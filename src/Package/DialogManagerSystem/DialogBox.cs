@@ -44,6 +44,11 @@ namespace Package.UI
 		private List<Button> _optionButtons;
 		
 		/// <summary>
+		/// Margen superior para el contenedor de opciones
+		/// </summary>
+		private float _topMargin = 50.0f;
+		
+		/// <summary>
 		/// Texto duplicado del diálogo para animar en el panel de opciones
 		/// </summary>
 		private RichTextLabel _duplicatedDialogText;
@@ -463,30 +468,33 @@ namespace Package.UI
 			optionsWrapper.Visible = true; // Asegurar que sea visible
 			_optionsOverlay.AddChild(optionsWrapper);
 
+			// Crear un Control wrapper para posicionar arriba con margen
+			var positionWrapper = new Control();
+			positionWrapper.Name = "PositionWrapper";
+			positionWrapper.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
+			positionWrapper.MouseFilter = Control.MouseFilterEnum.Ignore; // Permitir clics a través
+			optionsWrapper.AddChild(positionWrapper);
+			
+			// Usar CenterContainer para centrado horizontal automático (sin calcular offsets)
+			var centerContainer = new CenterContainer();
+			centerContainer.Name = "OptionsCenterContainer";
+			centerContainer.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
+			centerContainer.MouseFilter = Control.MouseFilterEnum.Stop;
+			positionWrapper.AddChild(centerContainer);
+			
 			_optionsContainer = new VBoxContainer();
 			_optionsContainer.Name = "OptionsContainer";
 			_optionsContainer.CustomMinimumSize = new Vector2(500, 300);
-			
-			// Posicionar centrado horizontalmente (X) pero en la parte superior (Y=0)
-			// AnchorLeft = 0.5f y AnchorRight = 0.5f = centro horizontal
-			// AnchorTop = 0.0f y AnchorBottom = 0.0f = parte superior
-			_optionsContainer.AnchorLeft = 0.5f; // Centro horizontal
-			_optionsContainer.AnchorTop = 0.0f; // Parte superior (Y=0)
-			_optionsContainer.AnchorRight = 0.5f; // Centro horizontal
-			_optionsContainer.AnchorBottom = 0.0f; // Parte superior
-			
-			// Establecer offsets para el tamaño (centrado horizontalmente)
-			_optionsContainer.OffsetLeft = -250; // Mitad del ancho mínimo (500/2) hacia la izquierda
-			_optionsContainer.OffsetRight = 250; // Mitad del ancho mínimo (500/2) hacia la derecha
-			_optionsContainer.OffsetTop = 0; // Comenzar desde la parte superior
-			_optionsContainer.OffsetBottom = 300; // Altura mínima (se ajustará según contenido)
-			
 			_optionsContainer.SizeFlagsHorizontal = Control.SizeFlags.ShrinkCenter;
 			_optionsContainer.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
 			_optionsContainer.AddThemeConstantOverride("separation", 15);
-			_optionsContainer.Alignment = BoxContainer.AlignmentMode.Center; // Centrar elementos dentro del contenedor
+			_optionsContainer.Alignment = BoxContainer.AlignmentMode.Center;
 			_optionsContainer.Visible = true; // Asegurar que sea visible
-			optionsWrapper.AddChild(_optionsContainer);
+			centerContainer.AddChild(_optionsContainer);
+			
+			// Ajustar posición vertical después de que el layout se calcule
+			_topMargin = -70.0f; // Margen desde arriba (ajusta este valor)
+			CallDeferred(MethodName.AdjustOptionsVerticalPosition);
 
 			_optionButtons = new List<Button>();
 
@@ -1513,10 +1521,11 @@ namespace Package.UI
 			button.Name = $"OptionButton_{index}";
 			button.Text = text;
 			button.CustomMinimumSize = new Vector2(450, 60);
-			button.SizeFlagsHorizontal = Control.SizeFlags.ShrinkCenter;
+			// CRÍTICO: Usar Fill para que todos los botones tengan el mismo ancho y queden centrados
+			button.SizeFlagsHorizontal = Control.SizeFlags.Fill;
 
 			// Aplicar estilo al botón con mejor tipografía
-			float scaledSize = FontManager.GetScaledSize(FontManager.TextType.Large);
+			float scaledSize = FontManager.GetScaledSize(FontManager.TextType.Medium);
 			button.AddThemeFontSizeOverride("font_size", (int)scaledSize);
 			
 			// Color blanco elegante
@@ -2068,6 +2077,22 @@ namespace Package.UI
 							GetViewport().SetInputAsHandled();
 						}
 					}
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Ajusta la posición vertical del contenedor de opciones para moverlo más arriba
+		/// </summary>
+		private void AdjustOptionsVerticalPosition()
+		{
+			if (_optionsContainer != null && IsInstanceValid(_optionsContainer))
+			{
+				var parent = _optionsContainer.GetParent();
+				if (parent != null && parent is CenterContainer centerContainer)
+				{
+					// Mover el CenterContainer arriba usando Position
+					centerContainer.Position = new Vector2(centerContainer.Position.X, _topMargin);
 				}
 			}
 		}
