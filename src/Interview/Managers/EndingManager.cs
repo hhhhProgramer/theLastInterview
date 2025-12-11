@@ -33,8 +33,8 @@ namespace TheLastInterview.Interview.Managers
                 "Después de revisar tus respuestas completamente absurdas, el comité decidió que eres 'perfecto para nuestra cultura corporativa'. Has sido contratado. Felicidades, supongo.",
                 new EndingCondition
                 {
-                    MinTotalPoints = 91,
-                    MaxTotalPoints = 100,
+                    MinTotalPoints = 70,
+                    MaxTotalPoints = 150,
                     PredominantAnswerType = AnswerType.AbsurdCoherent
                 }
             ));
@@ -46,8 +46,8 @@ namespace TheLastInterview.Interview.Managers
                 "Una de tus respuestas hizo que el entrevistador renunciara en el acto. Has sido despedido antes de ser contratado. Logro desbloqueado.",
                 new EndingCondition
                 {
-                    MinTotalPoints = 91,
-                    MaxTotalPoints = 100,
+                    MinTotalPoints = 70,
+                    MaxTotalPoints = 150,
                     PredominantAnswerType = AnswerType.Aggressive
                 }
             ));
@@ -59,7 +59,7 @@ namespace TheLastInterview.Interview.Managers
                 "El entrevistador se rindió y te nombró su jefe. Ahora eres el nuevo entrevistador. El ciclo continúa.",
                 new EndingCondition
                 {
-                    MinTotalPoints = 61,
+                    MinTotalPoints = 50,
                     MaxTotalPoints = 90,
                     RequiredState = InterviewState.Chaos,
                     PredominantAnswerType = AnswerType.AbsurdExtreme
@@ -87,7 +87,7 @@ namespace TheLastInterview.Interview.Managers
                 new EndingCondition
                 {
                     MinTotalPoints = 0,
-                    MaxTotalPoints = 30,
+                    MaxTotalPoints = 40,
                     PredominantAnswerType = AnswerType.Zen
                 }
             ));
@@ -99,8 +99,8 @@ namespace TheLastInterview.Interview.Managers
                 "Tu última respuesta fue tan extrema que el entrevistador llamó a seguridad. Has sido expulsado del edificio. Al menos fue memorable.",
                 new EndingCondition
                 {
-                    MinTotalPoints = 91,
-                    MaxTotalPoints = 100,
+                    MinTotalPoints = 70,
+                    MaxTotalPoints = 150,
                     PredominantAnswerType = AnswerType.Sociopathic
                 }
             ));
@@ -113,7 +113,7 @@ namespace TheLastInterview.Interview.Managers
                 new EndingCondition
                 {
                     MinTotalPoints = 0,
-                    MaxTotalPoints = 30,
+                    MaxTotalPoints = 40,
                     RequiredState = InterviewState.Normal
                 }
             ));
@@ -201,12 +201,37 @@ namespace TheLastInterview.Interview.Managers
                     return false;
             }
 
-            // Verificar tipo de respuesta predominante (simplificado)
+            // Verificar tipo de respuesta predominante
             if (condition.PredominantAnswerType.HasValue)
             {
-                // TODO: Implementar lógica más sofisticada para determinar tipo predominante
-                // Por ahora, solo verificamos si hay al menos una respuesta del tipo
-                // Esto es un placeholder
+                if (gameState.AnswerTypeHistory == null || gameState.AnswerTypeHistory.Count == 0)
+                    return false;
+                
+                // Contar cuántas respuestas de cada tipo hay
+                var typeCounts = new System.Collections.Generic.Dictionary<AnswerType, int>();
+                foreach (var type in gameState.AnswerTypeHistory)
+                {
+                    if (!typeCounts.ContainsKey(type))
+                        typeCounts[type] = 0;
+                    typeCounts[type]++;
+                }
+                
+                // Verificar si el tipo requerido es el más común (o al menos el 40% de las respuestas)
+                var requiredType = condition.PredominantAnswerType.Value;
+                if (!typeCounts.ContainsKey(requiredType))
+                    return false;
+                
+                int requiredCount = typeCounts[requiredType];
+                int totalAnswers = gameState.AnswerTypeHistory.Count;
+                
+                // El tipo debe ser al menos el 40% de las respuestas para ser "predominante"
+                if (requiredCount < totalAnswers * 0.4f)
+                    return false;
+                
+                // Además, debe ser el tipo más común o estar muy cerca
+                int maxCount = typeCounts.Values.Max();
+                if (requiredCount < maxCount * 0.8f)
+                    return false;
             }
 
             return true;

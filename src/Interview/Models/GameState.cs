@@ -34,6 +34,11 @@ namespace TheLastInterview.Interview.Models
         /// Historial de respuestas (para endings especiales)
         /// </summary>
         public System.Collections.Generic.List<string> AnswerHistory { get; set; } = new System.Collections.Generic.List<string>();
+        
+        /// <summary>
+        /// Historial de tipos de respuestas (para determinar tipo predominante)
+        /// </summary>
+        public System.Collections.Generic.List<AnswerType> AnswerTypeHistory { get; set; } = new System.Collections.Generic.List<AnswerType>();
 
         /// <summary>
         /// Calcula el total de puntos
@@ -51,6 +56,7 @@ namespace TheLastInterview.Interview.Models
             QuestionsAnswered = 0;
             AnsweredQuestionIds.Clear();
             AnswerHistory.Clear();
+            AnswerTypeHistory.Clear();
         }
     }
 

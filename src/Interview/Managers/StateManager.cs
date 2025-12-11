@@ -32,6 +32,7 @@ namespace TheLastInterview.Interview.Managers
             _gameState.ChaosPoints += answer.ChaosPoints;
             _gameState.QuestionsAnswered++;
             _gameState.AnswerHistory.Add(answer.Text);
+            _gameState.AnswerTypeHistory.Add(answer.Type);
 
             // Actualizar estado basado en puntos totales
             UpdateInterviewState();

@@ -15,6 +15,12 @@ run/main_scene="uid://1j0q1hjy0bn6"
 config/features=PackedStringArray("4.4", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+AudioManager="*res://src/Package/Audio/AudioManager.tscn"
+GlobalManager="*res://src/Managers/GlobalManager.tscn"
+DialogSystem="*res://src/Package/DialogManagerSystem/DialogSystem.tscn"
+
 [dotnet]
 
 project/assembly_name="TheLastInterview"
@@ -24,10 +30,3 @@ project/assembly_name="TheLastInterview"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 textures/vram_compression/import_etc2_astc=true
-
-
-[autoload]
-
-AudioManager="*res://src/Package/Audio/AudioManager.tscn"
-GlobalManager="*res://src/Managers/GlobalManager.tscn"
-DialogSystem="*res://src/Package/DialogManagerSystem/DialogSystem.tscn"
