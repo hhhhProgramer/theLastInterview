@@ -1,0 +1,134 @@
+# Estilos de Texto Narrativo - Convenciones de Novelas Visuales
+
+## ⚠️ PATRONES ESTABLECIDOS PARA DIFERENTES TIPOS DE TEXTO ⚠️
+
+### 1. Narración (Narrative Text)
+
+- **Estilo**: Texto normal (sin cursiva)
+- **Uso**: Descripciones del entorno, acciones, eventos que ocurren
+- **Ejemplo**: "Caminaba por el pasillo después de clases, distraído en mis pensamientos..."
+- **Regla**: La narración NO debe usar `.AsInternalThought()` - es texto descriptivo normal
+
+**Ejemplos de narración:**
+```csharp
+// ✅ CORRECTO: Narración sin cursiva
+new DialogEntry("Caminábamos hacia un banco en el parque. Cada paso estaba cargado de tensión.")
+    .Start(() => { /* acción */ })
+
+// ✅ CORRECTO: Narración descriptiva
+new DialogEntry("El parque parecía más silencioso que antes. La amenaza no estaba clara...")
+    .Start(() => { /* acción */ })
+```
+
+### 2. Pensamientos Internos (Internal Thoughts/Monologue)
+
+- **Estilo**: Texto en cursiva (itálica)
+- **Uso**: Pensamientos directos del protagonista, reflexiones internas
+- **Ejemplo**: "Si lo estaban siguiendo… y además estaba en peligro en el laboratorio… algo no cuadra."
+- **Regla**: SIEMPRE usar `.AsInternalThought()` para pensamientos internos
+
+**Ejemplos de pensamientos:**
+```csharp
+// ✅ CORRECTO: Pensamiento interno con cursiva
+new DialogEntry("Si lo estaban siguiendo… y además estaba en peligro… algo no cuadra.")
+    .AsInternalThought()
+
+// ✅ CORRECTO: Reflexión interna
+new DialogEntry("Es admirable cómo se mantiene firme, aunque esté preocupada.")
+    .AsInternalThought()
+```
+
+### 3. Diálogo de Personajes (Character Speech)
+
+- **Estilo**: Texto normal con nombre del personaje
+- **Uso**: Cuando un personaje habla directamente
+- **Ejemplo**: "Oye… ¿eres amigo de Nadir, verdad?"
+- **Regla**: SIEMPRE usar `.WithCharacter()` para mostrar el nombre del personaje
+
+**Ejemplos de diálogo:**
+```csharp
+// ✅ CORRECTO: Diálogo con personaje (muestra nombre)
+new DialogEntry("Oye… ¿eres amigo de Nadir, verdad?")
+    .WithCharacter(_nova)
+    .WithEmotion(Emotion.Timid)
+```
+
+### 4. Diálogo del Protagonista (Protagonist Speech)
+
+- **Estilo**: Texto normal sin nombre
+- **Uso**: Cuando el protagonista habla directamente (no es pensamiento)
+- **Ejemplo**: "¿Quién eres?"
+- **Regla**: NO usar `.WithCharacter()` ni `.AsInternalThought()` - es diálogo hablado normal
+
+**Ejemplos de diálogo del protagonista:**
+```csharp
+// ✅ CORRECTO: Protagonista habla (sin nombre, sin cursiva)
+new DialogEntry("¿Quién eres?")
+    .Start(() => { /* acción */ })
+
+// ✅ CORRECTO: Protagonista responde
+new DialogEntry("Sí… no hay llamadas ni mensajes.")
+    .Start(() => { /* acción */ })
+```
+
+### 5. Flashbacks y Sueños
+
+- **Estilo**: Puede usar cursiva para secciones completas (opcional)
+- **Uso**: Escenas de flashback, recuerdos, sueños
+- **Nota**: En este proyecto, los flashbacks se manejan con cambios de background y música, no necesariamente con cursiva
+
+### 6. Convenciones Importantes
+
+1. **Consistencia**: Mantener el mismo estilo para cada tipo de texto en todo el juego
+2. **Legibilidad**: No abusar de la cursiva - solo para pensamientos internos
+3. **Distinción clara**: 
+   - Narración = texto normal
+   - Pensamientos = cursiva
+   - Diálogo con personaje = texto normal + nombre
+   - Diálogo del protagonista = texto normal sin nombre
+
+### 7. Cómo Identificar el Tipo de Texto
+
+**Es Narración si:**
+- Describe acciones o eventos
+- Usa tercera persona o narración omnisciente
+- No es un pensamiento directo del protagonista
+- Ejemplo: "Caminábamos hacia un banco en el parque..."
+
+**Es Pensamiento Interno si:**
+- Es un pensamiento directo del protagonista
+- Usa primera persona en la mente del personaje
+- Es una reflexión o monólogo interno
+- Ejemplo: "Si lo estaban siguiendo… algo no cuadra."
+
+**Es Diálogo si:**
+- Un personaje habla directamente
+- Usa `.WithCharacter()` para mostrar nombre
+- O es el protagonista hablando (sin personaje asignado)
+
+### 8. Referencias y Fuentes
+
+- **Convenciones de ficción**: Narración en texto normal, pensamientos en cursiva
+- **Novelas visuales**: Mismo patrón - narración normal, pensamientos en cursiva
+- **Mejores prácticas**: Consistencia y legibilidad son prioritarias
+
+### 9. Ejemplos Completos
+
+```csharp
+// Narración (texto normal)
+new DialogEntry("Caminábamos hacia un banco en el parque. Cada paso estaba cargado de tensión.")
+    .Start(() => { /* acción */ })
+
+// Pensamiento interno (cursiva)
+new DialogEntry("Si lo estaban siguiendo… algo no cuadra.")
+    .AsInternalThought()
+
+// Diálogo con personaje (texto normal + nombre)
+new DialogEntry("Oye… ¿eres amigo de Nadir?")
+    .WithCharacter(_nova)
+    .WithEmotion(Emotion.Timid)
+
+// Diálogo del protagonista (texto normal, sin nombre)
+new DialogEntry("¿Quién eres?")
+    .Start(() => { /* acción */ })
+```

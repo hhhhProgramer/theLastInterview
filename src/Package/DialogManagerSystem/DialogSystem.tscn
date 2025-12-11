@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://bq8x7lam2n3p4"]
+
+[ext_resource type="Script" path="res://src/Package/DialogManagerSystem/DialogSystem.cs" id="1_0abcd"]
+
+[node name="DialogSystem" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_0abcd")
+
+[node name="DialogControl" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0

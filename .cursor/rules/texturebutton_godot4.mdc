@@ -1,0 +1,136 @@
+---
+description: "Reglas para trabajar con TextureButton en Godot 4: tamaño, escalado, anclas y posicionamiento"
+globs: ["**/*.cs", "**/*.gd"]
+alwaysApply: true
+---
+
+# TextureButton en Godot 4 - Reglas y Mejores Prácticas
+
+## ⚠️ COMPORTAMIENTO CRÍTICO DE TextureButton ⚠️
+
+### 1. Tamaño Automático por Textura
+
+- **Por defecto**, `TextureButton` ajusta su tamaño automáticamente al tamaño de la textura asignada a `TextureNormal`
+- **SI `Expand = false`** (por defecto): El botón tendrá el tamaño exacto de la textura, sin importar `CustomMinimumSize` o `Size`
+- **SI `Expand = true`**: La textura se estirará para ajustarse al tamaño del nodo según el `StretchMode`
+
+### 2. Propiedad Expand (CRÍTICA - Solo GDScript)
+
+- **`Expand`** es una propiedad booleana que controla si la textura se ajusta al tamaño del nodo
+- **`Expand = false`** (por defecto): El botón mantiene el tamaño de la textura original
+- **`Expand = true`**: La textura se escala para llenar el tamaño del nodo según `StretchMode`
+- **⚠️ IMPORTANTE**: En **Godot 4 C#**, la propiedad `Expand` puede **NO estar disponible** directamente
+- **Alternativa en C#**: Usar `StretchMode` con `CustomMinimumSize` y `Size` configurados correctamente
+- **CRÍTICO**: El orden de configuración es más importante que `Expand` en C#
+
+### 3. Orden de Configuración (CRÍTICO)
+
+**SIEMPRE seguir este orden (CRÍTICO):**
+
+1. **Cargar la textura** y obtener su tamaño original
+2. **Calcular el tamaño deseado** (escalado)
+3. **Crear el TextureButton**
+4. **Configurar anclas PRIMERO** con `SetAnchorsAndOffsetsPreset()` o manualmente
+5. **Establecer `CustomMinimumSize` y `Size`** con el tamaño escalado (ANTES de asignar textura)
+6. **Asignar la textura** a `TextureNormal` (DESPUÉS de establecer tamaño)
+7. **Configurar `StretchMode`** (recomendado: `KeepAspectCentered`)
+8. **Configurar offsets** para posicionar el botón
+9. **Agregar al árbol de escena**
+
+**NOTA**: En C#, `Expand` puede no estar disponible. El orden correcto (anclas → tamaño → textura → StretchMode) es suficiente.
+
+### 4. StretchMode
+
+Los modos disponibles son:
+
+- **`StretchScale`**: Escala la textura para ajustarse al rectángulo (puede distorsionar)
+- **`StretchTile`**: Repite la textura dentro del rectángulo
+- **`StretchKeep`**: Mantiene tamaño original, esquina superior izquierda
+- **`StretchKeepCentered`**: Mantiene tamaño original, centrado
+- **`StretchKeepAspect`**: Escala manteniendo relación de aspecto, esquina superior izquierda
+- **`StretchKeepAspectCentered`**: Escala manteniendo relación de aspecto, centrado (RECOMENDADO)
+- **`StretchKeepAspectCovered`**: Escala para cubrir todo el rectángulo, recortando si es necesario
+
+**RECOMENDADO**: Usar `StretchKeepAspectCentered` para botones con texturas que deben mantener su aspecto
+
+### 5. Anclas y Posicionamiento
+
+- **SIEMPRE configurar anclas ANTES de establecer offsets**
+- **Usar `SetAnchorsAndOffsetsPreset()`** cuando sea posible para evitar errores
+- **Para esquina inferior derecha**: `LayoutPreset.BottomRight`
+- **Los offsets son relativos a las anclas**:
+  - Con `BottomRight`: `OffsetRight` y `OffsetBottom` son negativos (hacia adentro)
+  - `OffsetLeft = OffsetRight - Size.X`
+  - `OffsetTop = OffsetBottom - Size.Y`
+
+### 6. Ejemplo Correcto de Implementación
+
+```csharp
+// 1. Cargar textura
+var buttonTexture = ResourceLoader.Load<Texture2D>("res://path/to/texture.png");
+Vector2 originalSize = buttonTexture.GetSize();
+
+// 2. Calcular tamaño escalado
+var viewportSize = GetViewport().GetVisibleRect().Size;
+float targetHeight = viewportSize.Y * 0.08f; // 8% de altura
+float scaleFactor = targetHeight / originalSize.Y;
+Vector2 scaledSize = originalSize * scaleFactor;
+
+// 3. Crear TextureButton
+var button = new TextureButton();
+button.Name = "MyButton";
+
+// 4. Asignar textura
+button.TextureNormal = buttonTexture;
+
+// 4. CRÍTICO: Configurar anclas PRIMERO
+button.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.BottomRight);
+
+// 5. CRÍTICO: Establecer tamaño ANTES de asignar textura
+button.CustomMinimumSize = scaledSize;
+button.Size = scaledSize;
+
+// 6. Asignar textura DESPUÉS de establecer tamaño
+button.TextureNormal = buttonTexture;
+
+// 7. Configurar StretchMode
+button.StretchMode = TextureButton.StretchModeEnum.KeepAspectCentered;
+
+// 9. Configurar offsets (relativos a BottomRight)
+float rightMargin = viewportSize.X * 0.05f;
+float bottomMargin = viewportSize.Y * 0.05f;
+button.OffsetRight = -rightMargin;
+button.OffsetBottom = -bottomMargin;
+button.OffsetTop = -bottomMargin - scaledSize.Y;
+button.OffsetLeft = -rightMargin - scaledSize.X;
+
+// 10. Agregar al árbol
+AddChild(button);
+```
+
+### 7. Errores Comunes a Evitar
+
+- ❌ **NO asignar textura ANTES de establecer tamaño** - La textura sobrescribirá el tamaño
+- ❌ **NO configurar offsets antes de las anclas** - Los offsets pueden ser incorrectos
+- ❌ **NO establecer tamaño después de asignar textura** - El tamaño será ignorado
+- ❌ **NO usar `StretchMode` sin establecer tamaño primero** - No tendrá efecto
+- ❌ **NO asumir que `CustomMinimumSize` funciona sin el orden correcto** - El orden es crítico
+
+### 8. Verificación y Debug
+
+Siempre verificar:
+- `button.Size` debe ser igual a `scaledSize`
+- `button.CustomMinimumSize` debe ser igual a `scaledSize`
+- `button.StretchMode` debe estar configurado (recomendado: `KeepAspectCentered`)
+- `button.TextureNormal` debe estar asignada
+- Las anclas deben estar configuradas correctamente
+- Los offsets deben ser relativos a las anclas configuradas
+- El orden de configuración debe ser: anclas → tamaño → textura → StretchMode
+
+### 9. Alternativa: Usar Control + TextureRect + Area2D
+
+Si `TextureButton` sigue causando problemas, una alternativa es:
+- Usar un `Control` como contenedor
+- Agregar un `TextureRect` para mostrar la textura
+- Agregar un `Area2D` o manejar `_GuiInput()` para detectar clicks
+- Esto da control total sobre tamaño y posicionamiento

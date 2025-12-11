@@ -1,0 +1,145 @@
+# Sistema de Diálogos - Nombres de Personajes e Itálica para Pensamientos
+
+## ⚠️ REGLAS CRÍTICAS DEL SISTEMA DE DIÁLOGOS ⚠️
+
+### 1. Nombres de Personajes
+
+- **SIEMPRE mostrar el nombre del personaje** cuando un diálogo tiene `CharacterId`
+- **El nombre se muestra automáticamente** en el panel superior del diálogo
+- **Si un diálogo NO tiene `CharacterId`**, no se muestra nombre (pensamientos internos, narración, etc.)
+
+**Ejemplo:**
+```csharp
+// Diálogo con personaje - se muestra el nombre
+new DialogEntry("Hola, ¿cómo estás?")
+    .WithCharacter(_nova)  // Se mostrará "Nova" en el panel de nombre
+
+// Diálogo sin personaje - NO se muestra nombre
+new DialogEntry("Pensé en lo que había pasado...")
+    .AsInternalThought()  // NO se muestra nombre, solo el texto en itálica
+```
+
+### 2. Pensamientos Internos
+
+- **SIEMPRE usar `.AsInternalThought()`** para marcar pensamientos internos del protagonista
+- **El texto se muestra automáticamente en itálica** usando BBCode `[i]...[/i]`
+- **Los pensamientos internos NO tienen nombre de personaje** (son pensamientos del protagonista)
+
+**Ejemplo:**
+```csharp
+// Pensamiento interno - se muestra en itálica, sin nombre
+new DialogEntry("No podía dejar de pensar en lo que había visto...")
+    .AsInternalThought()  // Texto se mostrará en itálica, sin nombre de personaje
+
+// Diálogo normal con personaje - se muestra nombre, texto normal
+new DialogEntry("¿Estás bien?")
+    .WithCharacter(_nova)  // Se muestra "Nova" y el texto normal
+```
+
+### 3. Uso del Builder Pattern
+
+El sistema usa el patrón Builder para construir diálogos de forma fluida:
+
+```csharp
+// Diálogo con personaje (muestra nombre)
+new DialogEntry("Texto del diálogo")
+    .WithCharacter(_character)
+    .WithEmotion(Emotion.Happy)
+    .Start(() => { /* acción al mostrar */ })
+    .End(() => { /* acción al terminar */ })
+
+// Pensamiento interno (itálica, sin nombre)
+new DialogEntry("Pensé en lo que había pasado...")
+    .AsInternalThought()
+    .Start(() => { /* acción al mostrar */ })
+```
+
+### 4. Propiedades de DialogEntry
+
+- **`CharacterId`**: ID del personaje que habla (opcional)
+- **`IsInternalThought`**: Indica si es un pensamiento interno (se aplica itálica automáticamente)
+- **`IsProtagonistSpeech`**: Indica si es hablado por el protagonista (muestra nombre personalizado o "Tu")
+- **`ProtagonistName`**: Nombre personalizado del protagonista (para localización/personalización)
+- **`Text`**: Texto del diálogo (se envuelve en `[i]...[/i]` si `IsInternalThought` es true)
+
+### 5. Reglas Importantes
+
+1. **NUNCA mezclar** `WithCharacter()`, `AsInternalThought()` y `AsProtagonistSpeech()` en el mismo diálogo
+   - Si hay personaje, se muestra nombre del personaje y texto normal
+   - Si es pensamiento, NO hay nombre y texto en itálica
+   - Si el protagonista habla, se muestra "Tu" y texto normal
+
+2. **SIEMPRE usar `.AsInternalThought()`** para pensamientos del protagonista
+   - No usar itálica manual con BBCode `[i]` en el texto
+   - El sistema lo aplica automáticamente
+   - NO muestra nombre (es pensamiento interno)
+
+3. **SIEMPRE usar `.AsProtagonistSpeech()`** cuando el protagonista habla (no piensa)
+   - Muestra "Tu" como nombre para distinguirlo de pensamientos
+   - Texto normal (sin cursiva)
+
+4. **SIEMPRE mostrar nombre** cuando hay `CharacterId`
+   - El sistema lo hace automáticamente
+   - No es necesario configurar nada adicional
+
+### 6. Ejemplos Completos
+
+```csharp
+// Ejemplo 1: Personaje habla (muestra nombre)
+new DialogEntry("Hola, ¿cómo estás?")
+    .WithCharacter(_nova)
+    .WithEmotion(Emotion.Happy)
+
+// Ejemplo 2: Pensamiento interno (itálica, sin nombre)
+new DialogEntry("No podía creer lo que había visto...")
+    .AsInternalThought()
+
+// Ejemplo 3: Protagonista habla (muestra "Tu" por defecto, texto normal)
+new DialogEntry("¿Quién eres?")
+    .AsProtagonistSpeech()
+
+// Ejemplo 3b: Protagonista habla con nombre personalizado (para localización)
+new DialogEntry("Who are you?")
+    .AsProtagonistSpeech("You")  // Nombre personalizado para inglés
+
+// Ejemplo 4: Personaje habla con emoción
+new DialogEntry("¡Esto es increíble!")
+    .WithCharacter(_yumi)
+    .WithEmotion(Emotion.Excited)
+
+// Ejemplo 5: Pensamiento interno con acción
+new DialogEntry("Tenía que hacer algo...")
+    .AsInternalThought()
+    .Start(() => {
+        // Acción cuando se muestra el pensamiento
+    })
+
+// Ejemplo 6: Protagonista habla con acción
+new DialogEntry("Sí, entiendo.")
+    .AsProtagonistSpeech()
+    .Start(() => {
+        // Acción cuando el protagonista habla
+    })
+```
+
+### 7. Implementación Técnica
+
+- **DialogSystem** detecta `IsInternalThought` y envuelve el texto en `[i]...[/i]`
+- **DialogSystem** detecta `IsProtagonistSpeech` y pasa "Tu" como `characterName`
+- **DialogBox** muestra el nombre solo si `characterName` no es null
+- **RichTextLabel** renderiza el BBCode `[i]` como itálica automáticamente
+
+### 8. Diferencias Clave
+
+| Tipo | Nombre | Estilo | Método |
+|------|--------|--------|--------|
+| Personaje habla | Nombre del personaje | Texto normal | `.WithCharacter()` |
+| Protagonista habla | "Tu" | Texto normal | `.AsProtagonistSpeech()` |
+| Pensamiento interno | Sin nombre | Cursiva (itálica) | `.AsInternalThought()` |
+| Narración | Sin nombre | Texto normal | Sin método especial |
+
+### 8. Referencias
+
+- `src/Package/DialogManagerSystem/DialogSystem.cs` - Lógica de aplicación de itálica
+- `src/Package/DialogManagerSystem/DialogBox.cs` - Visualización de nombres y texto
+- `src/Package/DialogManagerSystem/DialogSystem.cs` - Clase `DialogEntry` con método `AsInternalThought()`

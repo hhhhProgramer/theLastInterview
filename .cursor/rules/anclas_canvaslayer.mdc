@@ -1,0 +1,80 @@
+---
+description: "Sistema de Anclas (Anchors) - MÁXIMA PRIORIDAD: SIEMPRE usar anclas con CanvasLayer y expand mode"
+globs: ["**/*.cs"]
+alwaysApply: true
+---
+
+# ⚠️ SISTEMA DE ANCLAS (ANCHORS) - MÁXIMA PRIORIDAD ⚠️
+
+**CRÍTICO**: Cuando trabajas con `CanvasLayer` y `expand` mode, **SIEMPRE** usar anclas. Sin anclas, los elementos NO se ajustarán correctamente al viewport.
+
+## Reglas Absolutas de Anclas
+
+- **NUNCA usar `Position` directamente** para UI - **SIEMPRE usar anclas**
+- **SIEMPRE configurar anclas ANTES de agregar elementos a CanvasLayer**
+- **SIEMPRE usar `SetAnchorsAndOffsetsPreset()`** cuando sea posible
+- **SIEMPRE verificar anclas** cuando trabajas con `CanvasLayer` y `expand` mode
+- **NUNCA asumir** que un elemento se ajustará automáticamente sin anclas
+
+## Por Qué Es Crítico con CanvasLayer y Expand Mode
+
+- Con `expand` mode, el viewport se escala automáticamente
+- **Sin anclas**, los elementos mantienen posiciones absolutas y NO se ajustan
+- **Con anclas**, los elementos se ajustan proporcionalmente al viewport
+- Los `offset` se calculan automáticamente según las anclas y el tamaño del viewport
+
+## Presets de Anclas (Usar SIEMPRE)
+
+```csharp
+// Pantalla completa (backgrounds, overlays)
+element.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
+
+// Centrado (paneles, ventanas)
+element.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
+
+// Esquina superior izquierda (HUD)
+element.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopLeft);
+
+// Esquina superior derecha (indicadores)
+element.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopRight);
+
+// Esquina inferior izquierda
+element.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.BottomLeft);
+
+// Esquina inferior derecha
+element.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.BottomRight);
+```
+
+## Ejemplo Correcto: Elemento en CanvasLayer
+
+```csharp
+// ✅ CORRECTO: Usar anclas con CanvasLayer
+var canvasLayer = new CanvasLayer();
+canvasLayer.Layer = 0;
+AddChild(canvasLayer);
+
+var panel = new Panel();
+panel.Name = "MyPanel";
+
+// CRÍTICO: Configurar anclas ANTES de agregar al CanvasLayer
+panel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
+panel.CustomMinimumSize = new Vector2(400, 300);
+
+canvasLayer.AddChild(panel);
+```
+
+## Ejemplo Incorrecto: Sin Anclas
+
+```csharp
+// ❌ INCORRECTO: Usar Position directamente
+var panel = new Panel();
+panel.Position = new Vector2(100, 100); // NO funciona con expand mode
+panel.Size = new Vector2(400, 300);
+canvasLayer.AddChild(panel);
+```
+
+## Verificación de Anclas
+
+- **SIEMPRE verificar** que los elementos tienen anclas configuradas antes de agregarlos a `CanvasLayer`
+- **SIEMPRE probar** con diferentes resoluciones para verificar que las anclas funcionan
+- **SIEMPRE usar** `GetViewport().GetVisibleRect().Size` para obtener el tamaño real del viewport

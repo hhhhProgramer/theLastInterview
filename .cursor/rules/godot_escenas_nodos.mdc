@@ -1,0 +1,25 @@
+---
+description: "Reglas de escenas y nodos en Godot: estructura de escenas, nombres de nodos, cambios de escena"
+globs: ["**/*.cs", "**/*.tscn"]
+alwaysApply: true
+---
+
+# Godot Específico - Escenas y Nodos
+
+## Estructura de Escenas
+
+- **Escenas**: Solo enviar señales, no contener lógica
+- **Lógica**: En managers, objetos o entidades
+- **Flujo**: Escenas → Señales → (Objetos, Managers, Entidades) → Procesan → (Emiten señales si es necesario)
+
+## Nombres de Nodos
+
+- **SIEMPRE poner nombre** a los nodos al crearlos
+- **Usar nombres descriptivos** y consistentes
+
+## Cambios de Escena
+
+- **Usar `ChangeSceneToFile`** en lugar de `ReloadCurrentScene`
+- **Limpiar eventos y referencias** antes de cambiar de escena
+- **Usar `CallDeferred`** para cambios de escena seguros
+- **Seguir el patrón**: `CleanupBeforeReload()` → `CallDeferred(MethodName.PerformSceneChange)`

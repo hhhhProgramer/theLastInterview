@@ -1,0 +1,12 @@
+---
+description: "Contexto del proyecto: motor, lenguaje, tipo de proyecto, resolución base"
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Contexto del Proyecto
+
+- **Motor**: Godot Engine v4.4.1.stable.mono.official
+- **Lenguaje**: C# (.NET)
+- **Tipo de Proyecto**: Juego de estrategia con aprendices y enemigos
+- **Resolución Base**: 2560x1440 (2K/QHD)

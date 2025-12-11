@@ -1,0 +1,120 @@
+---
+description: "Patrón para usar imágenes como fondo en Panels - Se usa frecuentemente"
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Patrón: Imagen como Fondo en Panel
+
+## ⚠️ PATRÓN COMÚN - USAR SIEMPRE ESTE MÉTODO ⚠️
+
+Cuando necesites poner una imagen como fondo de un `Panel` o `PanelContainer`, **SIEMPRE** usa `StyleBoxTexture` con `ContentMargin` para márgenes internos.
+
+## Estructura del Patrón
+
+```csharp
+// 1. Cargar la textura
+var backgroundTexture = GD.Load<Texture2D>("res://ruta/a/imagen.jpg");
+
+if (backgroundTexture != null)
+{
+    // 2. Crear StyleBoxTexture
+    var styleBoxTexture = new StyleBoxTexture();
+    styleBoxTexture.Texture = backgroundTexture;
+    
+    // 3. CRÍTICO: Configurar márgenes internos para que el contenido no esté pegado al fondo
+    styleBoxTexture.ContentMarginLeft = CONTENT_MARGIN;
+    styleBoxTexture.ContentMarginRight = CONTENT_MARGIN;
+    styleBoxTexture.ContentMarginTop = CONTENT_MARGIN;
+    styleBoxTexture.ContentMarginBottom = CONTENT_MARGIN;
+    
+    // 4. Aplicar al Panel
+    panel.AddThemeStyleboxOverride("panel", styleBoxTexture);
+}
+else
+{
+    // 5. Fallback: StyleBoxFlat si no se carga la imagen
+    var styleBoxFlat = new StyleBoxFlat();
+    styleBoxFlat.BgColor = new Color(0.15f, 0.15f, 0.15f, 0.95f);
+    styleBoxFlat.BorderColor = new Color(0.5f, 0.5f, 0.5f, 1.0f);
+    styleBoxFlat.BorderWidthLeft = 2;
+    styleBoxFlat.BorderWidthTop = 2;
+    styleBoxFlat.BorderWidthRight = 2;
+    styleBoxFlat.BorderWidthBottom = 2;
+    styleBoxFlat.CornerRadiusTopLeft = 8;
+    styleBoxFlat.CornerRadiusTopRight = 8;
+    styleBoxFlat.CornerRadiusBottomLeft = 8;
+    styleBoxFlat.CornerRadiusBottomRight = 8;
+    // CRÍTICO: También configurar márgenes en el fallback
+    styleBoxFlat.ContentMarginLeft = CONTENT_MARGIN;
+    styleBoxFlat.ContentMarginRight = CONTENT_MARGIN;
+    styleBoxFlat.ContentMarginTop = CONTENT_MARGIN;
+    styleBoxFlat.ContentMarginBottom = CONTENT_MARGIN;
+    panel.AddThemeStyleboxOverride("panel", styleBoxFlat);
+}
+```
+
+## Ejemplos de Uso
+
+### Ejemplo 1: TutorialCard (Referencia)
+```csharp
+private const string BACKGROUND_IMAGE_PATH = "res://src/Image/Gemini_Generated_Image_11b5vz11b5vz11b5.png";
+private const float CONTENT_MARGIN = 30.0f;
+
+var backgroundTexture = GD.Load<Texture2D>(BACKGROUND_IMAGE_PATH);
+if (backgroundTexture != null)
+{
+    var styleBoxTexture = new StyleBoxTexture();
+    styleBoxTexture.Texture = backgroundTexture;
+    styleBoxTexture.ContentMarginLeft = CONTENT_MARGIN;
+    styleBoxTexture.ContentMarginRight = CONTENT_MARGIN;
+    styleBoxTexture.ContentMarginTop = CONTENT_MARGIN;
+    styleBoxTexture.ContentMarginBottom = CONTENT_MARGIN;
+    AddThemeStyleboxOverride("panel", styleBoxTexture);
+}
+```
+
+### Ejemplo 2: PoemDisplay
+```csharp
+private const string BACKGROUND_IMAGE_PATH = "res://src/Image/Gui/sheet of old paper.jpg";
+private const float CONTENT_MARGIN = 50.0f;
+
+var backgroundTexture = GD.Load<Texture2D>(BACKGROUND_IMAGE_PATH);
+if (backgroundTexture != null)
+{
+    var styleBoxTexture = new StyleBoxTexture();
+    styleBoxTexture.Texture = backgroundTexture;
+    styleBoxTexture.ContentMarginLeft = CONTENT_MARGIN;
+    styleBoxTexture.ContentMarginRight = CONTENT_MARGIN;
+    styleBoxTexture.ContentMarginTop = CONTENT_MARGIN;
+    styleBoxTexture.ContentMarginBottom = CONTENT_MARGIN;
+    AddThemeStyleboxOverride("panel", styleBoxTexture);
+}
+```
+
+## Reglas Críticas
+
+1. **SIEMPRE usar `StyleBoxTexture`** para imágenes de fondo en Panels
+2. **SIEMPRE configurar `ContentMargin`** para que el contenido no esté pegado al fondo
+3. **SIEMPRE tener un fallback** con `StyleBoxFlat` si la imagen no se carga
+4. **SIEMPRE configurar márgenes en el fallback también** para mantener consistencia
+5. **NUNCA usar `TextureRect` como fondo** cuando necesitas márgenes internos - usa `StyleBoxTexture` en un `Panel`
+
+## Ventajas de este Patrón
+
+- **Márgenes internos:** El contenido no se pega al borde de la imagen
+- **Reutilizable:** Funciona con cualquier imagen
+- **Consistente:** Mismo patrón en todo el código
+- **Fallback seguro:** Si la imagen no carga, hay un estilo alternativo
+- **Responsive:** Los márgenes se respetan automáticamente
+
+## Cuándo Usar
+
+- **TutorialCard:** Para mostrar información con fondo decorativo
+- **PoemDisplay:** Para mostrar poemas/pistas con fondo de papel viejo
+- **Cualquier Panel con fondo decorativo:** Diálogos especiales, menús temáticos, etc.
+
+## Referencias
+
+- `src/Package/Tutorial/TutorialCard.cs` - Ejemplo completo
+- `src/UI/PoemDisplay.cs` - Ejemplo completo

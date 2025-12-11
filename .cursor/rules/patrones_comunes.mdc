@@ -1,0 +1,92 @@
+---
+description: "Patrones comunes de código: Manager Singleton, limpieza de escenas, UI responsive"
+globs: ["**/*.cs"]
+alwaysApply: true
+---
+
+# Patrones Comunes
+
+## Patrón: Manager Singleton
+
+```csharp
+public partial class MyManager : Node
+{
+    public static MyManager Instance { get; private set; }
+    
+    public override void _Ready()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+    }
+}
+```
+
+## Patrón: Limpieza Antes de Cambio de Escena
+
+```csharp
+private void CleanupBeforeReload()
+{
+    // 1. Despausar el juego
+    if (GetTree().Paused) GetTree().Paused = false;
+    
+    // 2. Limpiar singletons
+    // 3. Desconectar eventos
+    // 4. Ocultar UI
+}
+
+private void PerformSceneChange()
+{
+    var error = GetTree().ChangeSceneToFile("res://src/Scenes/MainScene.tscn");
+    // Manejar error
+}
+```
+
+## Patrón: UI Responsive con CanvasLayer (CRÍTICO)
+
+```csharp
+// ⚠️ CRÍTICO: SIEMPRE configurar anclas ANTES de agregar a CanvasLayer
+
+// Crear CanvasLayer
+var canvasLayer = new CanvasLayer();
+canvasLayer.Layer = 0;
+AddChild(canvasLayer);
+
+// Crear elemento
+var element = new Panel();
+element.Name = "MyPanel";
+
+// ⚠️ CRÍTICO: Configurar anclas PRIMERO
+element.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
+
+// Configurar tamaño mínimo
+element.CustomMinimumSize = new Vector2(400, 300);
+
+// AHORA agregar al CanvasLayer
+canvasLayer.AddChild(element);
+
+// Obtener tamaño del viewport (para cálculos si es necesario)
+var viewport = GetViewport();
+var viewportSize = viewport?.GetVisibleRect().Size ?? new Vector2(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT);
+```
+
+## Patrón: Background de Pantalla Completa
+
+```csharp
+// ⚠️ CRÍTICO: Background DEBE usar FullRect con anclas
+
+var canvasLayer = new CanvasLayer();
+canvasLayer.Layer = -1; // Detrás de todo
+AddChild(canvasLayer);
+
+var background = new TextureRect();
+background.Name = "Background";
+
+// ⚠️ CRÍTICO: FullRect para cubrir toda la pantalla
+background.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
+background.CustomMinimumSize = new Vector2(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT);
+background.StretchMode = TextureRect.StretchModeEnum.KeepAspectCovered;
+
+canvasLayer.AddChild(background);
+```

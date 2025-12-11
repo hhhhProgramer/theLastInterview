@@ -1,0 +1,136 @@
+---
+description: "Reglas de UI y Layout en Godot: CanvasLayer, contenedores, márgenes, tamaños responsive, estructura responsiva"
+globs: ["**/*.cs"]
+alwaysApply: true
+---
+
+# Godot Específico - UI y Layout
+
+## CanvasLayer
+
+- **SIEMPRE usar CanvasLayer** para UI (HUD, menús, diálogos)
+- **Usar diferentes `Layer` values** para controlar qué UI está por encima
+- **Ejemplo**: HUD = 0, Menús = 1, Diálogos = 2
+- **CRÍTICO**: Todos los elementos en `CanvasLayer` **DEBEN** tener anclas configuradas
+
+## Contenedores
+
+- **SIEMPRE usar contenedores** para organizar elementos relacionados
+- **VBoxContainer/HBoxContainer**: Para menús con opciones verticales/horizontales
+- **MarginContainer**: Para añadir márgenes alrededor de paneles
+- **GridContainer**: Para inventarios y estructuras de grid
+- **CenterContainer**: Para centrar elementos automáticamente
+
+## Márgenes y Espaciado
+
+- **NUNCA hardcodear valores de margen**
+- **Usar constantes**: `MIN_UI_MARGIN`, `PANEL_MARGIN`, `BUTTON_MARGIN`
+- **Usar márgenes porcentuales** para diferentes resoluciones: `viewportSize.X * marginPercent`
+- **Siempre verificar márgenes mínimos** cuando posiciones elementos dinámicamente
+- **Usar `AddThemeConstantOverride`** para márgenes y separación
+
+## Tamaños y Responsive Design
+
+- **NUNCA usar tamaños fijos** para UI responsive
+- **Usar `CustomMinimumSize`** para tamaños mínimos
+- **Usar `SizeFlags`** para controlar expansión de elementos
+- **Obtener viewport size dinámicamente**: `GetViewport().GetVisibleRect().Size`
+- **NUNCA asumir tamaños fijos** del viewport
+- **Escalar tamaños basado en viewport**: `baseSize * (viewportSize / baseViewportSize)`
+
+## Estructura Responsiva: Contenedor → Navegador → Nodos
+
+### ⚠️ CRÍTICO: Estructura Jerárquica Responsiva
+
+Para sistemas de navegación de mapas o UI compleja, **SIEMPRE** seguir esta estructura:
+
+```
+CanvasLayer
+└── Control (MainContainer - FullRect)
+    └── Control (Navigator - FullRect con márgenes)
+        └── Control (NodesContainer - FullRect)
+            └── Elementos individuales (con anclas)
+```
+
+### Reglas de Estructura Responsiva
+
+1. **Paso 1: Contenedor Principal (Ocupa Toda la Pantalla)**
+   - Crear `CanvasLayer` primero
+   - Crear `Control` con `FullRect` preset
+   - Obtener viewport real dinámicamente
+   - Configurar `CustomMinimumSize` basado en viewport real
+
+2. **Paso 2: Generar el Navegador (Dentro del Contenedor)**
+   - Crear `Control` con `FullRect` preset
+   - Configurar márgenes porcentuales (ej: 5% del viewport)
+   - Usar `OffsetLeft`, `OffsetTop`, `OffsetRight`, `OffsetBottom` para márgenes
+
+3. **Paso 3: Generar los Nodos (Dentro del Navegador)**
+   - Calcular posiciones como porcentajes del viewport
+   - Convertir porcentajes a anclas
+   - Configurar anclas ANTES de agregar al contenedor
+   - Usar `CustomMinimumSize` para tamaños mínimos
+
+### Ejemplo: Estructura Responsiva Completa
+
+```csharp
+// Paso 1: Contenedor principal
+var canvasLayer = new CanvasLayer();
+canvasLayer.Layer = 0;
+AddChild(canvasLayer);
+
+var mainContainer = new Control();
+mainContainer.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
+var viewport = GetViewport();
+var viewportSize = viewport?.GetVisibleRect().Size ?? new Vector2(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT);
+mainContainer.CustomMinimumSize = viewportSize;
+canvasLayer.AddChild(mainContainer);
+
+// Paso 2: Navegador con márgenes
+var navigator = new Control();
+navigator.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
+float marginPercent = 0.05f;
+navigator.OffsetLeft = viewportSize.X * marginPercent;
+navigator.OffsetTop = viewportSize.Y * marginPercent;
+navigator.OffsetRight = -viewportSize.X * marginPercent;
+navigator.OffsetBottom = -viewportSize.Y * marginPercent;
+mainContainer.AddChild(navigator);
+
+// Paso 3: Nodos con anclas porcentuales
+var nodeVisual = new Control();
+Vector2 positionPercent = new Vector2(node.Position.X / viewportSize.X, node.Position.Y / viewportSize.Y);
+Vector2 sizePercent = new Vector2(nodeSize / viewportSize.X, nodeSize / viewportSize.Y);
+nodeVisual.AnchorLeft = Mathf.Clamp(positionPercent.X, 0.0f, 1.0f);
+nodeVisual.AnchorTop = Mathf.Clamp(positionPercent.Y, 0.0f, 1.0f);
+nodeVisual.AnchorRight = Mathf.Clamp(positionPercent.X + sizePercent.X, 0.0f, 1.0f);
+nodeVisual.AnchorBottom = Mathf.Clamp(positionPercent.Y + sizePercent.Y, 0.0f, 1.0f);
+nodeVisual.OffsetLeft = 0.0f;
+nodeVisual.OffsetTop = 0.0f;
+nodeVisual.OffsetRight = 0.0f;
+nodeVisual.OffsetBottom = 0.0f;
+navigator.AddChild(nodeVisual);
+```
+
+## Cálculo Dinámico de Posiciones
+
+- **SIEMPRE obtener viewport real**: `GetViewport().GetVisibleRect().Size`
+- **NUNCA asumir tamaños fijos** del viewport
+- **Calcular posiciones como porcentajes**: `positionPercent = absolutePosition / viewportSize`
+- **Convertir porcentajes a anclas**: `AnchorLeft = positionPercent.X`
+- **Validar límites**: `Mathf.Clamp(anchor, 0.0f, 1.0f)`
+- **Usar `Mathf.Clamp`** para mantener elementos dentro de límites
+
+## Verificaciones Importantes
+
+- **Siempre verificar márgenes mínimos** al posicionar dinámicamente
+- **Siempre verificar tamaños válidos** antes de calcular posiciones
+- **Verificar casos edge**: elemento más grande que viewport
+- **Validar que elementos quepan**: `position + size <= viewportSize`
+- **Probar en múltiples resoluciones** durante el desarrollo
+
+## Referencias
+
+- **Investigación Completa**: Ver `INVESTIGACION_COMPLETA_UI_RESPONSIVA_GODOT4.md`
+- **Documentación Oficial**: https://docs.godotengine.org/es/stable/tutorials/ui/size_and_anchors.html
+- **Kodeco Tutorial**: https://www.kodeco.com/45869762-making-responsive-ui-in-godot
+- **Alva Majo Tutorials**: https://www.youtube.com/@AlvaMajo

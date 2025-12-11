@@ -1,0 +1,35 @@
+---
+description: "Estructura de archivos del proyecto: organización de directorios, convenciones de nombres"
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Estructura de Archivos
+
+## Organización
+
+- **Escenas**: `src/Scenes/`
+- **Managers**: `src/Managers/`
+- **Core**: `src/Core/` (Behaviors, Commands, Enums, Events, Factories, Handlers, Interfaces, Models, Services, Utils)
+- **UI**: `src/UI/`
+- **Visual**: `src/Visual/`
+- **Package**: `src/Package/` (Attacks, Audio, CollectiveMagic, History, Notifications, RPGMapNavigation, Selectors, Support, Tutorial, UI)
+
+## Archivos de Escena
+
+- **Extensiones**: `.tscn` para escenas, `.cs` para scripts
+- **Nombres**: PascalCase (ej: `MainScene.tscn`, `MapsScene.cs`)
+
+## Constantes y Valores
+
+- **Definir constantes** en `GlobalGameManager.Constants`
+- **Usar constantes** en lugar de valores hardcodeados
+- **Ejemplos**: `Constants.VIEWPORT_WIDTH`, `Constants.MIN_UI_MARGIN`, `Constants.PANEL_MARGIN`
+
+### Valores Comunes
+
+- **VIEWPORT_WIDTH**: 2560.0f
+- **VIEWPORT_HEIGHT**: 1440.0f
+- **MIN_UI_MARGIN**: 20.0f
+- **PANEL_MARGIN**: 30.0f
+- **BUTTON_MARGIN**: 10.0f

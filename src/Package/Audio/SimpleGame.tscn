@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bkyjc8but0vpe"]
+
+[ext_resource type="Script" uid="uid://bb2snfqtcdia7" path="res://src/Scenes/Game/SimpleGame.cs" id="1_udoxa"]
+
+[node name="SimpleGame" type="Node2D"]
+script = ExtResource("1_udoxa")

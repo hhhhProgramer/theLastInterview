@@ -1,0 +1,35 @@
+---
+description: "Convenciones de código: nomenclatura, nombres de nodos, rutas de archivos, documentación"
+globs: ["**/*.cs"]
+alwaysApply: true
+---
+
+# Convenciones de Código
+
+## Nomenclatura
+
+- **Clases**: PascalCase (ej: `GameManager`, `ManaManager`)
+- **Métodos**: PascalCase (ej: `InitializeManagers()`, `CreateUI()`)
+- **Variables privadas**: _camelCase (ej: `_gameManager`, `_manaManager`)
+- **Constantes**: UPPER_CASE (ej: `MIN_UI_MARGIN`, `VIEWPORT_WIDTH`)
+- **Namespaces**: `Aprendizdemago.[Categoría]` (ej: `Aprendizdemago.Scenes`, `Aprendizdemago.Managers`)
+
+## Nombres de Nodos
+
+- **SIEMPRE poner nombre a los nodos** al crearlos
+- **Usar nombres descriptivos**: "TooltipPanel" es mejor que "Panel"
+- **Ejemplo**: `button.Name = "NextButton";`
+
+## Rutas de Archivos
+
+- **Rutas de escenas**: Siempre empezar con `res://src/...`
+- **Rutas de recursos**: Usar rutas relativas desde `res://`
+- **Ejemplo**: `res://src/Scenes/MainScene.tscn`
+
+## Documentación
+
+- **Usar comentarios XML** (`///`) para documentación
+- **Incluir `<summary>`** para clases y métodos importantes
+- **Documentar parámetros** con `<param name="...">`
+- **Documentar valores de retorno** con `<returns>`
+- **Explicar decisiones de diseño complejas**

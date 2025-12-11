@@ -1,0 +1,54 @@
+---
+description: "Principios fundamentales de código: SOLID, KISS, SRP, DRY, enumeradores, separación de responsabilidades"
+globs: ["**/*.cs"]
+alwaysApply: true
+---
+
+# Principios Fundamentales de Código
+
+## SOLID, KISS, SRP, DRY
+
+- **SIEMPRE** seguir los principios SOLID, KISS, SRP, DRY
+- **NUNCA** violar el principio de responsabilidad única
+- **SIEMPRE** reutilizar código en lugar de duplicar
+- **SIEMPRE** mantener el código simple y directo
+
+## Enumeradores vs Strings
+
+- **NO usar strings como valores** cuando sea posible usar enumeradores
+- **Ejemplo MAL**: `"punch"`, `"hice"` ← Difícil de discernir cuál es correcto
+- **Ejemplo BIEN**: Crear enumerador `EAttacks` con valores claros
+- **Siempre verificar** cuál es la mejor opción (enumerador vs string)
+
+## Evitar Switches
+
+- **NO usar switches** para información por enumeradores
+- **Mejor crear un objeto y una lista**:
+
+```csharp
+// MAL: Switch para cada enumerador
+switch (enum) {
+    case Enum1: return imagen;
+    case Enum2: return tipo;
+}
+
+// BIEN: Objeto con lista
+class ObjectAttributes {
+    public Texture2D Image;
+    public EType Type;
+}
+List<Enum, ObjectAttributes> myStatics;
+```
+
+## Separación de Responsabilidades
+
+- **Las escenas NO deben contener lógica**, solo enviar señales a managers u objetos externos
+- **Los objetos solo deben conocer y ejecutar funcionalidades que les correspondan**
+- **Ejemplo**: Un inventario NO se debe ocupar de guardar. Un jugador NO se debe ocupar de ver FPS
+- **Separar por conceptos y funcionalidades**: Escenas → Señales → (Objetos, Managers, Entidades) → Procesan → (Emiten señales si es necesario) → Atrapan otros objetos u escenas
+
+## Hardcoding
+
+- **NO hardcodear valores** que se repiten o se usan en varios lugares
+- **Crear enumeradores o mapas de valores** en lugar de hardcodear
+- **Evitar hardcodear en la medida de lo posible**
