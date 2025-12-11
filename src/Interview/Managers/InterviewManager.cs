@@ -2,6 +2,7 @@ using Godot;
 using Package.UI;
 using Package.Background;
 using TheLastInterview.Interview.Models;
+using TheLastInterview.Interview.Minigames;
 using System.Collections.Generic;
 
 namespace TheLastInterview.Interview.Managers
@@ -17,6 +18,8 @@ namespace TheLastInterview.Interview.Managers
         private Question _currentQuestion;
         private SceneBackground _background;
         private Control _interviewerVisual;
+        private BaseMinigame _currentMinigame;
+        private System.Random _minigameRandom = new System.Random();
 
         /// <summary>
         /// Señal que se emite cuando la entrevista termina
@@ -152,7 +155,60 @@ namespace TheLastInterview.Interview.Managers
                 return;
             }
 
-            // Convertir pregunta a DialogEntry y mostrar
+            // 30% de probabilidad de mostrar un minijuego antes de la pregunta
+            if (_minigameRandom.Next(0, 10) < 3)
+            {
+                ShowRandomMinigame();
+            }
+            else
+            {
+                // Convertir pregunta a DialogEntry y mostrar directamente
+                ShowQuestionAsDialog(_currentQuestion);
+            }
+        }
+        
+        /// <summary>
+        /// Muestra un minijuego aleatorio
+        /// </summary>
+        private void ShowRandomMinigame()
+        {
+            var minigameType = MinigameManager.GetRandomMinigame();
+            _currentMinigame = MinigameManager.CreateMinigame(minigameType, this);
+            _currentMinigame.OnMinigameFinished += OnMinigameFinished;
+            
+            // Crear CanvasLayer para el minijuego (por encima del diálogo)
+            var minigameLayer = new CanvasLayer();
+            minigameLayer.Name = "MinigameLayer";
+            minigameLayer.Layer = 3000; // Por encima del DialogBox (que está en 1000)
+            AddChild(minigameLayer);
+            
+            // Agregar el minijuego al layer
+            minigameLayer.AddChild(_currentMinigame);
+            
+            // Mostrar el minijuego
+            _currentMinigame.ShowMinigame();
+        }
+        
+        /// <summary>
+        /// Se llama cuando termina un minijuego
+        /// </summary>
+        private void OnMinigameFinished()
+        {
+            if (_currentMinigame != null && IsInstanceValid(_currentMinigame))
+            {
+                _currentMinigame.OnMinigameFinished -= OnMinigameFinished;
+                
+                // Limpiar el CanvasLayer del minijuego
+                var minigameLayer = GetNodeOrNull<CanvasLayer>("MinigameLayer");
+                if (minigameLayer != null)
+                {
+                    minigameLayer.QueueFree();
+                }
+                
+                _currentMinigame = null;
+            }
+            
+            // Continuar con la pregunta después del minijuego
             ShowQuestionAsDialog(_currentQuestion);
         }
 
