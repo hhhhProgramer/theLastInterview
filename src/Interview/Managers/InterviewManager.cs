@@ -108,8 +108,11 @@ namespace TheLastInterview.Interview.Managers
             // Crear SceneBackground usando package
             _background = new SceneBackground();
             // Usar el fondo de oficina
-            _background.SetBackground("res://src/Image/Background/backgroun_office.png", new Color(0.1f, 0.1f, 0.1f, 1.0f));
+            _background.SetBackground("res://src/Image/Background/backgroun_lobby.png", new Color(0.1f, 0.1f, 0.1f, 1.0f));
             backgroundContainer.AddChild(_background);
+            _background.ChangeBackgroundWithFade("res://src/Image/Background/backgroun_office.png", 1.0f, () => {
+                GD.Print("[InterviewManager] ✅ Background de oficina configurado");
+            });
             
             GD.Print("[InterviewManager] ✅ Background de oficina configurado");
         }
@@ -171,6 +174,7 @@ namespace TheLastInterview.Interview.Managers
         
         /// <summary>
         /// Muestra un minijuego aleatorio que no haya sido usado antes en esta partida
+        /// Si todos los minijuegos ya se usaron, muestra la pregunta directamente sin minijuego
         /// </summary>
         private void ShowRandomMinigame()
         {
@@ -194,11 +198,12 @@ namespace TheLastInterview.Interview.Managers
                 }
             }
             
-            // Si todos los minijuegos ya se usaron, resetear la lista para permitir repeticiones
+            // Si todos los minijuegos ya se usaron, mostrar la pregunta directamente sin minijuego
             if (availableMinigames.Count == 0)
             {
-                _usedMinigames.Clear();
-                availableMinigames = allMinigameTypes;
+                GD.Print("[InterviewManager] Todos los minijuegos ya se usaron en esta partida, mostrando pregunta directamente");
+                ShowQuestionAsDialog(_currentQuestion);
+                return;
             }
             
             // Seleccionar uno aleatorio de los disponibles

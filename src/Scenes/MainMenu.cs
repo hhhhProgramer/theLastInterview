@@ -59,7 +59,7 @@ namespace TheLastInterview.Scenes
         private void SetupBackground()
         {
             _background = new SceneBackground();
-            _background.SetBackground("res://src/Image/Background/backgroun_office.png", new Color(0.05f, 0.05f, 0.05f, 1.0f));
+            _background.SetBackground("res://src/Image/Background/backgroun_lobby.png", new Color(0.05f, 0.05f, 0.05f, 1.0f));
             AddChild(_background);
             MoveChild(_background, 0);
         }

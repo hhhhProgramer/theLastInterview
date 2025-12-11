@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://mainmenu_scene"]
+[gd_scene load_steps=2 format=3 uid="uid://b4h6fcphbltjx"]
 
-[ext_resource type="Script" path="res://src/Scenes/MainMenu.cs" id="1_mainmenu"]
+[ext_resource type="Script" uid="uid://c2cmfbcga3471" path="res://src/Scenes/MainMenu.cs" id="1_mainmenu"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -10,4 +10,3 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_mainmenu")
-
