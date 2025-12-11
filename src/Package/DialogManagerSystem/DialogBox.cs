@@ -1,5 +1,6 @@
 using Core.Services;
 using Godot;
+using Package.Audio;
 using Package.Core.Enums;
 using System.Collections.Generic;
 
@@ -1595,10 +1596,24 @@ namespace Package.UI
 			button.AddThemeStyleboxOverride("hover", hoverStyle);
 			}
 
-			// Conectar evento
+			// Conectar eventos
 			button.Pressed += () =>
 			{
+				// Reproducir sonido de selección
+				if (AudioManager.Instance != null)
+				{
+					AudioManager.Instance.PlaySoundEffect(SoundEffect.OptionConfirm);
+				}
 				onOptionSelected?.Invoke(index);
+			};
+			
+			// Conectar evento de hover para reproducir sonido
+			button.MouseEntered += () =>
+			{
+				if (AudioManager.Instance != null)
+				{
+					AudioManager.Instance.PlaySoundEffect(SoundEffect.ItemCollect); // pop.ogg
+				}
 			};
 
 			return button;

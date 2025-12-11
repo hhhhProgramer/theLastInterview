@@ -218,7 +218,12 @@ namespace Package.Audio
         /// <summary>
         /// Sonido de selección de botón (beltHandle2)
         /// </summary>
-        ButtonSelect
+        ButtonSelect,
+        
+        /// <summary>
+        /// Sonido de confirmación de opción (on.ogg)
+        /// </summary>
+        OptionConfirm
     }
     
     /// <summary>

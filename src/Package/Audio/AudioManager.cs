@@ -287,7 +287,8 @@ namespace Package.Audio
                     { SoundEffect.Resume, "resume.ogg" },
                     { SoundEffect.Milestone, "1up 1 - Sound effects Pack 2.ogg" },
                     { SoundEffect.ItemCollect, "pop.ogg" },
-                    { SoundEffect.ButtonSelect, "beltHandle2.ogg" }
+                    { SoundEffect.ButtonSelect, "beltHandle2.ogg" },
+                    { SoundEffect.OptionConfirm, "on.ogg" }
                 };
                 
                 foreach (var kvp in soundEffectFileMap)
