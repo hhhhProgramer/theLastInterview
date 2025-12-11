@@ -20,9 +20,13 @@ namespace TheLastInterview.Interview.Managers
         private Control _interviewerVisual;
         private BaseMinigame _currentMinigame;
         private System.Random _minigameRandom = new System.Random();
+        private System.Random _eventRandom = new System.Random();
         private HashSet<MinigameManager.MinigameType> _usedMinigames = new HashSet<MinigameManager.MinigameType>();
         private int _questionsShown = 0; // Contador de preguntas mostradas
         private const int MIN_QUESTIONS_BEFORE_MINIGAME = 3; // Mínimo de preguntas antes de permitir minijuegos
+        private const float EVENT_PROBABILITY = 0.18f; // 18% de probabilidad de evento meta-oficina
+        private const float INTERRUPTION_PROBABILITY = 0.15f; // 15% de probabilidad de interrupción
+        private bool _rumorShown = false; // Flag para mostrar el rumor solo una vez
 
         /// <summary>
         /// Señal que se emite cuando la entrevista termina
@@ -67,18 +71,47 @@ namespace TheLastInterview.Interview.Managers
         private bool _waitingForReactionToFinish = false;
         
         /// <summary>
+        /// Flag para indicar que estamos esperando que termine una consecuencia visual
+        /// </summary>
+        private bool _waitingForVisualConsequence = false;
+        
+        /// <summary>
+        /// Última respuesta seleccionada (para mostrar consecuencias visuales)
+        /// </summary>
+        private Answer _lastSelectedAnswer = null;
+        
+        /// <summary>
         /// Se llama cuando termina un diálogo
         /// </summary>
         private void OnDialogFinished()
         {
-            // Si estamos esperando que termine una reacción, continuar con la siguiente pregunta
+            // Si estamos esperando que termine una reacción, mostrar consecuencia visual o continuar
             if (_waitingForReactionToFinish)
             {
                 _waitingForReactionToFinish = false;
+                
+                // Verificar si hay consecuencia visual que mostrar
+                if (_lastSelectedAnswer != null && !string.IsNullOrEmpty(_lastSelectedAnswer.VisualConsequenceText))
+                {
+                    _waitingForVisualConsequence = true;
+                    ShowVisualConsequence(_lastSelectedAnswer.VisualConsequenceText);
+                    _lastSelectedAnswer = null; // Limpiar después de usar
+                    return;
+                }
+                
+                _lastSelectedAnswer = null; // Limpiar
                 GD.Print("[InterviewManager] Reacción terminada, continuando con siguiente pregunta");
                 ShowNextQuestion();
             }
+            // Si estamos esperando que termine una consecuencia visual, continuar
+            else if (_waitingForVisualConsequence)
+            {
+                _waitingForVisualConsequence = false;
+                GD.Print("[InterviewManager] Consecuencia visual terminada, continuando con siguiente pregunta");
+                ShowNextQuestion();
+            }
         }
+        
 
         /// <summary>
         /// Configura el background de la oficina
@@ -146,7 +179,17 @@ namespace TheLastInterview.Interview.Managers
             _stateManager.Reset();
             _usedMinigames.Clear(); // Limpiar minijuegos usados al iniciar nueva partida
             _questionsShown = 0; // Resetear contador de preguntas
-            ShowNextQuestion();
+            _rumorShown = false; // Resetear flag de rumor
+            
+            // Seleccionar rumor aleatorio para esta partida
+            var rumor = OfficeRumorManager.GetRandomRumor();
+            if (rumor != null)
+            {
+                _stateManager.GameState.ActiveRumor = rumor;
+            }
+            
+            // Mostrar el rumor al inicio
+            ShowRumorIfAvailable();
         }
 
         /// <summary>
@@ -163,6 +206,13 @@ namespace TheLastInterview.Interview.Managers
                 return;
             }
 
+            // Verificar si mostrar un evento meta-oficina aleatorio (18% de probabilidad)
+            if (_eventRandom.NextDouble() < EVENT_PROBABILITY)
+            {
+                ShowRandomOfficeEvent();
+                return; // El evento mostrará la pregunta después
+            }
+
             // Solo permitir minijuegos si ya se han mostrado al menos 3 preguntas
             bool canShowMinigame = _questionsShown >= MIN_QUESTIONS_BEFORE_MINIGAME;
             
@@ -173,6 +223,13 @@ namespace TheLastInterview.Interview.Managers
             }
             else
             {
+                // Verificar si mostrar una interrupción incómoda (15% de probabilidad)
+                if (_eventRandom.NextDouble() < INTERRUPTION_PROBABILITY)
+                {
+                    ShowRandomInterruption();
+                    return; // La interrupción mostrará la pregunta después
+                }
+                
                 // Convertir pregunta a DialogEntry y mostrar directamente
                 ShowQuestionAsDialog(_currentQuestion);
             }
@@ -291,9 +348,15 @@ namespace TheLastInterview.Interview.Managers
                             _waitingForReactionToFinish = true;
                             ShowInterviewerReaction(answer.ReactionText);
                         }
+                        else if (!string.IsNullOrEmpty(answer.VisualConsequenceText))
+                        {
+                            // Si no hay reacción pero hay consecuencia visual, mostrarla
+                            _waitingForVisualConsequence = true;
+                            ShowVisualConsequence(answer.VisualConsequenceText);
+                        }
                         else
                         {
-                            // Si no hay reacción, continuar inmediatamente con siguiente pregunta
+                            // Si no hay reacción ni consecuencia, continuar inmediatamente con siguiente pregunta
                             ShowNextQuestion();
                         }
                     },
@@ -333,6 +396,7 @@ namespace TheLastInterview.Interview.Managers
             }
 
             var selectedAnswer = _currentQuestion.Answers[answerIndex];
+            _lastSelectedAnswer = selectedAnswer; // Guardar para mostrar consecuencias visuales
 
             // Aplicar respuesta al estado
             _stateManager.ApplyAnswer(selectedAnswer);
@@ -404,6 +468,150 @@ namespace TheLastInterview.Interview.Managers
             {
                 _background.StartPulseEffect(0.1f, 0.6f, 0.05f);
             }
+        }
+
+        /// <summary>
+        /// Muestra un evento meta-oficina aleatorio
+        /// </summary>
+        private void ShowRandomOfficeEvent()
+        {
+            var officeEvent = OfficeEventManager.GetRandomEvent();
+            if (officeEvent == null || DialogSystem.Instance == null)
+            {
+                ShowQuestionAsDialog(_currentQuestion);
+                return;
+            }
+
+            var eventEntry = new DialogEntry(
+                officeEvent.Text,
+                "Oficina",
+                null,
+                null,
+                null,
+                null
+            );
+
+            // Después del evento, mostrar la pregunta
+            var dialogList = new List<DialogEntry> { eventEntry };
+            DialogSystem.Instance.StartDialog(dialogList);
+            
+            // Conectar para mostrar la pregunta después del evento
+            DialogSystem.Instance.DialogFinished += OnOfficeEventFinished;
+        }
+
+        /// <summary>
+        /// Se llama cuando termina un evento meta-oficina
+        /// </summary>
+        private void OnOfficeEventFinished()
+        {
+            DialogSystem.Instance.DialogFinished -= OnOfficeEventFinished;
+            ShowQuestionAsDialog(_currentQuestion);
+        }
+
+        /// <summary>
+        /// Muestra una interrupción incómoda aleatoria
+        /// </summary>
+        private void ShowRandomInterruption()
+        {
+            var interruption = OfficeInterruptionManager.GetRandomInterruption();
+            if (interruption == null || DialogSystem.Instance == null)
+            {
+                ShowQuestionAsDialog(_currentQuestion);
+                return;
+            }
+
+            var interruptionEntry = new DialogEntry(
+                interruption.Text,
+                interruption.Source,
+                null,
+                null,
+                null,
+                null
+            );
+
+            // Después de la interrupción, mostrar la pregunta
+            var dialogList = new List<DialogEntry> { interruptionEntry };
+            DialogSystem.Instance.StartDialog(dialogList);
+            
+            // Conectar para mostrar la pregunta después de la interrupción
+            DialogSystem.Instance.DialogFinished += OnInterruptionFinished;
+        }
+
+        /// <summary>
+        /// Se llama cuando termina una interrupción
+        /// </summary>
+        private void OnInterruptionFinished()
+        {
+            DialogSystem.Instance.DialogFinished -= OnInterruptionFinished;
+            ShowQuestionAsDialog(_currentQuestion);
+        }
+
+        /// <summary>
+        /// Muestra el rumor de la oficina al inicio de la partida
+        /// </summary>
+        private void ShowRumorIfAvailable()
+        {
+            if (_rumorShown || _stateManager.GameState.ActiveRumor == null || DialogSystem.Instance == null)
+            {
+                // Si ya se mostró o no hay rumor, continuar con la primera pregunta
+                if (!_rumorShown)
+                {
+                    ShowNextQuestion();
+                }
+                return;
+            }
+
+            _rumorShown = true;
+
+            var rumorEntry = new DialogEntry(
+                _stateManager.GameState.ActiveRumor.Text,
+                "Rumor",
+                null,
+                null,
+                null,
+                null
+            );
+
+            // Después del rumor, mostrar la primera pregunta
+            var dialogList = new List<DialogEntry> { rumorEntry };
+            DialogSystem.Instance.StartDialog(dialogList);
+            
+            // Conectar para mostrar la primera pregunta después del rumor
+            DialogSystem.Instance.DialogFinished += OnRumorFinished;
+        }
+
+        /// <summary>
+        /// Se llama cuando termina el rumor
+        /// </summary>
+        private void OnRumorFinished()
+        {
+            DialogSystem.Instance.DialogFinished -= OnRumorFinished;
+            ShowNextQuestion();
+        }
+
+        /// <summary>
+        /// Muestra una consecuencia visual mínima (solo texto descriptivo)
+        /// </summary>
+        private void ShowVisualConsequence(string consequenceText)
+        {
+            if (string.IsNullOrEmpty(consequenceText) || DialogSystem.Instance == null)
+            {
+                ShowNextQuestion();
+                return;
+            }
+
+            var consequenceEntry = new DialogEntry(
+                consequenceText,
+                "Sistema",
+                null,
+                null,
+                null,
+                null
+            );
+
+            // Después de la consecuencia, continuar con la siguiente pregunta
+            var dialogList = new List<DialogEntry> { consequenceEntry };
+            DialogSystem.Instance.StartDialog(dialogList);
         }
 
         /// <summary>

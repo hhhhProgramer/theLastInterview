@@ -41,6 +41,11 @@ namespace TheLastInterview.Interview.Models
         public System.Collections.Generic.List<AnswerType> AnswerTypeHistory { get; set; } = new System.Collections.Generic.List<AnswerType>();
 
         /// <summary>
+        /// Rumor activo de la oficina para esta partida
+        /// </summary>
+        public OfficeRumor ActiveRumor { get; set; }
+
+        /// <summary>
         /// Calcula el total de puntos
         /// </summary>
         public int TotalPoints => NormalPoints + ChaosPoints;

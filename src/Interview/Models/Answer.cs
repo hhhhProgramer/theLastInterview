@@ -31,15 +31,21 @@ namespace TheLastInterview.Interview.Models
         public string ReactionText { get; set; }
 
         /// <summary>
+        /// Texto descriptivo de consecuencia visual mínima (solo texto, sin gráficos)
+        /// </summary>
+        public string VisualConsequenceText { get; set; }
+
+        /// <summary>
         /// Constructor
         /// </summary>
-        public Answer(string text, int normalPoints, int chaosPoints, AnswerType type, string reactionText = "")
+        public Answer(string text, int normalPoints, int chaosPoints, AnswerType type, string reactionText = "", string visualConsequenceText = "")
         {
             Text = text;
             NormalPoints = normalPoints;
             ChaosPoints = chaosPoints;
             Type = type;
             ReactionText = reactionText;
+            VisualConsequenceText = visualConsequenceText;
         }
     }
 

@@ -670,7 +670,147 @@ Usar el sistema de audio existente del proyecto:
 
 ---
 
-## 14. Conclusión
+## 14. Sistema de Eventos y Humor Absurdo
+
+### 14.1 Eventos "Meta-Oficina" Aleatorios
+
+Son textos cortos que interrumpen el flujo como si algo absurdo pasara en la oficina. No afectan mecánicas, solo agregan humor inesperado.
+
+**Características:**
+- Aparecen aleatoriamente entre preguntas (probabilidad: 18%)
+- Solo muestran texto, sin gráficos adicionales
+- No afectan el estado del juego ni las puntuaciones
+- Rompen la tensión y añaden variedad
+
+**Ejemplos de Eventos:**
+- "Un empleado pasa corriendo con un extintor. Nadie comenta nada."
+- "Se escucha a alguien gritar: '¡Deja mi lonche!' y luego un golpe seco."
+- "Un gerente aparece, te mira como si te conociera, se va sin decir nada."
+- "El entrevistador recibe un mensaje, sonríe demasiado y finge que nada pasó."
+- "Una planta de oficina se cae sola. Todos la ignoran."
+- "Se escucha un 'ping' del sistema. Nadie sabe de dónde vino."
+
+**Implementación:**
+- Lista de eventos aleatorios almacenados en un sistema de eventos
+- Se muestran como diálogos breves del "Sistema" o "Oficina"
+- Aparecen antes de mostrar la siguiente pregunta
+
+### 14.2 Preguntas que se Contradicen entre Sí
+
+Preguntas diseñadas para generar humor y variedad mediante contradicciones naturales.
+
+**Características:**
+- Preguntas que se contradicen con otras preguntas anteriores
+- Generan comedia natural, no forzada
+- No requieren mecánicas nuevas, solo contenido
+
+**Ejemplos de Preguntas Contradictorias:**
+- Pregunta 4: "¿Por qué deberíamos contratar a alguien tan seguro de sí mismo?"
+- Pregunta 7: "¿Por qué pareces tan poco seguro de ti mismo?"
+- "Define tu mayor fortaleza."
+- "Define por qué esa fortaleza es en realidad un problema."
+- "¿Eres una persona proactiva?"
+- "¿Por qué eres tan reactivo en lugar de proactivo?"
+
+**Implementación:**
+- Las preguntas se agregan al sistema de preguntas existente
+- El sistema puede detectar contradicciones y mostrar reacciones especiales
+- No requiere cambios en la mecánica, solo contenido adicional
+
+### 14.3 Interrupciones Incómodas
+
+Durante la entrevista aparecen mensajes tipo notificación, pero absurdos.
+
+**Características:**
+- Aparecen como notificaciones/pop-ups durante la entrevista
+- Son completamente absurdos y cómicos
+- Solo muestran texto, sin gráficos adicionales
+- Interrumpen brevemente el flujo
+
+**Ejemplos de Interrupciones:**
+- Notificación del sistema: "Error. El entrevistador ha dejado de funcionar."
+- Pop-up: "Advertencia: tu CV contiene demasiadas mentiras."
+- Llamada telefónica: "Mamá del entrevistador: ¿sí le preguntaste si toma mucho?"
+- "Sistema: El entrevistador necesita actualizarse. ¿Desea continuar?"
+- "Alerta: Se detectó una sonrisa genuina. Procediendo con protocolo anti-felicidad."
+
+**Implementación:**
+- Sistema de notificaciones que se integra con el DialogSystem
+- Aparecen aleatoriamente durante preguntas o entre preguntas (15% de probabilidad)
+- Se muestran como diálogos breves con un personaje "Sistema" o fuente especial
+
+### 14.4 Respuestas con Consecuencias Visuales Mínimas
+
+SIN gráficos extra, solo texto que describa cambios absurdos en el entorno.
+
+**Características:**
+- Las respuestas generan descripciones de cambios visuales
+- Solo texto descriptivo, no gráficos reales
+- Da la sensación de que el mundo reacciona a las respuestas
+- Añade profundidad sin requerir assets adicionales
+
+**Ejemplos de Consecuencias:**
+- Respuesta sarcástica → "El entrevistador toma nota en una hoja marcada 'venganza'."
+- Respuesta seria → "El entrevistador bosteza y revisa su celular."
+- Respuesta absurda → "Un foco parpadea, nadie menciona nada."
+- Respuesta agresiva → "El monitor CRT muestra 'ANÁLISIS DE AMENAZA EN CURSO'."
+- Respuesta zen → "La planta muerta parece moverse ligeramente. Probablemente el viento."
+
+**Implementación:**
+- Cada respuesta puede tener un campo `VisualConsequenceText`
+- Se muestra después de la reacción del entrevistador
+- Se integra en el flujo de diálogo existente
+
+### 14.5 Rumores de la Oficina
+
+Cada partida se sortea 1 rumor aleatorio que modifica algunos diálogos y añade contexto.
+
+**Características:**
+- Un rumor aleatorio se selecciona al inicio de cada partida
+- El rumor modifica algunos diálogos y reacciones
+- Hace que cada partida se sienta distinta
+- No requiere gráficos, solo texto
+
+**Ejemplos de Rumores:**
+- "Dicen que el entrevistador despidió a alguien por pestañear demasiado."
+- "Se rumora que hoy están de malas porque perdió en el fantasy."
+- "Cuentan que la empresa usa sillas diferentes para saber quién miente."
+- "Se dice que el último candidato desapareció después de la pregunta 5."
+- "Rumor: El entrevistador tiene un gemelo idéntico que también entrevista."
+
+**Implementación:**
+- Sistema de rumores que se selecciona al inicio de la partida
+- Los rumores se almacenan en el GameState
+- Algunas preguntas y reacciones pueden referenciar el rumor activo
+- Se muestra el rumor al inicio de la entrevista o entre preguntas
+
+### 14.6 Preguntas Incómodas que no Llevan a Nada
+
+Preguntas que son el corazón del humor, verosímiles pero absurdas.
+
+**Características:**
+- Preguntas que parecen reales pero son completamente absurdas
+- No llevan a nada específico, solo generan humor
+- Son el corazón del humor del juego
+- No son forzadas si parecen verosímiles pero absurdas
+
+**Ejemplos de Preguntas Incómodas:**
+- "¿Qué prefieres: llegar tarde o irte temprano?"
+- "¿Cómo reaccionas cuando te ignoran? … ¿Qué? … Perdón, ¿qué dijiste?"
+- "Si tu ex fuera tu jefe, ¿cuánto durarías en el puesto?"
+- "¿Cuánto café necesitas para no renunciar hoy mismo?"
+- "¿Qué opinas de la frase: 'Aquí no explotamos a nadie, solo motivamos fuerte'?"
+- "¿Prefieres trabajar con música o en silencio? (Nota: aquí no hay música ni silencio.)"
+- "¿Cómo manejas el estrés? (Pregunta mientras el sistema se sobrecarga.)"
+
+**Implementación:**
+- Se agregan al sistema de preguntas existente
+- Pueden tener respuestas normales o absurdas
+- No requieren mecánicas especiales, solo contenido
+
+---
+
+## 15. Conclusión
 
 **The Last Job Interview Simulator** es un juego narrativo simple pero efectivo que usa humor absurdo para satirizar el proceso de contratación corporativo. Con un sistema de estados ocultos, múltiples endings y preguntas hilarantes, el juego ofrece una experiencia única y rejugable que resuena con cualquiera que haya pasado por una entrevista laboral.
 
