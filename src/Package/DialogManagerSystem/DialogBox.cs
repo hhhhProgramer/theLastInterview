@@ -1933,7 +1933,7 @@ namespace Package.UI
 		/// </summary>
 		private void OnTextTimerTimeout()
 		{
-			if (!_isTyping || _currentCharIndex >= _fullText.Length)
+			if (!_isTyping)
 			{
 				_textTimer.Stop();
 				_isTyping = false;
@@ -1947,7 +1947,8 @@ namespace Package.UI
 				return;
 			}
 
-			// Usar visible_characters para el efecto de escritura
+			// CRÍTICO: Mostrar el carácter actual ANTES de incrementar
+			// Esto asegura que el último carácter (incluyendo "?") siempre se muestre
 			_dialogText.VisibleCharacters = _currentCharIndex;
 			
 			// MEJORADO: Actualizar también la sombra para que coincida con el efecto de escritura
@@ -1957,6 +1958,27 @@ namespace Package.UI
 			}
 			
 			_currentCharIndex++;
+			
+			// CRÍTICO: Verificar si terminamos DESPUÉS de mostrar el último carácter
+			// Si ya mostramos todos los caracteres, detener
+			if (_currentCharIndex > _fullText.Length)
+			{
+				_textTimer.Stop();
+				_isTyping = false;
+				// Asegurar que todos los caracteres estén visibles (por si acaso)
+				_dialogText.VisibleCharacters = -1; // -1 muestra todos los caracteres
+				if (_dialogTextShadow != null && _dialogTextShadow.Visible)
+				{
+					_dialogTextShadow.VisibleCharacters = -1;
+				}
+				// Mostrar el indicador parpadeante cuando termine el texto
+				if (_continueIndicator != null)
+				{
+					_continueIndicator.Visible = true;
+					_continueIndicator.Modulate = new Color(1.0f, 1.0f, 1.0f, 1.0f); // Asegurar opacidad completa al iniciar
+					_blinkTimer.Start();
+				}
+			}
 		}
 		
 		/// <summary>
