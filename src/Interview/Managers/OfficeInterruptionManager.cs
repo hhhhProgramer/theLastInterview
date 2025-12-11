@@ -24,16 +24,32 @@ namespace TheLastInterview.Interview.Managers
         {
             _interruptions = new List<OfficeInterruption>
             {
-                new OfficeInterruption("interrupt_01", "Error. El entrevistador ha dejado de funcionar.", "Sistema"),
-                new OfficeInterruption("interrupt_02", "Advertencia: tu CV contiene demasiadas mentiras.", "Pop-up"),
-                new OfficeInterruption("interrupt_03", "Mamá del entrevistador: ¿sí le preguntaste si toma mucho?", "Llamada"),
-                new OfficeInterruption("interrupt_04", "Sistema: El entrevistador necesita actualizarse. ¿Desea continuar?", "Sistema"),
-                new OfficeInterruption("interrupt_05", "Alerta: Se detectó una sonrisa genuina. Procediendo con protocolo anti-felicidad.", "Sistema"),
-                new OfficeInterruption("interrupt_06", "Notificación: El último candidato aún está esperando en la sala. Desde ayer.", "Sistema"),
-                new OfficeInterruption("interrupt_07", "Recordatorio: La entrevista debería haber terminado hace 3 horas.", "Calendario"),
-                new OfficeInterruption("interrupt_08", "Mensaje: '¿Ya terminaste? Tengo hambre.' - Entrevistador anterior", "Mensaje"),
-                new OfficeInterruption("interrupt_09", "Alerta de seguridad: Se detectaron demasiadas respuestas coherentes.", "Sistema"),
-                new OfficeInterruption("interrupt_10", "Actualización: El sistema de evaluación ha sido reemplazado por una moneda.", "Sistema")
+                // Pop-ups simulados
+                new OfficeInterruption("interrupt_01", "Pop-up: \"Advertencia: tu seguridad laboral está en riesgo.\"", "Pop-up"),
+                new OfficeInterruption("interrupt_02", "Pop-up: \"Fallo crítico: honestidad detectada.\"", "Pop-up"),
+                new OfficeInterruption("interrupt_03", "Pop-up: \"Sistema del entrevistador: requiere actualización emocional.\"", "Pop-up"),
+                new OfficeInterruption("interrupt_04", "Pop-up: \"Su respuesta fue enviada a Recursos Humanos para análisis forense.\"", "Pop-up"),
+                new OfficeInterruption("interrupt_05", "Advertencia: tu CV contiene demasiadas mentiras.", "Pop-up"),
+                
+                // Interrupciones del entrevistador
+                new OfficeInterruption("interrupt_06", "Perdón, ¿puedes repetir? Estaba revisando memes.", "Entrevistador"),
+                new OfficeInterruption("interrupt_07", "¿Puedes hablar más lento? Soy pésimo fingiendo interés.", "Entrevistador"),
+                new OfficeInterruption("interrupt_08", "Esa respuesta… ¿es en serio?", "Entrevistador"),
+                new OfficeInterruption("interrupt_09", "No entiendo tu CV. Aunque para ser sincero, tampoco leí el de los demás.", "Entrevistador"),
+                new OfficeInterruption("interrupt_10", "Voy a fingir que no escuché eso. Por el bien de ambos.", "Entrevistador"),
+                
+                // Interrupciones del entorno
+                new OfficeInterruption("interrupt_11", "Tu silla hace un ruido extraño. Todo el mundo mira.", "Entorno"),
+                new OfficeInterruption("interrupt_12", "Suena el teléfono. Nadie lo contesta.", "Entorno"),
+                new OfficeInterruption("interrupt_13", "El entrevistador estornuda; su computadora crashea al mismo tiempo.", "Entorno"),
+                new OfficeInterruption("interrupt_14", "La puerta se abre sola… probablemente el aire.", "Entorno"),
+                new OfficeInterruption("interrupt_15", "La luz se apaga y vuelve. No pregunten.", "Entorno"),
+                
+                // Interrupciones del sistema
+                new OfficeInterruption("interrupt_16", "Error. El entrevistador ha dejado de funcionar.", "Sistema"),
+                new OfficeInterruption("interrupt_17", "Sistema: El entrevistador necesita actualizarse. ¿Desea continuar?", "Sistema"),
+                new OfficeInterruption("interrupt_18", "Alerta: Se detectó una sonrisa genuina. Procediendo con protocolo anti-felicidad.", "Sistema"),
+                new OfficeInterruption("interrupt_19", "Mamá del entrevistador: ¿sí le preguntaste si toma mucho?", "Llamada")
             };
         }
 
