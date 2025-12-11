@@ -79,7 +79,7 @@ namespace TheLastInterview.Interview.Minigames
             titleLabel.HorizontalAlignment = HorizontalAlignment.Center;
             float titleSize = FontManager.GetScaledSize(TextType.Subtitle);
             titleLabel.AddThemeFontSizeOverride("font_size", (int)titleSize);
-            titleLabel.AddThemeColorOverride("font_color", new Color(0.8f, 0.8f, 0.2f, 1.0f));
+            titleLabel.AddThemeColorOverride("font_color", new Color(1.0f, 0.9f, 0.0f, 1.0f)); // Amarillo brillante
             mainContainer.AddChild(titleLabel);
             
             // Contador
@@ -174,9 +174,21 @@ namespace TheLastInterview.Interview.Minigames
                 {
                     _gameActive = false;
                     _changeTimer.Stop();
-                    _fileLabel.Text = "¡Completado! Has archivado 5 archivos correctamente.";
+                    
+                    // Ocultar botones
                     _trayAButton.Visible = false;
                     _trayBButton.Visible = false;
+                    
+                    // Mostrar mensaje de completado con mejor formato
+                    _fileLabel.Text = "¡Completado! Has archivado 5 archivos correctamente.";
+                    _fileLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
+                    _fileLabel.AddThemeColorOverride("font_color", new Color(1.0f, 0.9f, 0.0f, 1.0f)); // Amarillo brillante
+                    _fileLabel.AddThemeFontSizeOverride("font_size", (int)(FontManager.GetScaledSize(TextType.Body) * 1.1f));
+                    
+                    // Centrar el mensaje mejor
+                    _fileLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                    _fileLabel.VerticalAlignment = VerticalAlignment.Center;
+                    
                     GetTree().CreateTimer(1.5f).Timeout += () => {
                         _continueButton.Visible = true;
                     };

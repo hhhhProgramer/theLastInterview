@@ -11,7 +11,7 @@ namespace TheLastInterview.Scenes
     /// </summary>
     public partial class MinigamesMenu : Control
     {
-        private VBoxContainer _buttonsContainer;
+        private Container _buttonsContainer; // Cambiado a Container para soportar GridContainer
         private Button _backButton;
         private SceneBackground _background;
         private BaseMinigame _currentMinigame;
@@ -89,11 +89,15 @@ namespace TheLastInterview.Scenes
             spacer.CustomMinimumSize = new Vector2(0, 30);
             mainContainer.AddChild(spacer);
             
-            // Contenedor de botones de minijuegos
-            _buttonsContainer = new VBoxContainer();
-            _buttonsContainer.Name = "ButtonsContainer";
-            _buttonsContainer.AddThemeConstantOverride("separation", 15);
-            mainContainer.AddChild(_buttonsContainer);
+            // Contenedor de botones de minijuegos (Grid para que quepan todos)
+            var gridContainer = new GridContainer();
+            gridContainer.Name = "ButtonsContainer";
+            gridContainer.Columns = 2; // 2 columnas para que quepan mejor
+            gridContainer.AddThemeConstantOverride("h_separation", 20);
+            gridContainer.AddThemeConstantOverride("v_separation", 15);
+            mainContainer.AddChild(gridContainer);
+            
+            _buttonsContainer = gridContainer; // Mantener referencia para compatibilidad
             
             // Crear botones para cada minijuego
             CreateMinigameButtons();
@@ -114,32 +118,61 @@ namespace TheLastInterview.Scenes
         }
         
         /// <summary>
-        /// Crea los botones para cada minijuego
+        /// Crea los botones para cada minijuego con iconos
         /// </summary>
         private void CreateMinigameButtons()
         {
-            var minigameTypes = new Dictionary<MinigameManager.MinigameType, string>
+            var minigameData = new Dictionary<MinigameManager.MinigameType, (string name, string icon)>
             {
-                { MinigameManager.MinigameType.LieDetector, "Detector de Mentiras" },
-                { MinigameManager.MinigameType.TypeName, "Escribe tu Nombre" },
-                { MinigameManager.MinigameType.OrganizeDocuments, "Organiza Documentos" },
-                { MinigameManager.MinigameType.TechnicalTest, "Prueba Técnica" },
-                { MinigameManager.MinigameType.StayCalm, "Mantén la Calma" },
-                { MinigameManager.MinigameType.ArchiveFiles, "Archivar Archivos" },
-                { MinigameManager.MinigameType.TypeReport, "Escribir Reporte" },
-                { MinigameManager.MinigameType.AnswerPhone, "Responder Teléfono" },
-                { MinigameManager.MinigameType.DeleteSpam, "Eliminar Spam" },
-                { MinigameManager.MinigameType.FrozenSystem, "Sistema Congelado" }
+                { MinigameManager.MinigameType.LieDetector, ("Detector de Mentiras", "🔍") },
+                { MinigameManager.MinigameType.TypeName, ("Escribe tu Nombre", "⌨️") },
+                { MinigameManager.MinigameType.OrganizeDocuments, ("Organiza Documentos", "📁") },
+                { MinigameManager.MinigameType.TechnicalTest, ("Prueba Técnica", "💻") },
+                { MinigameManager.MinigameType.StayCalm, ("Mantén la Calma", "🧘") },
+                { MinigameManager.MinigameType.ArchiveFiles, ("Archivar Archivos", "📂") },
+                { MinigameManager.MinigameType.TypeReport, ("Escribir Reporte", "📝") },
+                { MinigameManager.MinigameType.AnswerPhone, ("Responder Teléfono", "📞") },
+                { MinigameManager.MinigameType.DeleteSpam, ("Eliminar Spam", "🗑️") },
+                { MinigameManager.MinigameType.FrozenSystem, ("Sistema Congelado", "❄️") }
             };
             
             float buttonFontSize = FontManager.GetScaledSize(TextType.Body);
             
-            foreach (var kvp in minigameTypes)
+            foreach (var kvp in minigameData)
             {
+                // Crear botón con icono y texto
                 var button = new Button();
-                button.Text = kvp.Value;
-                button.CustomMinimumSize = new Vector2(400, 50);
+                button.Text = $"{kvp.Value.icon} {kvp.Value.name}"; // Icono + texto directamente en el botón
+                button.CustomMinimumSize = new Vector2(300, 60); // Más compacto para que quepan 2 por línea
                 button.AddThemeFontSizeOverride("font_size", (int)buttonFontSize);
+                
+                // Estilo mejorado para los botones
+                var styleBox = new StyleBoxFlat();
+                styleBox.BgColor = new Color(0.2f, 0.2f, 0.2f, 0.95f);
+                styleBox.BorderColor = new Color(0.5f, 0.5f, 0.5f, 1.0f);
+                styleBox.BorderWidthLeft = 2;
+                styleBox.BorderWidthTop = 2;
+                styleBox.BorderWidthRight = 2;
+                styleBox.BorderWidthBottom = 2;
+                styleBox.CornerRadiusTopLeft = 8;
+                styleBox.CornerRadiusTopRight = 8;
+                styleBox.CornerRadiusBottomLeft = 8;
+                styleBox.CornerRadiusBottomRight = 8;
+                button.AddThemeStyleboxOverride("normal", styleBox);
+                
+                // Hover style
+                var hoverStyle = new StyleBoxFlat();
+                hoverStyle.BgColor = new Color(0.3f, 0.3f, 0.3f, 0.95f);
+                hoverStyle.BorderColor = new Color(0.7f, 0.7f, 0.7f, 1.0f);
+                hoverStyle.BorderWidthLeft = 2;
+                hoverStyle.BorderWidthTop = 2;
+                hoverStyle.BorderWidthRight = 2;
+                hoverStyle.BorderWidthBottom = 2;
+                hoverStyle.CornerRadiusTopLeft = 8;
+                hoverStyle.CornerRadiusTopRight = 8;
+                hoverStyle.CornerRadiusBottomLeft = 8;
+                hoverStyle.CornerRadiusBottomRight = 8;
+                button.AddThemeStyleboxOverride("hover", hoverStyle);
                 
                 MinigameManager.MinigameType minigameType = kvp.Key;
                 button.Pressed += () => OnMinigameSelected(minigameType);

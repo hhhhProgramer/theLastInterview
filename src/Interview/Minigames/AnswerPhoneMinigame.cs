@@ -203,6 +203,41 @@ namespace TheLastInterview.Interview.Minigames
         {
             if (!_gameActive || _phoneAnswered) return;
             
+            // 40% de probabilidad de que NO cambie, 60% de que cambie aleatoriamente
+            bool shouldChange = _random.Next(0, 10) < 6; // 60% de probabilidad
+            
+            if (shouldChange)
+            {
+                // Cambiar a otro teléfono aleatorio
+                int newPhone = _random.Next(0, 3);
+                while (newPhone == _currentRingingPhone)
+                {
+                    newPhone = _random.Next(0, 3);
+                }
+                _currentRingingPhone = newPhone;
+                _changeCount++;
+                UpdatePhoneDisplay();
+                
+                // Mostrar mensaje de que cambió
+                _instructionLabel.Text = $"El teléfono cambió a {(char)('A' + _currentRingingPhone)}";
+                _instructionLabel.AddThemeColorOverride("font_color", new Color(1.0f, 0.8f, 0.2f, 1.0f));
+                
+                // Después de un momento, verificar si el click fue correcto
+                GetTree().CreateTimer(0.3f).Timeout += () => {
+                    CheckPhoneAnswer(phoneIndex);
+                };
+            }
+            else
+            {
+                // No cambió, verificar respuesta inmediatamente
+                CheckPhoneAnswer(phoneIndex);
+            }
+        }
+        
+        private void CheckPhoneAnswer(int phoneIndex)
+        {
+            if (_phoneAnswered) return;
+            
             _phoneAnswered = true;
             _blinkTimer.Stop();
             
