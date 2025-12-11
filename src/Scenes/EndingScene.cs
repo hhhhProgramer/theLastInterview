@@ -60,12 +60,18 @@ namespace TheLastInterview.Scenes
             var viewport = GetViewport();
             var viewportSize = viewport?.GetVisibleRect().Size ?? new Vector2(2560, 1440);
 
-            // Contenedor principal centrado
+            // Contenedor principal centrado usando CenterContainer para centrado perfecto
+            var centerContainer = new CenterContainer();
+            centerContainer.Name = "CenterContainer";
+            centerContainer.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
+            AddChild(centerContainer);
+            
             var mainContainer = new VBoxContainer();
             mainContainer.Name = "MainContainer";
-            mainContainer.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
             mainContainer.CustomMinimumSize = new Vector2(800, 600);
-            AddChild(mainContainer);
+            mainContainer.SizeFlagsHorizontal = Control.SizeFlags.ShrinkCenter;
+            mainContainer.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
+            centerContainer.AddChild(mainContainer);
 
             // Título del ending
             _titleLabel = new Label();
