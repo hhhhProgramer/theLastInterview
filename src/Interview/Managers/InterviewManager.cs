@@ -45,22 +45,69 @@ namespace TheLastInterview.Interview.Managers
             // Configurar entrevistador visual
             SetupInterviewer();
 
+            // Conectar señal de DialogFinished para detectar cuando termina un diálogo
+            if (DialogSystem.Instance != null)
+            {
+                DialogSystem.Instance.DialogFinished += OnDialogFinished;
+            }
+
             // Iniciar la entrevista
             StartInterview();
         }
 
         /// <summary>
+        /// Flag para indicar que estamos esperando que termine una reacción
+        /// </summary>
+        private bool _waitingForReactionToFinish = false;
+        
+        /// <summary>
+        /// Se llama cuando termina un diálogo
+        /// </summary>
+        private void OnDialogFinished()
+        {
+            // Si estamos esperando que termine una reacción, continuar con la siguiente pregunta
+            if (_waitingForReactionToFinish)
+            {
+                _waitingForReactionToFinish = false;
+                GD.Print("[InterviewManager] Reacción terminada, continuando con siguiente pregunta");
+                ShowNextQuestion();
+            }
+        }
+
+        /// <summary>
         /// Configura el background de la oficina
+        /// Siguiendo el patrón de HallwaysScene para consistencia
         /// </summary>
         private void SetupBackground()
         {
-            var canvasLayer = new CanvasLayer();
-            canvasLayer.Layer = -1; // Detrás de todo
-            AddChild(canvasLayer);
-
+            // Crear CanvasLayer para background (detrás de todo)
+            var backgroundCanvasLayer = new CanvasLayer();
+            backgroundCanvasLayer.Name = "BackgroundCanvasLayer";
+            backgroundCanvasLayer.Layer = -1; // Detrás de todo
+            AddChild(backgroundCanvasLayer);
+            
+            // Crear Control contenedor dentro del CanvasLayer
+            var backgroundContainer = new Control();
+            backgroundContainer.Name = "BackgroundContainer";
+            backgroundContainer.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
+            
+            // CRÍTICO: No bloquear clicks - permitir que pasen a través
+            backgroundContainer.MouseFilter = Control.MouseFilterEnum.Ignore;
+            
+            // Obtener tamaño del viewport y establecer tamaño mínimo
+            var viewport = GetViewport();
+            var viewportSize = viewport?.GetVisibleRect().Size ?? new Vector2(2560, 1440);
+            backgroundContainer.CustomMinimumSize = viewportSize;
+            
+            backgroundCanvasLayer.AddChild(backgroundContainer);
+            
+            // Crear SceneBackground usando package
             _background = new SceneBackground();
+            // Usar el fondo de oficina
             _background.SetBackground("res://src/Image/Background/backgroun_office.png", new Color(0.1f, 0.1f, 0.1f, 1.0f));
-            canvasLayer.AddChild(_background);
+            backgroundContainer.AddChild(_background);
+            
+            GD.Print("[InterviewManager] ✅ Background de oficina configurado");
         }
 
         /// <summary>
@@ -127,11 +174,28 @@ namespace TheLastInterview.Interview.Managers
                 var answer = question.Answers[i];
                 int answerIndex = i; // Capturar índice para el closure
 
+                // Crear opción de diálogo
                 var dialogOption = new DialogOption(
                     answer.Text,
-                    () => OnAnswerSelected(answerIndex),
-                    null
+                    () => {
+                        // Aplicar respuesta inmediatamente cuando se selecciona
+                        ProcessAnswer(answerIndex);
+                        
+                        // Si hay reacción, mostrarla y esperar a que termine
+                        if (!string.IsNullOrEmpty(answer.ReactionText))
+                        {
+                            _waitingForReactionToFinish = true;
+                            ShowInterviewerReaction(answer.ReactionText);
+                        }
+                        else
+                        {
+                            // Si no hay reacción, continuar inmediatamente con siguiente pregunta
+                            ShowNextQuestion();
+                        }
+                    },
+                    null // No usar NextDialogs - manejamos el flujo manualmente
                 );
+                
                 dialogOptions.Add(dialogOption);
             }
 
@@ -154,9 +218,9 @@ namespace TheLastInterview.Interview.Managers
         }
 
         /// <summary>
-        /// Se llama cuando el jugador selecciona una respuesta
+        /// Procesa una respuesta seleccionada (aplica puntos y marca como respondida)
         /// </summary>
-        private void OnAnswerSelected(int answerIndex)
+        private void ProcessAnswer(int answerIndex)
         {
             if (_currentQuestion == null || answerIndex < 0 || answerIndex >= _currentQuestion.Answers.Count)
             {
@@ -178,15 +242,6 @@ namespace TheLastInterview.Interview.Managers
                 EmitSignal(SignalName.InterviewStateChanged, (int)newState);
                 OnStateChanged(newState);
             }
-
-            // Mostrar reacción del entrevistador si hay
-            if (!string.IsNullOrEmpty(selectedAnswer.ReactionText))
-            {
-                ShowInterviewerReaction(selectedAnswer.ReactionText);
-            }
-
-            // Esperar un momento y mostrar siguiente pregunta
-            GetTree().CreateTimer(1.5f).Timeout += () => ShowNextQuestion();
         }
 
         /// <summary>
@@ -205,6 +260,7 @@ namespace TheLastInterview.Interview.Managers
                 null
             );
 
+            // La señal DialogFinished se conectará automáticamente y continuará con la siguiente pregunta
             var dialogList = new List<DialogEntry> { reactionEntry };
             DialogSystem.Instance.StartDialog(dialogList);
         }

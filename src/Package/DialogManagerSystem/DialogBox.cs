@@ -721,16 +721,15 @@ namespace Package.UI
 			// Limpiar opciones anteriores
 			ClearOptions();
 			
-			// MEJORADO: Ocultar el dialog box original cuando aparecen las opciones
-			// Esto evita redundancia visual y mejora la claridad
+			// NOTA: Mantener el dialog box visible cuando aparecen las opciones
+			// El texto original permanece visible sin duplicación ni animación
 			if (_dialogPanel != null && IsInstanceValid(_dialogPanel))
 			{
-				_dialogPanel.Visible = false;
+				_dialogPanel.Visible = true; // Mantener visible
 			}
 			
-			// MEJORADO: Duplicar el texto del diálogo y agregarlo al overlay de opciones
-			// Esto permite animar el texto sin tocar la lógica del textbox principal
-			DuplicateDialogTextForAnimation();
+			// DESACTIVADO: No duplicar ni animar el texto - solo mostrar opciones normalmente
+			// DuplicateDialogTextForAnimation(); // Comentado para desactivar efecto
 
 			// Crear botones para cada opción
 			for (int i = 0; i < options.Count; i++)
@@ -776,8 +775,8 @@ namespace Package.UI
 			
 			GD.Print($"✅ Mostrando {options.Count} opciones de respuesta en overlay de pantalla completa (Timed: {isTimed}, TruthLie: {isTruthLie})");
 			
-			// MEJORADO: Animar el texto duplicado hacia arriba después de mostrar las opciones
-			CallDeferred(nameof(AnimateDuplicatedTextUp));
+			// DESACTIVADO: No animar texto duplicado - solo mostrar opciones normalmente
+			// CallDeferred(nameof(AnimateDuplicatedTextUp)); // Comentado para desactivar efecto
 		}
 		
 		/// <summary>
