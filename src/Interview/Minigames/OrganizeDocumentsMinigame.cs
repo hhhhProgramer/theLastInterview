@@ -48,19 +48,19 @@ namespace TheLastInterview.Interview.Minigames
         
         protected override void CreateUI()
         {
-            // Panel de fondo
+            // Panel de fondo (más alto para evitar sobreposiciones)
             var panel = new Panel();
             panel.Name = "MinigamePanel";
             panel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
-            panel.CustomMinimumSize = new Vector2(900, 550);
+            panel.CustomMinimumSize = new Vector2(900, 650);
             panel.AnchorLeft = 0.5f;
             panel.AnchorTop = 0.5f;
             panel.AnchorRight = 0.5f;
             panel.AnchorBottom = 0.5f;
             panel.OffsetLeft = -450;
             panel.OffsetRight = 450;
-            panel.OffsetTop = -275;
-            panel.OffsetBottom = 275;
+            panel.OffsetTop = -325;
+            panel.OffsetBottom = 325;
             
             var styleBox = new StyleBoxFlat();
             styleBox.BgColor = new Color(0.1f, 0.1f, 0.1f, 0.95f);
@@ -93,60 +93,62 @@ namespace TheLastInterview.Interview.Minigames
             titleLabel.OffsetRight = -20;
             panel.AddChild(titleLabel);
             
-            // Instrucción (más clara)
+            // Instrucción (más clara y compacta)
             _instructionLabel = new Label();
             _instructionLabel.Name = "InstructionLabel";
-            _instructionLabel.Text = "1. Haz click en un documento (izquierda)\n2. Luego haz click en una carpeta (derecha) para organizarlo\n(Da igual dónde lo pongas, siempre habrá comentarios aleatorios)";
+            _instructionLabel.Text = "1. Click en documento (izquierda) → 2. Click en carpeta (derecha)";
             _instructionLabel.HorizontalAlignment = HorizontalAlignment.Center;
             _instructionLabel.VerticalAlignment = VerticalAlignment.Center;
             _instructionLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             _instructionLabel.ClipContents = true;
             float instructionSize = FontManager.GetScaledSize(TextType.Body);
             _instructionLabel.AddThemeFontSizeOverride("font_size", (int)instructionSize);
+            _instructionLabel.AddThemeColorOverride("font_color", new Color(0.9f, 0.9f, 0.9f, 1.0f));
             _instructionLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
             _instructionLabel.OffsetTop = 65;
-            _instructionLabel.OffsetBottom = 125;
+            _instructionLabel.OffsetBottom = 95;
             _instructionLabel.OffsetLeft = 30;
             _instructionLabel.OffsetRight = -30;
             panel.AddChild(_instructionLabel);
             
-            // Feedback label (más espacio)
+            // Feedback label (mucho más grande y visible)
             _feedbackLabel = new Label();
             _feedbackLabel.Name = "FeedbackLabel";
-            _feedbackLabel.Text = "";
+            _feedbackLabel.Text = "Selecciona un documento para comenzar...";
             _feedbackLabel.HorizontalAlignment = HorizontalAlignment.Center;
             _feedbackLabel.VerticalAlignment = VerticalAlignment.Center;
             _feedbackLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             _feedbackLabel.ClipContents = true;
+            _feedbackLabel.CustomMinimumSize = new Vector2(600, 120);
             _feedbackLabel.AddThemeFontSizeOverride("font_size", (int)instructionSize);
             _feedbackLabel.AddThemeColorOverride("font_color", new Color(0.8f, 1.0f, 0.6f, 1.0f));
             _feedbackLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
-            _feedbackLabel.OffsetTop = 135;
-            _feedbackLabel.OffsetBottom = 185;
-            _feedbackLabel.OffsetLeft = 30;
-            _feedbackLabel.OffsetRight = -30;
+            _feedbackLabel.OffsetTop = 105;
+            _feedbackLabel.OffsetBottom = 225;
+            _feedbackLabel.OffsetLeft = 150;
+            _feedbackLabel.OffsetRight = -150;
             panel.AddChild(_feedbackLabel);
             
             _documents = new List<Control>();
             _slots = new List<Control>();
             
-            // Crear documentos (lado izquierdo)
+            // Crear documentos (lado izquierdo) - movidos más abajo para no sobreponerse con textos
             for (int i = 0; i < _documentNames.Length; i++)
             {
-                var doc = CreateDocument(_documentNames[i], new Vector2(100, 210 + i * 90));
+                var doc = CreateDocument(_documentNames[i], new Vector2(100, 250 + i * 90));
                 _documents.Add(doc);
                 panel.AddChild(doc);
             }
             
-            // Crear slots (lado derecho)
+            // Crear slots (lado derecho) - movidos más abajo
             for (int i = 0; i < _slotLabels.Length; i++)
             {
-                var slot = CreateSlot(_slotLabels[i], new Vector2(550, 210 + i * 90));
+                var slot = CreateSlot(_slotLabels[i], new Vector2(550, 250 + i * 90));
                 _slots.Add(slot);
                 panel.AddChild(slot);
             }
             
-            // Botón continuar
+            // Botón continuar (más espacio desde arriba)
             _continueButton = new Button();
             _continueButton.Name = "ContinueButton";
             _continueButton.Text = "Continuar";
@@ -270,14 +272,14 @@ namespace TheLastInterview.Interview.Minigames
                 }
             }
             
-            _feedbackLabel.Text = $"Documento seleccionado: {documentName}\nAhora haz click en una carpeta para organizarlo.";
+            _feedbackLabel.Text = $"✓ Documento seleccionado:\n\"{documentName}\"\n\n→ Ahora haz click en una carpeta (derecha)";
         }
         
         private void OnSlotClicked(string slotName, Control slot)
         {
             if (string.IsNullOrEmpty(_selectedDocument))
             {
-                _feedbackLabel.Text = "Primero selecciona un documento haciendo click en él.";
+                _feedbackLabel.Text = "⚠ Primero selecciona un documento\nhaciendo click en él (lado izquierdo)";
                 return;
             }
             
@@ -289,7 +291,7 @@ namespace TheLastInterview.Interview.Minigames
                 ? _positiveFeedback[_random.Next(_positiveFeedback.Length)]
                 : _negativeFeedback[_random.Next(_negativeFeedback.Length)];
             
-            _feedbackLabel.Text = $"Colocaste '{_selectedDocument}' en '{slotName}'\n\nEntrevistador: \"{feedback}\"";
+            _feedbackLabel.Text = $"✓ Colocado: \"{_selectedDocument}\"\n→ En carpeta: \"{slotName}\"\n\n💬 Entrevistador:\n\"{feedback}\"";
             
             // Deseleccionar documento
             _selectedDocument = null;

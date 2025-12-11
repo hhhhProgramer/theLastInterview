@@ -34,19 +34,19 @@ namespace TheLastInterview.Interview.Minigames
         
         protected override void CreateUI()
         {
-            // Panel de fondo (más alto para que quepa el texto del resultado)
+            // Panel de fondo
             var panel = new Panel();
             panel.Name = "MinigamePanel";
             panel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
-            panel.CustomMinimumSize = new Vector2(700, 550);
+            panel.CustomMinimumSize = new Vector2(700, 600);
             panel.AnchorLeft = 0.5f;
             panel.AnchorTop = 0.5f;
             panel.AnchorRight = 0.5f;
             panel.AnchorBottom = 0.5f;
             panel.OffsetLeft = -350;
             panel.OffsetRight = 350;
-            panel.OffsetTop = -275;
-            panel.OffsetBottom = 275;
+            panel.OffsetTop = -300;
+            panel.OffsetBottom = 300;
             
             var styleBox = new StyleBoxFlat();
             styleBox.BgColor = new Color(0.1f, 0.1f, 0.1f, 0.95f);
@@ -62,6 +62,17 @@ namespace TheLastInterview.Interview.Minigames
             panel.AddThemeStyleboxOverride("panel", styleBox);
             AddChild(panel);
             
+            // Contenedor principal con VBoxContainer para organizar verticalmente
+            var mainContainer = new VBoxContainer();
+            mainContainer.Name = "MainContainer";
+            mainContainer.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
+            mainContainer.OffsetLeft = 30;
+            mainContainer.OffsetRight = -30;
+            mainContainer.OffsetTop = 20;
+            mainContainer.OffsetBottom = -20;
+            mainContainer.AddThemeConstantOverride("separation", 15);
+            panel.AddChild(mainContainer);
+            
             // Título
             var titleLabel = new Label();
             titleLabel.Name = "TitleLabel";
@@ -72,12 +83,7 @@ namespace TheLastInterview.Interview.Minigames
             float titleSize = FontManager.GetScaledSize(TextType.Subtitle);
             titleLabel.AddThemeFontSizeOverride("font_size", (int)titleSize);
             titleLabel.AddThemeColorOverride("font_color", new Color(1.0f, 0.5f, 0.2f, 1.0f));
-            titleLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
-            titleLabel.OffsetTop = 20;
-            titleLabel.OffsetBottom = 60;
-            titleLabel.OffsetLeft = 20;
-            titleLabel.OffsetRight = -20;
-            panel.AddChild(titleLabel);
+            mainContainer.AddChild(titleLabel);
             
             // Instrucción
             _instructionLabel = new Label();
@@ -89,42 +95,39 @@ namespace TheLastInterview.Interview.Minigames
             _instructionLabel.ClipContents = true;
             float instructionSize = FontManager.GetScaledSize(TextType.Body);
             _instructionLabel.AddThemeFontSizeOverride("font_size", (int)instructionSize);
-            _instructionLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
-            _instructionLabel.OffsetTop = 70;
-            _instructionLabel.OffsetBottom = 130;
-            _instructionLabel.OffsetLeft = 30;
-            _instructionLabel.OffsetRight = -30;
-            panel.AddChild(_instructionLabel);
+            mainContainer.AddChild(_instructionLabel);
+            
+            // Contenedor para la barra de estrés (centrado)
+            var barContainer = new CenterContainer();
+            barContainer.Name = "BarContainer";
+            barContainer.CustomMinimumSize = new Vector2(0, 60);
+            mainContainer.AddChild(barContainer);
             
             // Barra de estrés
             _stressBar = new ProgressBar();
             _stressBar.Name = "StressBar";
-            _stressBar.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
             _stressBar.CustomMinimumSize = new Vector2(550, 50);
-            _stressBar.OffsetLeft = -275;
-            _stressBar.OffsetRight = 275;
-            _stressBar.OffsetTop = -30;
-            _stressBar.OffsetBottom = 20;
             _stressBar.MinValue = 0;
             _stressBar.MaxValue = 100;
             _stressBar.Value = 0;
-            panel.AddChild(_stressBar);
+            barContainer.AddChild(_stressBar);
             
-            // Botón relájate (ajustado para dejar espacio al resultado)
+            // Contenedor para el botón relájate (centrado)
+            var buttonContainer = new CenterContainer();
+            buttonContainer.Name = "ButtonContainer";
+            buttonContainer.CustomMinimumSize = new Vector2(0, 60);
+            mainContainer.AddChild(buttonContainer);
+            
+            // Botón relájate
             _relaxButton = new Button();
             _relaxButton.Name = "RelaxButton";
             _relaxButton.Text = "Relájate";
-            _relaxButton.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
             _relaxButton.CustomMinimumSize = new Vector2(200, 50);
-            _relaxButton.OffsetLeft = -100;
-            _relaxButton.OffsetRight = 100;
-            _relaxButton.OffsetTop = 30;
-            _relaxButton.OffsetBottom = 80;
             _relaxButton.AddThemeFontSizeOverride("font_size", (int)instructionSize);
             _relaxButton.Pressed += OnRelaxPressed;
-            panel.AddChild(_relaxButton);
+            buttonContainer.AddChild(_relaxButton);
             
-            // Label de resultado (más grande y visible)
+            // Label de resultado (con tamaño mínimo para que sea visible)
             _resultLabel = new Label();
             _resultLabel.Name = "ResultLabel";
             _resultLabel.Text = "";
@@ -132,29 +135,28 @@ namespace TheLastInterview.Interview.Minigames
             _resultLabel.VerticalAlignment = VerticalAlignment.Center;
             _resultLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             _resultLabel.ClipContents = true;
-            // Tamaño de fuente más grande para mejor legibilidad
+            _resultLabel.CustomMinimumSize = new Vector2(0, 120);
             float resultSize = FontManager.GetScaledSize(TextType.Body) * 1.1f;
             _resultLabel.AddThemeFontSizeOverride("font_size", (int)resultSize);
             _resultLabel.AddThemeColorOverride("font_color", new Color(0.8f, 1.0f, 0.6f, 1.0f));
-            // Área más grande para el texto
-            _resultLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
-            _resultLabel.OffsetTop = 160;
-            _resultLabel.OffsetBottom = 280;
-            _resultLabel.OffsetLeft = 40;
-            _resultLabel.OffsetRight = -40;
-            panel.AddChild(_resultLabel);
+            mainContainer.AddChild(_resultLabel);
+            
+            // Espaciador para empujar el botón continuar hacia abajo
+            var spacer = new Control();
+            spacer.Name = "Spacer";
+            spacer.CustomMinimumSize = new Vector2(0, 20);
+            spacer.SizeFlagsVertical = Control.SizeFlags.ExpandFill;
+            mainContainer.AddChild(spacer);
             
             // Botón continuar (oculto inicialmente)
             _continueButton = new Button();
             _continueButton.Name = "ContinueButton";
             _continueButton.Text = "Continuar";
-            _continueButton.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.BottomWide);
-            _continueButton.OffsetBottom = -30;
-            _continueButton.OffsetTop = -90;
+            _continueButton.CustomMinimumSize = new Vector2(200, 50);
             _continueButton.Visible = false;
             _continueButton.AddThemeFontSizeOverride("font_size", (int)instructionSize);
             _continueButton.Pressed += OnContinuePressed;
-            panel.AddChild(_continueButton);
+            mainContainer.AddChild(_continueButton);
             
             // Iniciar aumento de estrés
             StartStressIncrease();
