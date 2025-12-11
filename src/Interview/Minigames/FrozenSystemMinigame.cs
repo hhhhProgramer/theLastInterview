@@ -245,6 +245,7 @@ namespace TheLastInterview.Interview.Minigames
                 _instructionLabel.Text = "Error: Los paneles se están multiplicando.\nBusca el botón 'Reiniciar todo' abajo.";
                 _restartButton.Visible = true;
                 _restartButtonVisible = true;
+                StartButtonBlink(_restartButton); // Hacer parpadear el botón de reiniciar
             }
             
             // Crear 2 nuevos popups (duplicación exponencial)
@@ -274,6 +275,7 @@ namespace TheLastInterview.Interview.Minigames
             
             GetTree().CreateTimer(1.5f).Timeout += () => {
                 _continueButton.Visible = true;
+                StartButtonBlink(_continueButton); // Hacer parpadear el botón continuar
             };
         }
         

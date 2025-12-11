@@ -48,6 +48,27 @@ namespace TheLastInterview.Interview.Minigames
             Visible = false;
             OnMinigameFinished?.Invoke();
         }
+        
+        /// <summary>
+        /// Hace que un botón parpadee continuamente
+        /// </summary>
+        protected void StartButtonBlink(Button button)
+        {
+            if (button == null || !IsInstanceValid(button)) return;
+            
+            var blinkTimer = new Timer();
+            blinkTimer.WaitTime = 0.5f; // Parpadea cada 0.5 segundos
+            blinkTimer.Timeout += () => {
+                if (button != null && IsInstanceValid(button) && button.Visible)
+                {
+                    // Alternar opacidad entre 1.0 y 0.5
+                    var currentAlpha = button.Modulate.A;
+                    button.Modulate = new Color(1.0f, 1.0f, 1.0f, currentAlpha > 0.75f ? 0.5f : 1.0f);
+                }
+            };
+            blinkTimer.Autostart = true;
+            AddChild(blinkTimer);
+        }
     }
 }
 

@@ -239,6 +239,7 @@ namespace TheLastInterview.Interview.Minigames
             // Mostrar botón continuar después de un momento
             GetTree().CreateTimer(2.0f).Timeout += () => {
                 _continueButton.Visible = true;
+                StartButtonBlink(_continueButton); // Hacer parpadear el botón continuar
             };
         }
         

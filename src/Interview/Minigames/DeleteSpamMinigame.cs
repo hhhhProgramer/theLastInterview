@@ -225,6 +225,7 @@ namespace TheLastInterview.Interview.Minigames
                     _instructionLabel.AddThemeColorOverride("font_color", new Color(0.3f, 1.0f, 0.3f, 1.0f));
                     GetTree().CreateTimer(1.5f).Timeout += () => {
                         _continueButton.Visible = true;
+                        StartButtonBlink(_continueButton); // Hacer parpadear el botón continuar
                     };
                 }
             }

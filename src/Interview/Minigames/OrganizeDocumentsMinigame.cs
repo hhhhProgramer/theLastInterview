@@ -225,6 +225,7 @@ namespace TheLastInterview.Interview.Minigames
             {
                 GetTree().CreateTimer(1.0f).Timeout += () => {
                     _continueButton.Visible = true;
+                    StartButtonBlink(_continueButton); // Hacer parpadear el botón continuar
                 };
             }
         }
