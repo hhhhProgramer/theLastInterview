@@ -313,7 +313,12 @@ namespace TheLastInterview.Interview.Managers
                 MinigameManager.MinigameType.TypeName,
                 MinigameManager.MinigameType.OrganizeDocuments,
                 MinigameManager.MinigameType.TechnicalTest,
-                MinigameManager.MinigameType.StayCalm
+                MinigameManager.MinigameType.StayCalm,
+                MinigameManager.MinigameType.ArchiveFiles,
+                MinigameManager.MinigameType.TypeReport,
+                MinigameManager.MinigameType.AnswerPhone,
+                MinigameManager.MinigameType.DeleteSpam,
+                MinigameManager.MinigameType.FrozenSystem
             };
             
             // Filtrar solo los que no se han usado

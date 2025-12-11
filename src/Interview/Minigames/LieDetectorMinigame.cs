@@ -40,6 +40,12 @@ namespace TheLastInterview.Interview.Minigames
         {
         }
         
+        public override void ShowMinigame()
+        {
+            Visible = true;
+            CreateUI();
+        }
+        
         protected override void CreateUI()
         {
             // Panel de fondo
@@ -124,13 +130,14 @@ namespace TheLastInterview.Interview.Minigames
             // Label de estado
             _statusLabel = new Label();
             _statusLabel.Name = "StatusLabel";
-            _statusLabel.Text = "Presiona el botón para confirmar tu honestidad...";
+            _statusLabel.Text = "Presiona el botón para confirmar tu honestidad...\n(La barra se mueve sola, es normal)";
             _statusLabel.HorizontalAlignment = HorizontalAlignment.Center;
             _statusLabel.VerticalAlignment = VerticalAlignment.Center;
             _statusLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             _statusLabel.ClipContents = true;
             _statusLabel.CustomMinimumSize = new Vector2(0, 100);
             _statusLabel.AddThemeFontSizeOverride("font_size", (int)statementSize);
+            _statusLabel.AddThemeColorOverride("font_color", new Color(0.9f, 0.9f, 0.9f, 1.0f));
             mainContainer.AddChild(_statusLabel);
             
             // Contenedor para botón confirmar (centrado)
@@ -172,7 +179,7 @@ namespace TheLastInterview.Interview.Minigames
         private void StartBarAnimation()
         {
             _barTimer = new Timer();
-            _barTimer.WaitTime = 0.1f;
+            _barTimer.WaitTime = 0.05f; // Más rápido para más caos
             _barTimer.Timeout += UpdateBar;
             _barTimer.Autostart = true;
             AddChild(_barTimer);
@@ -182,16 +189,25 @@ namespace TheLastInterview.Interview.Minigames
         {
             if (_hasConfirmed) return;
             
-            // La barra sube y baja aleatoriamente
+            // La barra sube y baja de forma más caótica y divertida
             float currentValue = (float)_detectorBar.Value;
             
-            if (_random.Next(0, 2) == 0)
+            // Movimiento más extremo y caótico
+            int change = _random.Next(-30, 35);
+            _detectorBar.Value = Mathf.Clamp(currentValue + change, 0, 100);
+            
+            // Cambiar color de la barra según el valor (más visual)
+            if (_detectorBar.Value < 30)
             {
-                _detectorBar.Value = Mathf.Clamp(currentValue + _random.Next(-15, 20), 0, 100);
+                _detectorBar.Modulate = new Color(0.3f, 1.0f, 0.3f, 1.0f); // Verde (muy honesto)
+            }
+            else if (_detectorBar.Value < 70)
+            {
+                _detectorBar.Modulate = new Color(1.0f, 1.0f, 0.3f, 1.0f); // Amarillo (dudoso)
             }
             else
             {
-                _detectorBar.Value = Mathf.Clamp(currentValue + _random.Next(-20, 15), 0, 100);
+                _detectorBar.Modulate = new Color(1.0f, 0.3f, 0.3f, 1.0f); // Rojo (mentiroso)
             }
         }
         
@@ -203,16 +219,25 @@ namespace TheLastInterview.Interview.Minigames
             _confirmButton.Visible = false;
             _barTimer.Stop();
             
-            // Resultado aleatorio y cómico
-            string result = _results[_random.Next(_results.Length)];
-            _statusLabel.Text = result;
-            _statusLabel.AddThemeColorOverride("font_color", new Color(1.0f, 0.8f, 0.2f, 1.0f));
-            
-            // La barra se queda en un valor aleatorio
-            _detectorBar.Value = _random.Next(0, 101);
+            // Efecto visual: la barra hace un último salto dramático
+            var tween = CreateTween();
+            float finalValue = _random.Next(0, 101);
+            tween.TweenProperty(_detectorBar, "value", finalValue, 0.5f);
+            tween.TweenCallback(Callable.From(() => {
+                // Resultado aleatorio y cómico
+                string result = _results[_random.Next(_results.Length)];
+                _statusLabel.Text = result;
+                _statusLabel.AddThemeColorOverride("font_color", new Color(1.0f, 0.8f, 0.2f, 1.0f));
+                
+                // Efecto de pulso en el resultado
+                var pulseTween = CreateTween();
+                pulseTween.SetLoops(3);
+                pulseTween.TweenProperty(_statusLabel, "scale", new Vector2(1.1f, 1.1f), 0.2f);
+                pulseTween.TweenProperty(_statusLabel, "scale", Vector2.One, 0.2f);
+            }));
             
             // Mostrar botón continuar después de un momento
-            GetTree().CreateTimer(1.5f).Timeout += () => {
+            GetTree().CreateTimer(2.0f).Timeout += () => {
                 _continueButton.Visible = true;
             };
         }

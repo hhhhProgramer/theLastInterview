@@ -16,13 +16,34 @@ namespace TheLastInterview.Interview.Minigames
         private System.Random _random = new System.Random();
         private bool _hasAnswered = false;
         
-        private string _question = "¿Cuánto es 2 + desesperación?";
+        private string[] _questions = {
+            "¿Cuánto es 2 + desesperación?",
+            "¿Cuál es la velocidad de la luz en un viernes a las 5pm?",
+            "¿Cuántas personas se necesitan para cambiar una bombilla?",
+            "¿Qué es más importante: el trabajo o el café?",
+            "Si un árbol cae en un bosque sin nadie, ¿hace ruido?",
+            "¿Cuál es el sentido de la vida, el universo y todo lo demás?",
+            "¿Por qué los lunes existen?",
+            "¿Cuántas veces puedes doblar un papel antes de que se rompa?",
+            "¿Qué vino primero: el huevo o la gallina?",
+            "¿Cuánto tiempo tarda en hervir el agua en Marte?",
+            "¿Cuál es la mejor forma de organizar un escritorio?",
+            "¿Por qué los viernes se sienten más largos que los lunes?"
+        };
+        
+        private string _question = "";
         
         private string[] _options = {
             "4",
             "No sé",
             "Mi salario",
-            "¿Estoy contratado?"
+            "¿Estoy contratado?",
+            "42",
+            "Depende",
+            "Sí",
+            "No",
+            "Tal vez",
+            "Error 404"
         };
         
         private string[] _responses = {
@@ -32,11 +53,22 @@ namespace TheLastInterview.Interview.Minigames
             "Esa es una pregunta válida. Pero no la respondí yo.",
             "Matemáticamente incorrecto, pero emocionalmente preciso.",
             "Aceptado. Has demostrado pensamiento lateral.",
-            "Error 404: Lógica no encontrada. Pero aprobado."
+            "Error 404: Lógica no encontrada. Pero aprobado.",
+            "¡Genial! Esa respuesta tiene exactamente 0% de sentido. Perfecto.",
+            "Interesante. Tu capacidad de razonamiento es... existente.",
+            "Correcto. Aunque técnicamente incorrecto. Pero correcto.",
+            "Excelente. Has demostrado que puedes leer. Habilidad impresionante.",
+            "Perfecto. Esa respuesta es tan válida como mi deseo de estar aquí."
         };
         
         public TechnicalTestMinigame(Node parent) : base(parent)
         {
+        }
+        
+        public override void ShowMinigame()
+        {
+            Visible = true;
+            CreateUI();
         }
         
         protected override void CreateUI()
@@ -92,6 +124,9 @@ namespace TheLastInterview.Interview.Minigames
             titleLabel.AddThemeColorOverride("font_color", new Color(0.2f, 0.8f, 1.0f, 1.0f));
             mainContainer.AddChild(titleLabel);
             
+            // Seleccionar pregunta aleatoria
+            _question = _questions[_random.Next(_questions.Length)];
+            
             // Pregunta
             _questionLabel = new Label();
             _questionLabel.Name = "QuestionLabel";
@@ -105,18 +140,28 @@ namespace TheLastInterview.Interview.Minigames
             _questionLabel.AddThemeColorOverride("font_color", new Color(0.9f, 0.9f, 0.9f, 1.0f));
             mainContainer.AddChild(_questionLabel);
             
-            // Opciones
+            // Opciones (seleccionar 4 aleatorias)
             _optionButtons = new List<Button>();
             var optionsContainer = new VBoxContainer();
             optionsContainer.Name = "OptionsContainer";
             optionsContainer.AddThemeConstantOverride("separation", 10);
             mainContainer.AddChild(optionsContainer);
             
-            for (int i = 0; i < _options.Length; i++)
+            var selectedOptions = new List<string>();
+            while (selectedOptions.Count < 4)
+            {
+                string option = _options[_random.Next(_options.Length)];
+                if (!selectedOptions.Contains(option))
+                {
+                    selectedOptions.Add(option);
+                }
+            }
+            
+            for (int i = 0; i < selectedOptions.Count; i++)
             {
                 int index = i;
                 var button = new Button();
-                button.Text = _options[i];
+                button.Text = selectedOptions[i];
                 button.AddThemeFontSizeOverride("font_size", (int)questionSize);
                 button.Pressed += () => OnOptionSelected(index);
                 _optionButtons.Add(button);

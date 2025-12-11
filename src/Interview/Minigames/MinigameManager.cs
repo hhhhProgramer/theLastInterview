@@ -20,7 +20,12 @@ namespace TheLastInterview.Interview.Minigames
             TypeName,           // Escribe tu nombre con teclado aleatorio
             OrganizeDocuments,  // Ordena documentos (comentarios aleatorios)
             TechnicalTest,      // Prueba técnica falsa
-            StayCalm            // Mantén la calma (barra de estrés)
+            StayCalm,           // Mantén la calma (barra de estrés)
+            ArchiveFiles,       // Archivar archivos incorrectos (destino cambia)
+            TypeReport,         // Escribir reporte con teclas bloqueadas
+            AnswerPhone,        // Responder el teléfono correcto
+            DeleteSpam,         // Eliminar correos spam (scroll automático)
+            FrozenSystem        // Sistema congelado - reinicia los paneles
         }
         
         /// <summary>
@@ -44,6 +49,11 @@ namespace TheLastInterview.Interview.Minigames
                 MinigameType.OrganizeDocuments => new OrganizeDocumentsMinigame(parent),
                 MinigameType.TechnicalTest => new TechnicalTestMinigame(parent),
                 MinigameType.StayCalm => new StayCalmMinigame(parent),
+                MinigameType.ArchiveFiles => new ArchiveFilesMinigame(parent),
+                MinigameType.TypeReport => new TypeReportMinigame(parent),
+                MinigameType.AnswerPhone => new AnswerPhoneMinigame(parent),
+                MinigameType.DeleteSpam => new DeleteSpamMinigame(parent),
+                MinigameType.FrozenSystem => new FrozenSystemMinigame(parent),
                 _ => throw new ArgumentException($"Tipo de minijuego desconocido: {type}")
             };
         }

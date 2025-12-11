@@ -124,7 +124,12 @@ namespace TheLastInterview.Scenes
                 { MinigameManager.MinigameType.TypeName, "Escribe tu Nombre" },
                 { MinigameManager.MinigameType.OrganizeDocuments, "Organiza Documentos" },
                 { MinigameManager.MinigameType.TechnicalTest, "Prueba Técnica" },
-                { MinigameManager.MinigameType.StayCalm, "Mantén la Calma" }
+                { MinigameManager.MinigameType.StayCalm, "Mantén la Calma" },
+                { MinigameManager.MinigameType.ArchiveFiles, "Archivar Archivos" },
+                { MinigameManager.MinigameType.TypeReport, "Escribir Reporte" },
+                { MinigameManager.MinigameType.AnswerPhone, "Responder Teléfono" },
+                { MinigameManager.MinigameType.DeleteSpam, "Eliminar Spam" },
+                { MinigameManager.MinigameType.FrozenSystem, "Sistema Congelado" }
             };
             
             float buttonFontSize = FontManager.GetScaledSize(TextType.Body);

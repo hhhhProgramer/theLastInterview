@@ -35,11 +35,23 @@ namespace TheLastInterview.Interview.Minigames
             "Eso está mal, pero me da igual. Siguiente.",
             "No, eso no es correcto. Pero tampoco importa realmente.",
             "Excelente. Tu criterio es... cuestionable.",
-            "Bien. Aunque personalmente lo habría puesto en otra categoría inexistente."
+            "Bien. Aunque personalmente lo habría puesto en otra categoría inexistente.",
+            "¡Genial! Ese documento definitivamente no debería estar ahí... o sí?",
+            "Perfecto. Has elegido el documento más... documentado.",
+            "Interesante. Ese documento tiene exactamente 0% de urgencia. Aprobado.",
+            "Excelente. Tu capacidad de organización es... existente.",
+            "Bien hecho. Ese documento es tan urgente como mi deseo de estar aquí.",
+            "Perfecto. Has demostrado que puedes hacer clic. Habilidad impresionante."
         };
         
         public OrganizeDocumentsMinigame(Node parent) : base(parent)
         {
+        }
+        
+        public override void ShowMinigame()
+        {
+            Visible = true;
+            CreateUI();
         }
         
         protected override void CreateUI()
@@ -181,22 +193,39 @@ namespace TheLastInterview.Interview.Minigames
             _placedDocuments.Add(documentIndex);
             string selectedDocument = _documentNames[documentIndex];
             
-            // Ocultar el documento seleccionado
-            _documentButtons[documentIndex].Visible = false;
+            // Efecto visual: el botón desaparece con animación
+            var button = _documentButtons[documentIndex];
+            var tween = CreateTween();
+            tween.TweenProperty(button, "modulate", new Color(1, 1, 1, 0), 0.3f);
+            tween.TweenCallback(Callable.From(() => button.Visible = false));
             
-            // Mostrar resultado
+            // Mostrar resultado con efecto
             _feedbackLabel.Text = $"Seleccionaste: \"{selectedDocument}\"";
             _feedbackLabel.Visible = true;
+            _feedbackLabel.Modulate = new Color(1, 1, 1, 0);
+            var fadeTween = CreateTween();
+            fadeTween.TweenProperty(_feedbackLabel, "modulate", new Color(1, 1, 1, 1), 0.3f);
             
             // Comentario aleatorio (siempre visible hasta seleccionar otro)
             string comment = _comments[_random.Next(_comments.Length)];
             _commentLabel.Text = $"Entrevistador: \"{comment}\"";
             _commentLabel.Visible = true;
+            _commentLabel.Modulate = new Color(1, 1, 1, 0);
+            var commentTween = CreateTween();
+            commentTween.TweenProperty(_commentLabel, "modulate", new Color(1, 1, 1, 1), 0.3f);
+            
+            // Efecto de pulso en el comentario
+            var pulseTween = CreateTween();
+            pulseTween.SetLoops(2);
+            pulseTween.TweenProperty(_commentLabel, "scale", new Vector2(1.05f, 1.05f), 0.15f);
+            pulseTween.TweenProperty(_commentLabel, "scale", Vector2.One, 0.15f);
             
             // Si todos los documentos están seleccionados, mostrar botón continuar
             if (_documentsPlaced >= _documentNames.Length)
             {
-                _continueButton.Visible = true;
+                GetTree().CreateTimer(1.0f).Timeout += () => {
+                    _continueButton.Visible = true;
+                };
             }
         }
         

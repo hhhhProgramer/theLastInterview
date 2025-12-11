@@ -32,6 +32,12 @@ namespace TheLastInterview.Interview.Minigames
         {
         }
         
+        public override void ShowMinigame()
+        {
+            Visible = true;
+            CreateUI();
+        }
+        
         protected override void CreateUI()
         {
             // Panel de fondo
@@ -175,8 +181,35 @@ namespace TheLastInterview.Interview.Minigames
         {
             if (_hasPressedRelax) return;
             
-            // La barra sube sola sin control
-            _stressBar.Value = Mathf.Min(_stressBar.Value + _random.Next(3, 8), 100);
+            // La barra sube sola sin control (más rápido y caótico)
+            int increase = _random.Next(4, 12);
+            _stressBar.Value = Mathf.Min(_stressBar.Value + increase, 100);
+            
+            // Cambiar color de la barra según el nivel de estrés
+            if (_stressBar.Value < 30)
+            {
+                _stressBar.Modulate = new Color(0.3f, 1.0f, 0.3f, 1.0f); // Verde (calmado)
+            }
+            else if (_stressBar.Value < 60)
+            {
+                _stressBar.Modulate = new Color(1.0f, 1.0f, 0.3f, 1.0f); // Amarillo (tenso)
+            }
+            else if (_stressBar.Value < 90)
+            {
+                _stressBar.Modulate = new Color(1.0f, 0.6f, 0.2f, 1.0f); // Naranja (estresado)
+            }
+            else
+            {
+                _stressBar.Modulate = new Color(1.0f, 0.2f, 0.2f, 1.0f); // Rojo (crítico)
+            }
+            
+            // Efecto visual: la barra pulsa cuando está alta
+            if (_stressBar.Value > 70)
+            {
+                var pulseTween = CreateTween();
+                pulseTween.TweenProperty(_stressBar, "scale", new Vector2(1.02f, 1.0f), 0.1f);
+                pulseTween.TweenProperty(_stressBar, "scale", Vector2.One, 0.1f);
+            }
             
             // Si llega al máximo, automáticamente muestra resultado
             if (_stressBar.Value >= 100)
