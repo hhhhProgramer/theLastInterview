@@ -20,6 +20,7 @@ namespace TheLastInterview.Interview.Managers
         private Control _interviewerVisual;
         private BaseMinigame _currentMinigame;
         private System.Random _minigameRandom = new System.Random();
+        private HashSet<MinigameManager.MinigameType> _usedMinigames = new HashSet<MinigameManager.MinigameType>();
 
         /// <summary>
         /// Señal que se emite cuando la entrevista termina
@@ -138,6 +139,7 @@ namespace TheLastInterview.Interview.Managers
         public void StartInterview()
         {
             _stateManager.Reset();
+            _usedMinigames.Clear(); // Limpiar minijuegos usados al iniciar nueva partida
             ShowNextQuestion();
         }
 
@@ -168,11 +170,43 @@ namespace TheLastInterview.Interview.Managers
         }
         
         /// <summary>
-        /// Muestra un minijuego aleatorio
+        /// Muestra un minijuego aleatorio que no haya sido usado antes en esta partida
         /// </summary>
         private void ShowRandomMinigame()
         {
-            var minigameType = MinigameManager.GetRandomMinigame();
+            // Obtener todos los tipos de minijuegos disponibles
+            var allMinigameTypes = new List<MinigameManager.MinigameType>
+            {
+                MinigameManager.MinigameType.LieDetector,
+                MinigameManager.MinigameType.TypeName,
+                MinigameManager.MinigameType.OrganizeDocuments,
+                MinigameManager.MinigameType.TechnicalTest,
+                MinigameManager.MinigameType.StayCalm
+            };
+            
+            // Filtrar solo los que no se han usado
+            var availableMinigames = new List<MinigameManager.MinigameType>();
+            foreach (var type in allMinigameTypes)
+            {
+                if (!_usedMinigames.Contains(type))
+                {
+                    availableMinigames.Add(type);
+                }
+            }
+            
+            // Si todos los minijuegos ya se usaron, resetear la lista para permitir repeticiones
+            if (availableMinigames.Count == 0)
+            {
+                _usedMinigames.Clear();
+                availableMinigames = allMinigameTypes;
+            }
+            
+            // Seleccionar uno aleatorio de los disponibles
+            var minigameType = availableMinigames[_minigameRandom.Next(availableMinigames.Count)];
+            
+            // Marcar como usado
+            _usedMinigames.Add(minigameType);
+            
             _currentMinigame = MinigameManager.CreateMinigame(minigameType, this);
             _currentMinigame.OnMinigameFinished += OnMinigameFinished;
             
