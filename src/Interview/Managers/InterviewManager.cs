@@ -21,6 +21,8 @@ namespace TheLastInterview.Interview.Managers
         private BaseMinigame _currentMinigame;
         private System.Random _minigameRandom = new System.Random();
         private HashSet<MinigameManager.MinigameType> _usedMinigames = new HashSet<MinigameManager.MinigameType>();
+        private int _questionsShown = 0; // Contador de preguntas mostradas
+        private const int MIN_QUESTIONS_BEFORE_MINIGAME = 3; // Mínimo de preguntas antes de permitir minijuegos
 
         /// <summary>
         /// Señal que se emite cuando la entrevista termina
@@ -143,6 +145,7 @@ namespace TheLastInterview.Interview.Managers
         {
             _stateManager.Reset();
             _usedMinigames.Clear(); // Limpiar minijuegos usados al iniciar nueva partida
+            _questionsShown = 0; // Resetear contador de preguntas
             ShowNextQuestion();
         }
 
@@ -160,8 +163,11 @@ namespace TheLastInterview.Interview.Managers
                 return;
             }
 
-            // 30% de probabilidad de mostrar un minijuego antes de la pregunta
-            if (_minigameRandom.Next(0, 10) < 3)
+            // Solo permitir minijuegos si ya se han mostrado al menos 3 preguntas
+            bool canShowMinigame = _questionsShown >= MIN_QUESTIONS_BEFORE_MINIGAME;
+            
+            // 30% de probabilidad de mostrar un minijuego antes de la pregunta (solo si se cumplen las condiciones)
+            if (canShowMinigame && _minigameRandom.Next(0, 10) < 3)
             {
                 ShowRandomMinigame();
             }
@@ -261,6 +267,9 @@ namespace TheLastInterview.Interview.Managers
                 GD.PrintErr("[InterviewManager] DialogSystem.Instance es null");
                 return;
             }
+
+            // Incrementar contador de preguntas mostradas
+            _questionsShown++;
 
             // Crear opciones de diálogo desde las respuestas
             var dialogOptions = new List<DialogOption>();
