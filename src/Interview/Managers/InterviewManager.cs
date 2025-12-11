@@ -1,6 +1,7 @@
 using Godot;
 using Package.UI;
 using Package.Background;
+using Package.Core.Enums;
 using TheLastInterview.Interview.Models;
 using TheLastInterview.Interview.Minigames;
 using System.Collections.Generic;
@@ -366,11 +367,18 @@ namespace TheLastInterview.Interview.Managers
                 dialogOptions.Add(dialogOption);
             }
 
+            // Determinar el estado emocional del entrevistador
+            var currentMood = InterviewerMoodManager.DetermineMood(_stateManager.GameState);
+            var emotion = InterviewerMoodManager.GetEmotion(currentMood);
+            
+            // Modificar el texto de la pregunta según el estado emocional
+            string questionText = InterviewerMoodManager.ModifyTextByMood(question.Text, currentMood);
+
             // Crear entrada de diálogo
             var dialogEntry = new DialogEntry(
-                question.Text,
-                "Entrevistador", // CharacterId
-                null, // Emotion
+                questionText,
+                "Entrevistador", // CharacterId - siempre mostrará "Entrevistador"
+                emotion, // Emotion según el estado emocional
                 null, // Position
                 dialogOptions,
                 null  // OnShow
@@ -419,10 +427,17 @@ namespace TheLastInterview.Interview.Managers
         {
             if (DialogSystem.Instance == null) return;
 
+            // Determinar el estado emocional del entrevistador
+            var currentMood = InterviewerMoodManager.DetermineMood(_stateManager.GameState);
+            var emotion = InterviewerMoodManager.GetEmotion(currentMood);
+            
+            // Modificar el texto de la reacción según el estado emocional
+            string modifiedReactionText = InterviewerMoodManager.ModifyTextByMood(reactionText, currentMood);
+
             var reactionEntry = new DialogEntry(
-                reactionText,
-                "Entrevistador",
-                null,
+                modifiedReactionText,
+                "Entrevistador", // CharacterId - siempre mostrará "Entrevistador"
+                emotion, // Emotion según el estado emocional
                 null,
                 null,
                 null

@@ -868,6 +868,12 @@ namespace Package.UI
 					characterName = characterWithName.CharacterName;
 				}
 			}
+			else if (!string.IsNullOrEmpty(currentEntry.CharacterId))
+			{
+				// FALLBACK: Si hay CharacterId pero el personaje no está registrado, usar el CharacterId como nombre
+				// Esto permite usar nombres simples como "Entrevistador" sin necesidad de registrar un Character
+				characterName = currentEntry.CharacterId;
+			}
 			else if (currentEntry.IsProtagonistSpeech)
 			{
 				// REGLA: Si el protagonista habla (no es pensamiento), mostrar el nombre personalizado o "Tu" por defecto
