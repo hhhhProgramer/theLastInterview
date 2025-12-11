@@ -11,6 +11,7 @@ namespace TheLastInterview.Scenes
     public partial class MainMenu : Control
     {
         private Button _startButton;
+        private Button _minigamesButton;
         private Button _exitButton;
         private Label _titleLabel;
         private Label _subtitleLabel;
@@ -125,6 +126,20 @@ namespace TheLastInterview.Scenes
             spacer2.CustomMinimumSize = new Vector2(0, 20);
             mainContainer.AddChild(spacer2);
 
+            // Botón Minijuegos
+            _minigamesButton = new Button();
+            _minigamesButton.Name = "MinigamesButton";
+            _minigamesButton.Text = "Minijuegos";
+            _minigamesButton.CustomMinimumSize = new Vector2(300, 60);
+            _minigamesButton.AddThemeFontSizeOverride("font_size", (int)buttonFontSize);
+            _minigamesButton.Pressed += OnMinigamesButtonPressed;
+            mainContainer.AddChild(_minigamesButton);
+
+            // Espaciador pequeño
+            var spacer3 = new Control();
+            spacer3.CustomMinimumSize = new Vector2(0, 20);
+            mainContainer.AddChild(spacer3);
+
             // Botón Salir
             _exitButton = new Button();
             _exitButton.Name = "ExitButton";
@@ -141,6 +156,14 @@ namespace TheLastInterview.Scenes
         private void OnStartButtonPressed()
         {
             GetTree().ChangeSceneToFile("res://src/Scenes/InterviewScene.tscn");
+        }
+
+        /// <summary>
+        /// Se llama cuando se presiona el botón Minijuegos
+        /// </summary>
+        private void OnMinigamesButtonPressed()
+        {
+            GetTree().ChangeSceneToFile("res://src/Scenes/MinigamesMenu.tscn");
         }
 
         /// <summary>

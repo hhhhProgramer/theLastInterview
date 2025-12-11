@@ -36,15 +36,15 @@ namespace TheLastInterview.Interview.Minigames
             var panel = new Panel();
             panel.Name = "MinigamePanel";
             panel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
-            panel.CustomMinimumSize = new Vector2(700, 450);
+            panel.CustomMinimumSize = new Vector2(700, 500);
             panel.AnchorLeft = 0.5f;
             panel.AnchorTop = 0.5f;
             panel.AnchorRight = 0.5f;
             panel.AnchorBottom = 0.5f;
             panel.OffsetLeft = -350;
             panel.OffsetRight = 350;
-            panel.OffsetTop = -225;
-            panel.OffsetBottom = 225;
+            panel.OffsetTop = -250;
+            panel.OffsetBottom = 250;
             
             var styleBox = new StyleBoxFlat();
             styleBox.BgColor = new Color(0.1f, 0.1f, 0.1f, 0.95f);
@@ -60,6 +60,17 @@ namespace TheLastInterview.Interview.Minigames
             panel.AddThemeStyleboxOverride("panel", styleBox);
             AddChild(panel);
             
+            // Contenedor principal con VBoxContainer
+            var mainContainer = new VBoxContainer();
+            mainContainer.Name = "MainContainer";
+            mainContainer.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
+            mainContainer.OffsetLeft = 30;
+            mainContainer.OffsetRight = -30;
+            mainContainer.OffsetTop = 20;
+            mainContainer.OffsetBottom = -20;
+            mainContainer.AddThemeConstantOverride("separation", 15);
+            panel.AddChild(mainContainer);
+            
             // Título
             var titleLabel = new Label();
             titleLabel.Name = "TitleLabel";
@@ -70,12 +81,7 @@ namespace TheLastInterview.Interview.Minigames
             float titleSize = FontManager.GetScaledSize(TextType.Subtitle);
             titleLabel.AddThemeFontSizeOverride("font_size", (int)titleSize);
             titleLabel.AddThemeColorOverride("font_color", new Color(0.2f, 0.8f, 1.0f, 1.0f));
-            titleLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
-            titleLabel.OffsetTop = 20;
-            titleLabel.OffsetBottom = 60;
-            titleLabel.OffsetLeft = 20;
-            titleLabel.OffsetRight = -20;
-            panel.AddChild(titleLabel);
+            mainContainer.AddChild(titleLabel);
             
             // Instrucción
             _instructionLabel = new Label();
@@ -87,28 +93,24 @@ namespace TheLastInterview.Interview.Minigames
             _instructionLabel.ClipContents = true;
             float instructionSize = FontManager.GetScaledSize(TextType.Body);
             _instructionLabel.AddThemeFontSizeOverride("font_size", (int)instructionSize);
-            _instructionLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
-            _instructionLabel.OffsetTop = 70;
-            _instructionLabel.OffsetBottom = 120;
-            _instructionLabel.OffsetLeft = 30;
-            _instructionLabel.OffsetRight = -30;
-            panel.AddChild(_instructionLabel);
+            mainContainer.AddChild(_instructionLabel);
+            
+            // Contenedor para el input (centrado)
+            var inputContainer = new CenterContainer();
+            inputContainer.Name = "InputContainer";
+            inputContainer.CustomMinimumSize = new Vector2(0, 60);
+            mainContainer.AddChild(inputContainer);
             
             // Campo de texto
             _nameInput = new LineEdit();
             _nameInput.Name = "NameInput";
             _nameInput.PlaceholderText = "Escribe aquí...";
-            _nameInput.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
             _nameInput.CustomMinimumSize = new Vector2(450, 50);
-            _nameInput.OffsetLeft = -225;
-            _nameInput.OffsetRight = 225;
-            _nameInput.OffsetTop = -20;
-            _nameInput.OffsetBottom = 30;
             _nameInput.TextChanged += OnTextChanged;
             _nameInput.TextSubmitted += OnTextSubmitted;
             float inputSize = FontManager.GetScaledSize(TextType.Body);
             _nameInput.AddThemeFontSizeOverride("font_size", (int)inputSize);
-            panel.AddChild(_nameInput);
+            inputContainer.AddChild(_nameInput);
             
             // Label de resultado
             _resultLabel = new Label();
@@ -118,26 +120,27 @@ namespace TheLastInterview.Interview.Minigames
             _resultLabel.VerticalAlignment = VerticalAlignment.Center;
             _resultLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             _resultLabel.ClipContents = true;
+            _resultLabel.CustomMinimumSize = new Vector2(0, 100);
             _resultLabel.AddThemeFontSizeOverride("font_size", (int)instructionSize);
             _resultLabel.AddThemeColorOverride("font_color", new Color(0.8f, 1.0f, 0.6f, 1.0f));
-            _resultLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
-            _resultLabel.OffsetTop = 50;
-            _resultLabel.OffsetBottom = 110;
-            _resultLabel.OffsetLeft = 30;
-            _resultLabel.OffsetRight = -30;
-            panel.AddChild(_resultLabel);
+            mainContainer.AddChild(_resultLabel);
+            
+            // Espaciador
+            var spacer = new Control();
+            spacer.Name = "Spacer";
+            spacer.CustomMinimumSize = new Vector2(0, 20);
+            spacer.SizeFlagsVertical = Control.SizeFlags.ExpandFill;
+            mainContainer.AddChild(spacer);
             
             // Botón continuar (oculto inicialmente)
             _continueButton = new Button();
             _continueButton.Name = "ContinueButton";
             _continueButton.Text = "Continuar";
-            _continueButton.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.BottomWide);
-            _continueButton.OffsetBottom = -30;
-            _continueButton.OffsetTop = -90;
+            _continueButton.CustomMinimumSize = new Vector2(200, 50);
             _continueButton.Visible = false;
             _continueButton.AddThemeFontSizeOverride("font_size", (int)instructionSize);
             _continueButton.Pressed += OnContinuePressed;
-            panel.AddChild(_continueButton);
+            mainContainer.AddChild(_continueButton);
             
             // Focus en el input
             _nameInput.CallDeferred(Control.MethodName.GrabFocus);

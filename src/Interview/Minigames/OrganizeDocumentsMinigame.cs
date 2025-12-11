@@ -76,6 +76,17 @@ namespace TheLastInterview.Interview.Minigames
             panel.AddThemeStyleboxOverride("panel", styleBox);
             AddChild(panel);
             
+            // Contenedor superior con VBoxContainer para textos
+            var topContainer = new VBoxContainer();
+            topContainer.Name = "TopContainer";
+            topContainer.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
+            topContainer.OffsetTop = 15;
+            topContainer.OffsetBottom = 230;
+            topContainer.OffsetLeft = 20;
+            topContainer.OffsetRight = -20;
+            topContainer.AddThemeConstantOverride("separation", 10);
+            panel.AddChild(topContainer);
+            
             // Título
             var titleLabel = new Label();
             titleLabel.Name = "TitleLabel";
@@ -86,12 +97,7 @@ namespace TheLastInterview.Interview.Minigames
             float titleSize = FontManager.GetScaledSize(TextType.Subtitle);
             titleLabel.AddThemeFontSizeOverride("font_size", (int)titleSize);
             titleLabel.AddThemeColorOverride("font_color", new Color(0.8f, 0.8f, 0.2f, 1.0f));
-            titleLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
-            titleLabel.OffsetTop = 15;
-            titleLabel.OffsetBottom = 55;
-            titleLabel.OffsetLeft = 20;
-            titleLabel.OffsetRight = -20;
-            panel.AddChild(titleLabel);
+            topContainer.AddChild(titleLabel);
             
             // Instrucción (más clara y compacta)
             _instructionLabel = new Label();
@@ -104,12 +110,7 @@ namespace TheLastInterview.Interview.Minigames
             float instructionSize = FontManager.GetScaledSize(TextType.Body);
             _instructionLabel.AddThemeFontSizeOverride("font_size", (int)instructionSize);
             _instructionLabel.AddThemeColorOverride("font_color", new Color(0.9f, 0.9f, 0.9f, 1.0f));
-            _instructionLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
-            _instructionLabel.OffsetTop = 65;
-            _instructionLabel.OffsetBottom = 95;
-            _instructionLabel.OffsetLeft = 30;
-            _instructionLabel.OffsetRight = -30;
-            panel.AddChild(_instructionLabel);
+            topContainer.AddChild(_instructionLabel);
             
             // Feedback label (mucho más grande y visible)
             _feedbackLabel = new Label();
@@ -119,15 +120,10 @@ namespace TheLastInterview.Interview.Minigames
             _feedbackLabel.VerticalAlignment = VerticalAlignment.Center;
             _feedbackLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             _feedbackLabel.ClipContents = true;
-            _feedbackLabel.CustomMinimumSize = new Vector2(600, 120);
+            _feedbackLabel.CustomMinimumSize = new Vector2(0, 120);
             _feedbackLabel.AddThemeFontSizeOverride("font_size", (int)instructionSize);
             _feedbackLabel.AddThemeColorOverride("font_color", new Color(0.8f, 1.0f, 0.6f, 1.0f));
-            _feedbackLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
-            _feedbackLabel.OffsetTop = 105;
-            _feedbackLabel.OffsetBottom = 225;
-            _feedbackLabel.OffsetLeft = 150;
-            _feedbackLabel.OffsetRight = -150;
-            panel.AddChild(_feedbackLabel);
+            topContainer.AddChild(_feedbackLabel);
             
             _documents = new List<Control>();
             _slots = new List<Control>();

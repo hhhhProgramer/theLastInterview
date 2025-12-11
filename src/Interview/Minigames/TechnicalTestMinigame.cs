@@ -41,7 +41,7 @@ namespace TheLastInterview.Interview.Minigames
         
         protected override void CreateUI()
         {
-            // Panel de fondo (más alto para que quepa todo sin sobreponerse)
+            // Panel de fondo
             var panel = new Panel();
             panel.Name = "MinigamePanel";
             panel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
@@ -69,6 +69,17 @@ namespace TheLastInterview.Interview.Minigames
             panel.AddThemeStyleboxOverride("panel", styleBox);
             AddChild(panel);
             
+            // Contenedor principal con VBoxContainer
+            var mainContainer = new VBoxContainer();
+            mainContainer.Name = "MainContainer";
+            mainContainer.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
+            mainContainer.OffsetLeft = 30;
+            mainContainer.OffsetRight = -30;
+            mainContainer.OffsetTop = 20;
+            mainContainer.OffsetBottom = -20;
+            mainContainer.AddThemeConstantOverride("separation", 15);
+            panel.AddChild(mainContainer);
+            
             // Título
             var titleLabel = new Label();
             titleLabel.Name = "TitleLabel";
@@ -79,14 +90,9 @@ namespace TheLastInterview.Interview.Minigames
             float titleSize = FontManager.GetScaledSize(TextType.Subtitle);
             titleLabel.AddThemeFontSizeOverride("font_size", (int)titleSize);
             titleLabel.AddThemeColorOverride("font_color", new Color(0.2f, 0.8f, 1.0f, 1.0f));
-            titleLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
-            titleLabel.OffsetTop = 20;
-            titleLabel.OffsetBottom = 60;
-            titleLabel.OffsetLeft = 20;
-            titleLabel.OffsetRight = -20;
-            panel.AddChild(titleLabel);
+            mainContainer.AddChild(titleLabel);
             
-            // Pregunta (más espacio)
+            // Pregunta
             _questionLabel = new Label();
             _questionLabel.Name = "QuestionLabel";
             _questionLabel.Text = $"Demuestra tu competencia técnica. Resuelve este problema:\n\n{_question}";
@@ -97,25 +103,14 @@ namespace TheLastInterview.Interview.Minigames
             float questionSize = FontManager.GetScaledSize(TextType.Body);
             _questionLabel.AddThemeFontSizeOverride("font_size", (int)questionSize);
             _questionLabel.AddThemeColorOverride("font_color", new Color(0.9f, 0.9f, 0.9f, 1.0f));
-            _questionLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
-            _questionLabel.OffsetTop = 70;
-            _questionLabel.OffsetBottom = 160;
-            _questionLabel.OffsetLeft = 30;
-            _questionLabel.OffsetRight = -30;
-            panel.AddChild(_questionLabel);
+            mainContainer.AddChild(_questionLabel);
             
-            // Opciones (movidas más abajo para no sobreponerse con la pregunta)
+            // Opciones
             _optionButtons = new List<Button>();
             var optionsContainer = new VBoxContainer();
             optionsContainer.Name = "OptionsContainer";
-            optionsContainer.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
-            optionsContainer.CustomMinimumSize = new Vector2(400, 180);
-            optionsContainer.OffsetLeft = 150;
-            optionsContainer.OffsetRight = -150;
-            optionsContainer.OffsetTop = 170;
-            optionsContainer.OffsetBottom = 350;
             optionsContainer.AddThemeConstantOverride("separation", 10);
-            panel.AddChild(optionsContainer);
+            mainContainer.AddChild(optionsContainer);
             
             for (int i = 0; i < _options.Length; i++)
             {
@@ -128,7 +123,7 @@ namespace TheLastInterview.Interview.Minigames
                 optionsContainer.AddChild(button);
             }
             
-            // Label de resultado (más espacio desde el botón continuar)
+            // Label de resultado
             _resultLabel = new Label();
             _resultLabel.Name = "ResultLabel";
             _resultLabel.Text = "";
@@ -136,28 +131,27 @@ namespace TheLastInterview.Interview.Minigames
             _resultLabel.VerticalAlignment = VerticalAlignment.Center;
             _resultLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             _resultLabel.ClipContents = true;
-            _resultLabel.CustomMinimumSize = new Vector2(500, 100);
+            _resultLabel.CustomMinimumSize = new Vector2(0, 100);
             _resultLabel.AddThemeFontSizeOverride("font_size", (int)questionSize);
             _resultLabel.AddThemeColorOverride("font_color", new Color(0.8f, 1.0f, 0.6f, 1.0f));
-            // Posicionado más arriba para dejar espacio al botón continuar
-            _resultLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
-            _resultLabel.OffsetTop = 360;
-            _resultLabel.OffsetBottom = 460;
-            _resultLabel.OffsetLeft = 100;
-            _resultLabel.OffsetRight = -100;
-            panel.AddChild(_resultLabel);
+            mainContainer.AddChild(_resultLabel);
             
-            // Botón continuar (más espacio desde el ResultLabel)
+            // Espaciador
+            var spacer = new Control();
+            spacer.Name = "Spacer";
+            spacer.CustomMinimumSize = new Vector2(0, 20);
+            spacer.SizeFlagsVertical = Control.SizeFlags.ExpandFill;
+            mainContainer.AddChild(spacer);
+            
+            // Botón continuar (oculto inicialmente)
             _continueButton = new Button();
             _continueButton.Name = "ContinueButton";
             _continueButton.Text = "Continuar";
-            _continueButton.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.BottomWide);
-            _continueButton.OffsetBottom = -30;
-            _continueButton.OffsetTop = -90;
+            _continueButton.CustomMinimumSize = new Vector2(200, 50);
             _continueButton.Visible = false;
             _continueButton.AddThemeFontSizeOverride("font_size", (int)questionSize);
             _continueButton.Pressed += OnContinuePressed;
-            panel.AddChild(_continueButton);
+            mainContainer.AddChild(_continueButton);
         }
         
         private void OnOptionSelected(int optionIndex)
@@ -187,4 +181,3 @@ namespace TheLastInterview.Interview.Minigames
         }
     }
 }
-

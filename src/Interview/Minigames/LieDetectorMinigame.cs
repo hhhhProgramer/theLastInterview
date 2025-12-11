@@ -46,15 +46,15 @@ namespace TheLastInterview.Interview.Minigames
             var panel = new Panel();
             panel.Name = "MinigamePanel";
             panel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
-            panel.CustomMinimumSize = new Vector2(700, 500);
+            panel.CustomMinimumSize = new Vector2(700, 600);
             panel.AnchorLeft = 0.5f;
             panel.AnchorTop = 0.5f;
             panel.AnchorRight = 0.5f;
             panel.AnchorBottom = 0.5f;
             panel.OffsetLeft = -350;
             panel.OffsetRight = 350;
-            panel.OffsetTop = -250;
-            panel.OffsetBottom = 250;
+            panel.OffsetTop = -300;
+            panel.OffsetBottom = 300;
             
             var styleBox = new StyleBoxFlat();
             styleBox.BgColor = new Color(0.1f, 0.1f, 0.1f, 0.95f);
@@ -70,6 +70,17 @@ namespace TheLastInterview.Interview.Minigames
             panel.AddThemeStyleboxOverride("panel", styleBox);
             AddChild(panel);
             
+            // Contenedor principal con VBoxContainer
+            var mainContainer = new VBoxContainer();
+            mainContainer.Name = "MainContainer";
+            mainContainer.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
+            mainContainer.OffsetLeft = 30;
+            mainContainer.OffsetRight = -30;
+            mainContainer.OffsetTop = 20;
+            mainContainer.OffsetBottom = -20;
+            mainContainer.AddThemeConstantOverride("separation", 15);
+            panel.AddChild(mainContainer);
+            
             // Título
             var titleLabel = new Label();
             titleLabel.Name = "TitleLabel";
@@ -80,12 +91,7 @@ namespace TheLastInterview.Interview.Minigames
             float titleSize = FontManager.GetScaledSize(TextType.Subtitle);
             titleLabel.AddThemeFontSizeOverride("font_size", (int)titleSize);
             titleLabel.AddThemeColorOverride("font_color", new Color(1.0f, 0.2f, 0.2f, 1.0f));
-            titleLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
-            titleLabel.OffsetTop = 20;
-            titleLabel.OffsetBottom = 60;
-            titleLabel.OffsetLeft = 20;
-            titleLabel.OffsetRight = -20;
-            panel.AddChild(titleLabel);
+            mainContainer.AddChild(titleLabel);
             
             // Afirmación del jugador
             _statementLabel = new Label();
@@ -98,28 +104,24 @@ namespace TheLastInterview.Interview.Minigames
             float statementSize = FontManager.GetScaledSize(TextType.Body);
             _statementLabel.AddThemeFontSizeOverride("font_size", (int)statementSize);
             _statementLabel.AddThemeColorOverride("font_color", new Color(0.9f, 0.9f, 0.9f, 1.0f));
-            _statementLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
-            _statementLabel.OffsetTop = 70;
-            _statementLabel.OffsetBottom = 130;
-            _statementLabel.OffsetLeft = 30;
-            _statementLabel.OffsetRight = -30;
-            panel.AddChild(_statementLabel);
+            mainContainer.AddChild(_statementLabel);
+            
+            // Contenedor para la barra (centrado)
+            var barContainer = new CenterContainer();
+            barContainer.Name = "BarContainer";
+            barContainer.CustomMinimumSize = new Vector2(0, 60);
+            mainContainer.AddChild(barContainer);
             
             // Barra del detector
             _detectorBar = new ProgressBar();
             _detectorBar.Name = "DetectorBar";
-            _detectorBar.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
             _detectorBar.CustomMinimumSize = new Vector2(550, 50);
-            _detectorBar.OffsetLeft = -275;
-            _detectorBar.OffsetRight = 275;
-            _detectorBar.OffsetTop = -50;
-            _detectorBar.OffsetBottom = 0;
             _detectorBar.MinValue = 0;
             _detectorBar.MaxValue = 100;
             _detectorBar.Value = 0;
-            panel.AddChild(_detectorBar);
+            barContainer.AddChild(_detectorBar);
             
-            // Label de estado (más grande y visible)
+            // Label de estado
             _statusLabel = new Label();
             _statusLabel.Name = "StatusLabel";
             _statusLabel.Text = "Presiona el botón para confirmar tu honestidad...";
@@ -127,41 +129,41 @@ namespace TheLastInterview.Interview.Minigames
             _statusLabel.VerticalAlignment = VerticalAlignment.Center;
             _statusLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             _statusLabel.ClipContents = true;
-            _statusLabel.CustomMinimumSize = new Vector2(500, 100);
+            _statusLabel.CustomMinimumSize = new Vector2(0, 100);
             _statusLabel.AddThemeFontSizeOverride("font_size", (int)statementSize);
-            // Posicionado debajo de la barra con más espacio
-            _statusLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
-            _statusLabel.OffsetTop = 200;
-            _statusLabel.OffsetBottom = 300;
-            _statusLabel.OffsetLeft = 100;
-            _statusLabel.OffsetRight = -100;
-            panel.AddChild(_statusLabel);
+            mainContainer.AddChild(_statusLabel);
             
-            // Botón confirmar honestidad (ajustado para dejar espacio al StatusLabel)
+            // Contenedor para botón confirmar (centrado)
+            var buttonContainer = new CenterContainer();
+            buttonContainer.Name = "ButtonContainer";
+            buttonContainer.CustomMinimumSize = new Vector2(0, 60);
+            mainContainer.AddChild(buttonContainer);
+            
+            // Botón confirmar honestidad
             _confirmButton = new Button();
             _confirmButton.Name = "ConfirmButton";
             _confirmButton.Text = "Confirmar Honestidad";
-            _confirmButton.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
             _confirmButton.CustomMinimumSize = new Vector2(250, 50);
-            _confirmButton.OffsetLeft = 225;
-            _confirmButton.OffsetRight = -225;
-            _confirmButton.OffsetTop = 310;
-            _confirmButton.OffsetBottom = 360;
             _confirmButton.AddThemeFontSizeOverride("font_size", (int)statementSize);
             _confirmButton.Pressed += OnConfirmPressed;
-            panel.AddChild(_confirmButton);
+            buttonContainer.AddChild(_confirmButton);
             
-            // Botón continuar (más espacio desde el StatusLabel)
+            // Espaciador
+            var spacer = new Control();
+            spacer.Name = "Spacer";
+            spacer.CustomMinimumSize = new Vector2(0, 20);
+            spacer.SizeFlagsVertical = Control.SizeFlags.ExpandFill;
+            mainContainer.AddChild(spacer);
+            
+            // Botón continuar (oculto inicialmente)
             _continueButton = new Button();
             _continueButton.Name = "ContinueButton";
             _continueButton.Text = "Continuar";
-            _continueButton.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.BottomWide);
-            _continueButton.OffsetBottom = -30;
-            _continueButton.OffsetTop = -90;
+            _continueButton.CustomMinimumSize = new Vector2(200, 50);
             _continueButton.Visible = false;
             _continueButton.AddThemeFontSizeOverride("font_size", (int)statementSize);
             _continueButton.Pressed += OnContinuePressed;
-            panel.AddChild(_continueButton);
+            mainContainer.AddChild(_continueButton);
             
             // Iniciar animación de la barra
             StartBarAnimation();
