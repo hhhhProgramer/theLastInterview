@@ -1,5 +1,6 @@
 using Godot;
 using SlimeKingdomChronicles.Core.UI;
+using System;
 
 namespace TheLastInterview.Interview.Minigames
 {
@@ -15,6 +16,7 @@ namespace TheLastInterview.Interview.Minigames
         private System.Random _random = new System.Random();
         private int _letterCount = 0;
         private bool _completed = false;
+        private string _previousText = "";
         
         private string[] _interruptions = {
             "Perfecto. Buena ortografía. Siguiente pregunta.",
@@ -86,7 +88,7 @@ namespace TheLastInterview.Interview.Minigames
             // Instrucción
             _instructionLabel = new Label();
             _instructionLabel.Name = "InstructionLabel";
-            _instructionLabel.Text = "Escribe tu nombre (cada tecla introduce una letra aleatoria):";
+            _instructionLabel.Text = "Escribe tu nombre.";
             _instructionLabel.HorizontalAlignment = HorizontalAlignment.Center;
             _instructionLabel.VerticalAlignment = VerticalAlignment.Center;
             _instructionLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
@@ -108,6 +110,7 @@ namespace TheLastInterview.Interview.Minigames
             _nameInput.CustomMinimumSize = new Vector2(450, 50);
             _nameInput.TextChanged += OnTextChanged;
             _nameInput.TextSubmitted += OnTextSubmitted;
+            _nameInput.GuiInput += OnGuiInput; // Interceptar teclas para prevenir borrado
             float inputSize = FontManager.GetScaledSize(TextType.Body);
             _nameInput.AddThemeFontSizeOverride("font_size", (int)inputSize);
             inputContainer.AddChild(_nameInput);
@@ -146,22 +149,48 @@ namespace TheLastInterview.Interview.Minigames
             _nameInput.CallDeferred(Control.MethodName.GrabFocus);
         }
         
+        private void OnGuiInput(InputEvent @event)
+        {
+            if (_completed) return;
+            
+            // Prevenir borrado (Backspace, Delete, etc.)
+            if (@event is InputEventKey keyEvent && keyEvent.Pressed)
+            {
+                if (keyEvent.Keycode == Key.Backspace || 
+                    keyEvent.Keycode == Key.Delete ||
+                    (keyEvent.Keycode == Key.X && keyEvent.CtrlPressed)) // Ctrl+X
+                {
+                    GetViewport().SetInputAsHandled(); // Bloquear el evento
+                    return;
+                }
+            }
+        }
+        
         private void OnTextChanged(string newText)
         {
             if (_completed) return;
             
-            // Cada vez que escribes, se reemplaza con una letra aleatoria
-            if (!string.IsNullOrEmpty(newText))
+            // Si intentaron borrar (texto más corto), restaurar y agregar letra aleatoria
+            if (newText.Length < _previousText.Length)
             {
-                char randomChar = (char)_random.Next('A', 'Z' + 1);
-                
-                // Desconectar temporalmente para evitar loop
                 _nameInput.TextChanged -= OnTextChanged;
-                _nameInput.Text = randomChar.ToString();
-                _nameInput.CaretColumn = 1;
+                char randomChar = (char)_random.Next('A', 'Z' + 1);
+                _nameInput.Text = _previousText + randomChar.ToString();
+                _letterCount = _nameInput.Text.Length;
+                _previousText = _nameInput.Text;
+                _nameInput.CaretColumn = _nameInput.Text.Length;
                 _nameInput.TextChanged += OnTextChanged;
-                
-                _letterCount++;
+            }
+            // Si escribieron algo nuevo, reemplazar la última letra con una aleatoria
+            else if (newText.Length > _previousText.Length)
+            {
+                _nameInput.TextChanged -= OnTextChanged;
+                char randomChar = (char)_random.Next('A', 'Z' + 1);
+                _nameInput.Text = _previousText + randomChar.ToString();
+                _letterCount = _nameInput.Text.Length;
+                _previousText = _nameInput.Text;
+                _nameInput.CaretColumn = _nameInput.Text.Length;
+                _nameInput.TextChanged += OnTextChanged;
                 
                 // Si completas 5 letras, el entrevistador interrumpe
                 if (_letterCount >= 5)
