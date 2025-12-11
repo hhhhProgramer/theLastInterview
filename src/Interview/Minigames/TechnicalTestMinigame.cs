@@ -41,19 +41,19 @@ namespace TheLastInterview.Interview.Minigames
         
         protected override void CreateUI()
         {
-            // Panel de fondo
+            // Panel de fondo (más alto para que quepa todo sin sobreponerse)
             var panel = new Panel();
             panel.Name = "MinigamePanel";
             panel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
-            panel.CustomMinimumSize = new Vector2(700, 500);
+            panel.CustomMinimumSize = new Vector2(700, 600);
             panel.AnchorLeft = 0.5f;
             panel.AnchorTop = 0.5f;
             panel.AnchorRight = 0.5f;
             panel.AnchorBottom = 0.5f;
             panel.OffsetLeft = -350;
             panel.OffsetRight = 350;
-            panel.OffsetTop = -250;
-            panel.OffsetBottom = 250;
+            panel.OffsetTop = -300;
+            panel.OffsetBottom = 300;
             
             var styleBox = new StyleBoxFlat();
             styleBox.BgColor = new Color(0.1f, 0.1f, 0.1f, 0.95f);
@@ -86,7 +86,7 @@ namespace TheLastInterview.Interview.Minigames
             titleLabel.OffsetRight = -20;
             panel.AddChild(titleLabel);
             
-            // Pregunta
+            // Pregunta (más espacio)
             _questionLabel = new Label();
             _questionLabel.Name = "QuestionLabel";
             _questionLabel.Text = $"Demuestra tu competencia técnica. Resuelve este problema:\n\n{_question}";
@@ -99,21 +99,21 @@ namespace TheLastInterview.Interview.Minigames
             _questionLabel.AddThemeColorOverride("font_color", new Color(0.9f, 0.9f, 0.9f, 1.0f));
             _questionLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
             _questionLabel.OffsetTop = 70;
-            _questionLabel.OffsetBottom = 150;
+            _questionLabel.OffsetBottom = 160;
             _questionLabel.OffsetLeft = 30;
             _questionLabel.OffsetRight = -30;
             panel.AddChild(_questionLabel);
             
-            // Opciones
+            // Opciones (movidas más abajo para no sobreponerse con la pregunta)
             _optionButtons = new List<Button>();
             var optionsContainer = new VBoxContainer();
             optionsContainer.Name = "OptionsContainer";
-            optionsContainer.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
-            optionsContainer.CustomMinimumSize = new Vector2(400, 200);
-            optionsContainer.OffsetLeft = -200;
-            optionsContainer.OffsetRight = 200;
-            optionsContainer.OffsetTop = -50;
-            optionsContainer.OffsetBottom = 150;
+            optionsContainer.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
+            optionsContainer.CustomMinimumSize = new Vector2(400, 180);
+            optionsContainer.OffsetLeft = 150;
+            optionsContainer.OffsetRight = -150;
+            optionsContainer.OffsetTop = 170;
+            optionsContainer.OffsetBottom = 350;
             optionsContainer.AddThemeConstantOverride("separation", 10);
             panel.AddChild(optionsContainer);
             
@@ -128,7 +128,7 @@ namespace TheLastInterview.Interview.Minigames
                 optionsContainer.AddChild(button);
             }
             
-            // Label de resultado
+            // Label de resultado (más espacio desde el botón continuar)
             _resultLabel = new Label();
             _resultLabel.Name = "ResultLabel";
             _resultLabel.Text = "";
@@ -136,16 +136,18 @@ namespace TheLastInterview.Interview.Minigames
             _resultLabel.VerticalAlignment = VerticalAlignment.Center;
             _resultLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             _resultLabel.ClipContents = true;
+            _resultLabel.CustomMinimumSize = new Vector2(500, 100);
             _resultLabel.AddThemeFontSizeOverride("font_size", (int)questionSize);
             _resultLabel.AddThemeColorOverride("font_color", new Color(0.8f, 1.0f, 0.6f, 1.0f));
-            _resultLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
-            _resultLabel.OffsetTop = 160;
-            _resultLabel.OffsetBottom = 220;
-            _resultLabel.OffsetLeft = 30;
-            _resultLabel.OffsetRight = -30;
+            // Posicionado más arriba para dejar espacio al botón continuar
+            _resultLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
+            _resultLabel.OffsetTop = 360;
+            _resultLabel.OffsetBottom = 460;
+            _resultLabel.OffsetLeft = 100;
+            _resultLabel.OffsetRight = -100;
             panel.AddChild(_resultLabel);
             
-            // Botón continuar (oculto inicialmente)
+            // Botón continuar (más espacio desde el ResultLabel)
             _continueButton = new Button();
             _continueButton.Name = "ContinueButton";
             _continueButton.Text = "Continuar";

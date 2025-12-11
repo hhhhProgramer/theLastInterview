@@ -240,8 +240,47 @@ namespace TheLastInterview.Interview.Minigames
             return slot;
         }
         
-        private void OnDocumentClicked(string documentName)
+        private void OnDocumentClicked(string documentName, Control doc)
         {
+            // Seleccionar documento (resaltar visualmente)
+            _selectedDocument = documentName;
+            
+            // Resaltar el documento seleccionado
+            foreach (var d in _documents)
+            {
+                var style = d.GetThemeStylebox("panel") as StyleBoxFlat;
+                if (style != null)
+                {
+                    if (d == doc)
+                    {
+                        style.BorderColor = new Color(1.0f, 1.0f, 0.0f, 1.0f); // Amarillo para seleccionado
+                        style.BorderWidthLeft = 4;
+                        style.BorderWidthTop = 4;
+                        style.BorderWidthRight = 4;
+                        style.BorderWidthBottom = 4;
+                    }
+                    else
+                    {
+                        style.BorderColor = new Color(0.5f, 0.5f, 0.3f, 1.0f); // Normal
+                        style.BorderWidthLeft = 2;
+                        style.BorderWidthTop = 2;
+                        style.BorderWidthRight = 2;
+                        style.BorderWidthBottom = 2;
+                    }
+                }
+            }
+            
+            _feedbackLabel.Text = $"Documento seleccionado: {documentName}\nAhora haz click en una carpeta para organizarlo.";
+        }
+        
+        private void OnSlotClicked(string slotName, Control slot)
+        {
+            if (string.IsNullOrEmpty(_selectedDocument))
+            {
+                _feedbackLabel.Text = "Primero selecciona un documento haciendo click en él.";
+                return;
+            }
+            
             _documentsPlaced++;
             
             // Comentario aleatorio (da igual dónde lo pongas)
@@ -250,12 +289,27 @@ namespace TheLastInterview.Interview.Minigames
                 ? _positiveFeedback[_random.Next(_positiveFeedback.Length)]
                 : _negativeFeedback[_random.Next(_negativeFeedback.Length)];
             
-            _feedbackLabel.Text = $"Entrevistador: \"{feedback}\"";
+            _feedbackLabel.Text = $"Colocaste '{_selectedDocument}' en '{slotName}'\n\nEntrevistador: \"{feedback}\"";
+            
+            // Deseleccionar documento
+            _selectedDocument = null;
+            foreach (var d in _documents)
+            {
+                var style = d.GetThemeStylebox("panel") as StyleBoxFlat;
+                if (style != null)
+                {
+                    style.BorderColor = new Color(0.5f, 0.5f, 0.3f, 1.0f);
+                    style.BorderWidthLeft = 2;
+                    style.BorderWidthTop = 2;
+                    style.BorderWidthRight = 2;
+                    style.BorderWidthBottom = 2;
+                }
+            }
             
             // Después de colocar todos los documentos, mostrar botón continuar
             if (_documentsPlaced >= _documentNames.Length)
             {
-                GetTree().CreateTimer(1.5f).Timeout += () => {
+                GetTree().CreateTimer(2.0f).Timeout += () => {
                     _continueButton.Visible = true;
                 };
             }

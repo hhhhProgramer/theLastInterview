@@ -119,36 +119,39 @@ namespace TheLastInterview.Interview.Minigames
             _detectorBar.Value = 0;
             panel.AddChild(_detectorBar);
             
-            // Label de estado
+            // Label de estado (más grande y visible)
             _statusLabel = new Label();
             _statusLabel.Name = "StatusLabel";
             _statusLabel.Text = "Presiona el botón para confirmar tu honestidad...";
             _statusLabel.HorizontalAlignment = HorizontalAlignment.Center;
+            _statusLabel.VerticalAlignment = VerticalAlignment.Center;
             _statusLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             _statusLabel.ClipContents = true;
+            _statusLabel.CustomMinimumSize = new Vector2(500, 100);
             _statusLabel.AddThemeFontSizeOverride("font_size", (int)statementSize);
-            _statusLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
-            _statusLabel.OffsetTop = 30;
-            _statusLabel.OffsetBottom = 80;
-            _statusLabel.OffsetLeft = 30;
-            _statusLabel.OffsetRight = -30;
+            // Posicionado debajo de la barra con más espacio
+            _statusLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
+            _statusLabel.OffsetTop = 200;
+            _statusLabel.OffsetBottom = 300;
+            _statusLabel.OffsetLeft = 100;
+            _statusLabel.OffsetRight = -100;
             panel.AddChild(_statusLabel);
             
-            // Botón confirmar honestidad
+            // Botón confirmar honestidad (ajustado para dejar espacio al StatusLabel)
             _confirmButton = new Button();
             _confirmButton.Name = "ConfirmButton";
             _confirmButton.Text = "Confirmar Honestidad";
-            _confirmButton.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
+            _confirmButton.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
             _confirmButton.CustomMinimumSize = new Vector2(250, 50);
-            _confirmButton.OffsetLeft = -125;
-            _confirmButton.OffsetRight = 125;
-            _confirmButton.OffsetTop = 60;
-            _confirmButton.OffsetBottom = 110;
+            _confirmButton.OffsetLeft = 225;
+            _confirmButton.OffsetRight = -225;
+            _confirmButton.OffsetTop = 310;
+            _confirmButton.OffsetBottom = 360;
             _confirmButton.AddThemeFontSizeOverride("font_size", (int)statementSize);
             _confirmButton.Pressed += OnConfirmPressed;
             panel.AddChild(_confirmButton);
             
-            // Botón continuar (oculto inicialmente)
+            // Botón continuar (más espacio desde el StatusLabel)
             _continueButton = new Button();
             _continueButton.Name = "ContinueButton";
             _continueButton.Text = "Continuar";
