@@ -135,9 +135,10 @@ namespace TheLastInterview.Interview.Minigames
             popup.AnchorRight = 0.5f;
             popup.AnchorBottom = 0.5f;
             
-            // Posición aleatoria
+            // Posición aleatoria, pero evitar la parte inferior donde está el botón de reiniciar
+            // El botón está en la parte inferior, así que limitamos offsetY para que no baje demasiado
             int offsetX = _random.Next(-200, 200);
-            int offsetY = _random.Next(-150, 150);
+            int offsetY = _random.Next(-200, 50); // Máximo 50 hacia abajo para no tapar el botón
             popup.OffsetLeft = -200 + offsetX;
             popup.OffsetRight = 200 + offsetX;
             popup.OffsetTop = -100 + offsetY;
@@ -218,10 +219,11 @@ namespace TheLastInterview.Interview.Minigames
                 _restartButtonVisible = true;
             }
             
-            // Crear nuevo popup (duplicación)
-            if (_popupPanels.Count < 10) // Limitar a 10 popups máximo
+            // Crear 2 nuevos popups (duplicación exponencial)
+            if (_popupPanels.Count < 15) // Limitar a 15 popups máximo para evitar saturación
             {
-                CreatePopup();
+                CreatePopup(); // Primer popup
+                CreatePopup(); // Segundo popup (duplicación)
             }
         }
         
