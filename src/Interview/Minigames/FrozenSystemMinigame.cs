@@ -126,6 +126,10 @@ namespace TheLastInterview.Interview.Minigames
         
         private void CreatePopup()
         {
+            // Obtener tamaño del viewport para calcular posiciones
+            var viewport = GetViewport();
+            var viewportSize = viewport?.GetVisibleRect().Size ?? new Vector2(2560, 1440);
+            
             var popup = new Panel();
             popup.Name = $"Popup_{_popupPanels.Count}";
             popup.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
@@ -135,27 +139,51 @@ namespace TheLastInterview.Interview.Minigames
             popup.AnchorRight = 0.5f;
             popup.AnchorBottom = 0.5f;
             
-            // Posición aleatoria, pero evitar la parte inferior donde está el botón de reiniciar
-            // El botón está en la parte inferior, así que limitamos offsetY para que no baje demasiado
-            int offsetX = _random.Next(-200, 200);
+            // Posición aleatoria en todo el espacio horizontal
+            // Calcular el rango máximo horizontal (mitad del viewport menos la mitad del ancho del popup)
+            float maxHorizontalOffset = (viewportSize.X * 0.5f) - 200; // 200 es la mitad del ancho del popup
+            int offsetX = _random.Next(-(int)maxHorizontalOffset, (int)maxHorizontalOffset);
+            
+            // Posición vertical: evitar la parte inferior donde está el botón de reiniciar
             int offsetY = _random.Next(-200, 50); // Máximo 50 hacia abajo para no tapar el botón
+            
             popup.OffsetLeft = -200 + offsetX;
             popup.OffsetRight = 200 + offsetX;
             popup.OffsetTop = -100 + offsetY;
             popup.OffsetBottom = 100 + offsetY;
             
-            var styleBox = new StyleBoxFlat();
-            styleBox.BgColor = new Color(0.2f, 0.2f, 0.2f, 0.98f);
-            styleBox.BorderColor = new Color(0.6f, 0.6f, 0.6f, 1.0f);
-            styleBox.BorderWidthLeft = 3;
-            styleBox.BorderWidthTop = 3;
-            styleBox.BorderWidthRight = 3;
-            styleBox.BorderWidthBottom = 3;
-            styleBox.CornerRadiusTopLeft = 8;
-            styleBox.CornerRadiusTopRight = 8;
-            styleBox.CornerRadiusBottomLeft = 8;
-            styleBox.CornerRadiusBottomRight = 8;
-            popup.AddThemeStyleboxOverride("panel", styleBox);
+            // Cargar imagen de fondo del botón
+            const string BUTTON_IMAGE_PATH = "res://src/Image/Gui/button_option.png";
+            var buttonTexture = GD.Load<Texture2D>(BUTTON_IMAGE_PATH);
+            
+            if (buttonTexture != null)
+            {
+                // Usar StyleBoxTexture con la imagen de fondo
+                var styleBox = new StyleBoxTexture();
+                styleBox.Texture = buttonTexture;
+                styleBox.ContentMarginLeft = 20;
+                styleBox.ContentMarginRight = 20;
+                styleBox.ContentMarginTop = 20;
+                styleBox.ContentMarginBottom = 20;
+                popup.AddThemeStyleboxOverride("panel", styleBox);
+            }
+            else
+            {
+                // Fallback: StyleBoxFlat si no se carga la imagen
+                var styleBox = new StyleBoxFlat();
+                styleBox.BgColor = new Color(0.2f, 0.2f, 0.2f, 0.98f);
+                styleBox.BorderColor = new Color(0.6f, 0.6f, 0.6f, 1.0f);
+                styleBox.BorderWidthLeft = 3;
+                styleBox.BorderWidthTop = 3;
+                styleBox.BorderWidthRight = 3;
+                styleBox.BorderWidthBottom = 3;
+                styleBox.CornerRadiusTopLeft = 8;
+                styleBox.CornerRadiusTopRight = 8;
+                styleBox.CornerRadiusBottomLeft = 8;
+                styleBox.CornerRadiusBottomRight = 8;
+                popup.AddThemeStyleboxOverride("panel", styleBox);
+            }
+            
             AddChild(popup);
             
             // Contenedor del popup
@@ -163,7 +191,7 @@ namespace TheLastInterview.Interview.Minigames
             container.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
             container.OffsetLeft = 15;
             container.OffsetRight = -15;
-            container.OffsetTop = 15;
+            container.OffsetTop = 40; // Aumentado de 15 a 40 para bajar el texto
             container.OffsetBottom = -15;
             container.AddThemeConstantOverride("separation", 10);
             popup.AddChild(container);
