@@ -302,6 +302,7 @@ namespace Package.UI
 			_dialogText = new RichTextLabel();
 			_dialogText.Name = "DialogText";
 			_dialogText.LayoutMode = 0; // Position mode para control directo
+			_dialogText.ZIndex = 4096;
 
 			// IMPORTANTE: Establecer posición y tamaño directamente basado en el panel
 			// Esto asegura que el RichTextLabel respete los límites del contenedor
@@ -454,23 +455,38 @@ namespace Package.UI
 			_optionsBackgroundPanel.AddThemeStyleboxOverride("panel", backgroundStyle);
 			_optionsOverlay.AddChild(_optionsBackgroundPanel);
 
-			// Crear contenedor centrado para las opciones (debe estar después del panel de fondo para estar por encima)
-			var centerContainer = new CenterContainer();
-			centerContainer.Name = "OptionsCenterContainer";
-			centerContainer.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
-			centerContainer.MouseFilter = Control.MouseFilterEnum.Stop; // Bloquear clics en el contenedor
-			centerContainer.Visible = true; // Asegurar que sea visible
-			_optionsOverlay.AddChild(centerContainer);
+			// Crear contenedor wrapper para las opciones (pantalla completa para capturar clics)
+			var optionsWrapper = new Control();
+			optionsWrapper.Name = "OptionsWrapper";
+			optionsWrapper.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
+			optionsWrapper.MouseFilter = Control.MouseFilterEnum.Stop; // Bloquear clics en el contenedor
+			optionsWrapper.Visible = true; // Asegurar que sea visible
+			_optionsOverlay.AddChild(optionsWrapper);
 
 			_optionsContainer = new VBoxContainer();
 			_optionsContainer.Name = "OptionsContainer";
 			_optionsContainer.CustomMinimumSize = new Vector2(500, 300);
+			
+			// Posicionar centrado horizontalmente (X) pero en la parte superior (Y=0)
+			// AnchorLeft = 0.5f y AnchorRight = 0.5f = centro horizontal
+			// AnchorTop = 0.0f y AnchorBottom = 0.0f = parte superior
+			_optionsContainer.AnchorLeft = 0.5f; // Centro horizontal
+			_optionsContainer.AnchorTop = 0.0f; // Parte superior (Y=0)
+			_optionsContainer.AnchorRight = 0.5f; // Centro horizontal
+			_optionsContainer.AnchorBottom = 0.0f; // Parte superior
+			
+			// Establecer offsets para el tamaño (centrado horizontalmente)
+			_optionsContainer.OffsetLeft = -250; // Mitad del ancho mínimo (500/2) hacia la izquierda
+			_optionsContainer.OffsetRight = 250; // Mitad del ancho mínimo (500/2) hacia la derecha
+			_optionsContainer.OffsetTop = 0; // Comenzar desde la parte superior
+			_optionsContainer.OffsetBottom = 300; // Altura mínima (se ajustará según contenido)
+			
 			_optionsContainer.SizeFlagsHorizontal = Control.SizeFlags.ShrinkCenter;
 			_optionsContainer.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
 			_optionsContainer.AddThemeConstantOverride("separation", 15);
-			_optionsContainer.Alignment = BoxContainer.AlignmentMode.Center;
+			_optionsContainer.Alignment = BoxContainer.AlignmentMode.Center; // Centrar elementos dentro del contenedor
 			_optionsContainer.Visible = true; // Asegurar que sea visible
-			centerContainer.AddChild(_optionsContainer);
+			optionsWrapper.AddChild(_optionsContainer);
 
 			_optionButtons = new List<Button>();
 
@@ -746,10 +762,10 @@ namespace Package.UI
 			{
 				_optionsBackgroundPanel.Visible = true;
 			}
-			var centerContainer = _optionsOverlay.GetNodeOrNull<CenterContainer>("OptionsCenterContainer");
-			if (centerContainer != null)
+			var optionsWrapper = _optionsOverlay.GetNodeOrNull<Control>("OptionsWrapper");
+			if (optionsWrapper != null)
 			{
-				centerContainer.Visible = true;
+				optionsWrapper.Visible = true;
 			}
 			if (_optionsContainer != null)
 			{
@@ -1724,10 +1740,10 @@ namespace Package.UI
 			{
 				_optionsBackgroundPanel.Visible = false;
 			}
-			var centerContainer = _optionsOverlay?.GetNodeOrNull<CenterContainer>("OptionsCenterContainer");
-			if (centerContainer != null)
+			var optionsWrapper = _optionsOverlay?.GetNodeOrNull<Control>("OptionsWrapper");
+			if (optionsWrapper != null)
 			{
-				centerContainer.Visible = false;
+				optionsWrapper.Visible = false;
 			}
 			if (_optionsContainer != null)
 			{

@@ -71,7 +71,12 @@ namespace Package.Audio
         /// <summary>
         /// Música calmada - Innocence (Calm6)
         /// </summary>
-        Innocence
+        Innocence,
+        
+        /// <summary>
+        /// Música de entrevista - We Have Time
+        /// </summary>
+        WeHaveTime
     }
     
     /// <summary>

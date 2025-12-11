@@ -222,7 +222,8 @@ namespace Package.Audio
                     { MusicTrack.Flashback, "un_understandabl110.ogg" },
                     { MusicTrack.Decision, "Evil5 - Whispers From Beyond.ogg" },
                     { MusicTrack.Searching, "Searching.ogg" },
-                    { MusicTrack.Innocence, "Calm6 - Innocence.ogg" }
+                    { MusicTrack.Innocence, "Calm6 - Innocence.ogg" },
+                    { MusicTrack.WeHaveTime, "WeHaveTimeO.ogg" }
                 };
                 
  

@@ -331,7 +331,7 @@ namespace Package.UI
 
 			// Configurar el DialogBox con tamaños fijos
 			_dialogBox.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
-			_dialogBox.ZIndex = 2; // Encima del DialogSystem
+			_dialogBox.ZIndex = 1000; // ZIndex alto para estar encima de todo (preguntas, UI, etc.)
 			_dialogBox.ZAsRelative = false;
 			_dialogBox.Visible = true; // Siempre visible cuando se crea
 

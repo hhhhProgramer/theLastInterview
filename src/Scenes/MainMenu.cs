@@ -1,4 +1,5 @@
 using Godot;
+using Package.Audio;
 using Package.Background;
 using SlimeKingdomChronicles.Core.UI;
 
@@ -30,6 +31,25 @@ namespace TheLastInterview.Scenes
 
             // Crear UI
             CreateUI();
+            
+            // Reproducir música de fondo al iniciar
+            PlayBackgroundMusic();
+        }
+        
+        /// <summary>
+        /// Reproduce la música de fondo del menú principal
+        /// </summary>
+        private void PlayBackgroundMusic()
+        {
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlayMusic(MusicTrack.WeHaveTime, fadeIn: true);
+                GD.Print("[MainMenu] Reproduciendo música: WeHaveTime");
+            }
+            else
+            {
+                GD.PrintErr("[MainMenu] AudioManager.Instance es null - no se puede reproducir música");
+            }
         }
 
         /// <summary>
