@@ -72,7 +72,8 @@ namespace TheLastInterview.Interview.Models
         Personality,    // Preguntas de personalidad
         Experience,     // Preguntas de experiencia
         Ethics,         // Preguntas éticas
-        Absurd          // Preguntas absurdas/surrealistas
+        Absurd,         // Preguntas absurdas/surrealistas
+        Meta            // Preguntas meta que rompen la cuarta pared
     }
 
     /// <summary>

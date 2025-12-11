@@ -95,6 +95,27 @@ namespace TheLastInterview.Interview.Managers
         }
 
         /// <summary>
+        /// Marca una pregunta como respondida y actualiza el contador de preguntas no-meta
+        /// </summary>
+        public void MarkQuestionAnswered(Question question)
+        {
+            if (question == null) return;
+            
+            _gameState.AnsweredQuestionIds.Add(question.Id);
+            
+            // Si es una pregunta meta, reiniciar el contador
+            if (question.Category == QuestionCategory.Meta)
+            {
+                _gameState.NonMetaQuestionsAnswered = 0;
+            }
+            else
+            {
+                // Si no es meta, incrementar el contador
+                _gameState.NonMetaQuestionsAnswered++;
+            }
+        }
+
+        /// <summary>
         /// Verifica si una pregunta ya fue respondida
         /// </summary>
         public bool IsQuestionAnswered(string questionId)

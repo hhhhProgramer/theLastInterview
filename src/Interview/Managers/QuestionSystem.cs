@@ -1163,23 +1163,889 @@ namespace TheLastInterview.Interview.Managers
                 "q_contradict_05", // Contradice la pregunta sobre proactividad
                 QuestionCategory.Personality
             ));
+
+            // ========== PREGUNTAS META - ROMPEN LA 4TA PARED ==========
+            
+            // Pregunta: ¿Por qué estás leyendo esta pregunta tan seriamente?
+            _allQuestions.Add(new Question(
+                "q_meta_01",
+                "¿Por qué estás leyendo esta pregunta tan seriamente?",
+                new List<Answer>
+                {
+                    new Answer("Porque tomo todo en serio, incluso los juegos", 5, 0, AnswerType.Professional, "Consciente y reflexivo."),
+                    new Answer("Porque no sé si esto es parte del juego o no", 0, 10, AnswerType.AbsurdCoherent, "¿Meta-confusión?"),
+                    new Answer("Porque me diste miedo y ahora leo todo cuidadosamente", 0, 15, AnswerType.AbsurdExtreme, "¿Paranoia meta?"),
+                    new Answer("Porque sospecho que me estás evaluando a través de esto", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente paranoico.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Te diste cuenta de que tu mouse tardó en moverse antes de responder? Yo sí.
+            _allQuestions.Add(new Question(
+                "q_meta_02",
+                "¿Te diste cuenta de que tu mouse tardó en moverse antes de responder? Yo sí.",
+                new List<Answer>
+                {
+                    new Answer("Sí, estaba pensando en la respuesta", 5, 0, AnswerType.Professional, "Reflexivo y cuidadoso."),
+                    new Answer("No, pero ahora me siento observado", 0, 10, AnswerType.AbsurdCoherent, "¿Paranoia justificada?"),
+                    new Answer("Mi mouse tiene vida propia, no es mi culpa", 0, 15, AnswerType.AbsurdExtreme, "¿Mouse autónomo?"),
+                    new Answer("Estaba esperando a que me dieras una pista", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente dependiente.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Estás respondiendo rápido porque sabes que esto es un juego, o porque eres así en la vida real?
+            _allQuestions.Add(new Question(
+                "q_meta_03",
+                "¿Estás respondiendo rápido porque sabes que esto es un juego, o porque eres así en la vida real?",
+                new List<Answer>
+                {
+                    new Answer("Soy así en la vida real, tomo decisiones rápidas", 5, 0, AnswerType.Professional, "Decisivo y confiado."),
+                    new Answer("Es un juego, así que no importa tanto", 0, 10, AnswerType.AbsurdCoherent, "¿Desapego lúdico?"),
+                    new Answer("No sé, ¿cuál es la diferencia?", 0, 15, AnswerType.AbsurdExtreme, "¿Filosofía existencial?"),
+                    new Answer("Respondo rápido para que no me juzgues más", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente evasivo.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Estás eligiendo la opción más graciosa o la que te hace sentir menos culpable?
+            _allQuestions.Add(new Question(
+                "q_meta_04",
+                "¿Estás eligiendo la opción más graciosa o la que te hace sentir menos culpable?",
+                new List<Answer>
+                {
+                    new Answer("La que mejor representa mi respuesta honesta", 5, 0, AnswerType.Professional, "Honesto y auténtico."),
+                    new Answer("La más graciosa, obviamente", 0, 10, AnswerType.AbsurdCoherent, "¿Prioridad al humor?"),
+                    new Answer("Ambas, dependiendo de mi estado de ánimo", 0, 15, AnswerType.AbsurdExtreme, "¿Estrategia adaptativa?"),
+                    new Answer("La que creo que quieres que elija", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente complaciente.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Te gustaría que este juego dejara de juzgarte tanto?
+            _allQuestions.Add(new Question(
+                "q_meta_05",
+                "¿Te gustaría que este juego dejara de juzgarte tanto?",
+                new List<Answer>
+                {
+                    new Answer("No, el juicio es parte de la experiencia", 5, 0, AnswerType.Professional, "Aceptación y madurez."),
+                    new Answer("Sí, pero sé que no va a pasar", 0, 10, AnswerType.AbsurdCoherent, "¿Resignación realista?"),
+                    new Answer("Me gusta que me juzgue, es estimulante", 0, 15, AnswerType.AbsurdExtreme, "¿Masoquismo lúdico?"),
+                    new Answer("No me juzga, yo me juzgo a mí mismo", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente introspectivo.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Eres consciente de que el entrevistador solo existe porque presionaste "Start"?
+            _allQuestions.Add(new Question(
+                "q_meta_06",
+                "¿Eres consciente de que el entrevistador solo existe porque presionaste \"Start\"?",
+                new List<Answer>
+                {
+                    new Answer("Sí, es parte de la mecánica del juego", 5, 0, AnswerType.Professional, "Consciente del medio."),
+                    new Answer("No, ahora me siento responsable de su existencia", 0, 10, AnswerType.AbsurdCoherent, "¿Carga existencial?"),
+                    new Answer("Él existe porque yo existo, es simbiótico", 0, 15, AnswerType.AbsurdExtreme, "¿Filosofía simbiótica?"),
+                    new Answer("Si dejo de jugar, ¿deja de existir? Eso es perturbador", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente existencial.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Te sientes observado incluso cuando nadie juega?
+            _allQuestions.Add(new Question(
+                "q_meta_07",
+                "¿Te sientes observado incluso cuando nadie juega?",
+                new List<Answer>
+                {
+                    new Answer("No, es solo un juego", 5, 0, AnswerType.Professional, "Lúcido y racional."),
+                    new Answer("Sí, pero solo un poco", 0, 10, AnswerType.AbsurdCoherent, "¿Paranoia leve?"),
+                    new Answer("Siempre me siento observado, juego o no", 0, 15, AnswerType.AbsurdExtreme, "¿Paranoia constante?"),
+                    new Answer("El juego me observa incluso cuando está cerrado", -10, 20, AnswerType.Sociopathic, "Eso es... específicamente paranoico.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Hiciste clic por convicción o sólo porque no había otra opción decente?
+            _allQuestions.Add(new Question(
+                "q_meta_08",
+                "¿Hiciste clic por convicción o sólo porque no había otra opción decente?",
+                new List<Answer>
+                {
+                    new Answer("Por convicción, elegí la mejor opción", 5, 0, AnswerType.Professional, "Decisivo y confiado."),
+                    new Answer("Porque era la menos mala de las opciones", 0, 10, AnswerType.AbsurdCoherent, "¿Pragmatismo forzado?"),
+                    new Answer("Hice clic al azar y esperé lo mejor", 0, 15, AnswerType.AbsurdExtreme, "¿Estrategia aleatoria?"),
+                    new Answer("Hice clic porque todas las opciones eran igual de malas", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente resignado.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Por qué sigues leyendo todo si podrías saltar directo al final?
+            _allQuestions.Add(new Question(
+                "q_meta_09",
+                "¿Por qué sigues leyendo todo si podrías saltar directo al final?",
+                new List<Answer>
+                {
+                    new Answer("Porque valoro la experiencia completa", 5, 0, AnswerType.Professional, "Apreciativo y paciente."),
+                    new Answer("Porque tengo miedo de perderme algo importante", 0, 10, AnswerType.AbsurdCoherent, "¿FOMO lúdico?"),
+                    new Answer("Porque no sé cómo saltar al final", 0, 15, AnswerType.AbsurdExtreme, "¿Ignorancia técnica?"),
+                    new Answer("Porque el juego me obliga a leer todo", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente fatalista.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Estás pensando lo que yo creo que estás pensando?
+            _allQuestions.Add(new Question(
+                "q_meta_10",
+                "¿Estás pensando lo que yo creo que estás pensando?",
+                new List<Answer>
+                {
+                    new Answer("Probablemente no, pero es interesante intentar adivinarlo", 5, 0, AnswerType.Professional, "Filosófico y abierto."),
+                    new Answer("Sí, y me da miedo que lo sepas", 0, 10, AnswerType.AbsurdCoherent, "¿Paranoia justificada?"),
+                    new Answer("No sé qué estás pensando que estoy pensando", 0, 15, AnswerType.AbsurdExtreme, "¿Meta-confusión?"),
+                    new Answer("Estoy pensando que estás pensando que estoy pensando", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente recursivo.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // ========== PREGUNTAS QUE TE HABLAN DIRECTAMENTE A TI (JUGADOR) ==========
+            
+            // Pregunta: ¿Por qué sigues jugando esto en vez de hacer algo productivo?
+            _allQuestions.Add(new Question(
+                "q_meta_player_01",
+                "¿Por qué sigues jugando esto en vez de hacer algo productivo?",
+                new List<Answer>
+                {
+                    new Answer("Porque el entretenimiento también es válido", 5, 0, AnswerType.Professional, "Balanceado y consciente."),
+                    new Answer("Porque esto es más interesante que ser productivo", 0, 10, AnswerType.AbsurdCoherent, "¿Prioridades cuestionables?"),
+                    new Answer("Porque la productividad es una ilusión", 0, 15, AnswerType.AbsurdExtreme, "¿Filosofía anti-productividad?"),
+                    new Answer("Porque estoy procrastinando y lo sé", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente honesto.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: Dime la verdad: ¿te estás riendo o solo moviendo el mouse como zombie?
+            _allQuestions.Add(new Question(
+                "q_meta_player_02",
+                "Dime la verdad: ¿te estás riendo o solo moviendo el mouse como zombie?",
+                new List<Answer>
+                {
+                    new Answer("Me estoy riendo, el juego es gracioso", 5, 0, AnswerType.Professional, "Apreciativo y honesto."),
+                    new Answer("Un poco de ambos, la verdad", 0, 10, AnswerType.AbsurdCoherent, "¿Híbrido lúdico?"),
+                    new Answer("Solo muevo el mouse, ya no siento nada", 0, 15, AnswerType.AbsurdExtreme, "¿Desensibilización lúdica?"),
+                    new Answer("Soy un zombie que se ríe, es complicado", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente contradictorio.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿En qué momento decidiste que esta sería una buena idea para tu tarde?
+            _allQuestions.Add(new Question(
+                "q_meta_player_03",
+                "¿En qué momento decidiste que esta sería una buena idea para tu tarde?",
+                new List<Answer>
+                {
+                    new Answer("Cuando vi el concepto del juego", 5, 0, AnswerType.Professional, "Decisivo y curioso."),
+                    new Answer("Cuando me aburrí de todo lo demás", 0, 10, AnswerType.AbsurdCoherent, "¿Último recurso?"),
+                    new Answer("Nunca lo decidí, solo pasó", 0, 15, AnswerType.AbsurdExtreme, "¿Fatalismo lúdico?"),
+                    new Answer("Cuando me di cuenta de que ya era muy tarde para arrepentirme", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente resignado.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Cuántos juegos de entrevista vas a jugar antes de aceptar que necesitas un descanso?
+            _allQuestions.Add(new Question(
+                "q_meta_player_04",
+                "¿Cuántos juegos de entrevista vas a jugar antes de aceptar que necesitas un descanso?",
+                new List<Answer>
+                {
+                    new Answer("Este es el primero y último", 5, 0, AnswerType.Professional, "Consciente y moderado."),
+                    new Answer("Hasta que me canse, probablemente muchos", 0, 10, AnswerType.AbsurdCoherent, "¿Persistencia cuestionable?"),
+                    new Answer("Infinitos, nunca descansaré", 0, 15, AnswerType.AbsurdExtreme, "¿Adicción lúdica?"),
+                    new Answer("Hasta que el juego me diga que pare", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente dependiente.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Te das cuenta de que tus elecciones no solo afectan al personaje… te afectan a ti?
+            _allQuestions.Add(new Question(
+                "q_meta_player_05",
+                "¿Te das cuenta de que tus elecciones no solo afectan al personaje… te afectan a ti?",
+                new List<Answer>
+                {
+                    new Answer("Sí, los juegos pueden ser reflexivos", 5, 0, AnswerType.Professional, "Consciente y reflexivo."),
+                    new Answer("No, pero ahora me da miedo", 0, 10, AnswerType.AbsurdCoherent, "¿Paranoia justificada?"),
+                    new Answer("Sí, y me gusta que me afecten", 0, 15, AnswerType.AbsurdExtreme, "¿Masoquismo emocional?"),
+                    new Answer("No me afectan, soy inmune a los juegos", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente negacionista.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Estás presionando las opciones al azar? No mientas. Te estoy viendo.
+            _allQuestions.Add(new Question(
+                "q_meta_player_06",
+                "¿Estás presionando las opciones al azar? No mientas. Te estoy viendo.",
+                new List<Answer>
+                {
+                    new Answer("No, leo y elijo cuidadosamente", 5, 0, AnswerType.Professional, "Cuidadoso y deliberado."),
+                    new Answer("A veces, cuando me aburro", 0, 10, AnswerType.AbsurdCoherent, "¿Honestidad parcial?"),
+                    new Answer("Sí, pero solo para ver qué pasa", 0, 15, AnswerType.AbsurdExtreme, "¿Experimentación caótica?"),
+                    new Answer("Sí, y me da igual si lo sabes", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente desafiante.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Cuándo fue la última vez que guardaste algo importante?
+            _allQuestions.Add(new Question(
+                "q_meta_player_07",
+                "¿Cuándo fue la última vez que guardaste algo importante?",
+                new List<Answer>
+                {
+                    new Answer("Hace poco, soy cuidadoso con mis archivos", 5, 0, AnswerType.Professional, "Organizado y responsable."),
+                    new Answer("No recuerdo, probablemente hace mucho", 0, 10, AnswerType.AbsurdCoherent, "¿Memoria cuestionable?"),
+                    new Answer("Nunca, confío en la nube", 0, 15, AnswerType.AbsurdExtreme, "¿Fe tecnológica?"),
+                    new Answer("No guardo nada, vivo peligrosamente", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente temerario.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿De verdad pensaste que habría una respuesta correcta aquí?
+            _allQuestions.Add(new Question(
+                "q_meta_player_08",
+                "¿De verdad pensaste que habría una respuesta correcta aquí?",
+                new List<Answer>
+                {
+                    new Answer("No, pero busco la mejor opción posible", 5, 0, AnswerType.Professional, "Realista y optimista."),
+                    new Answer("Sí, y me decepcioné cuando no la encontré", 0, 10, AnswerType.AbsurdCoherent, "¿Expectativas irrealistas?"),
+                    new Answer("No sé, sigo buscando", 0, 15, AnswerType.AbsurdExtreme, "¿Búsqueda infinita?"),
+                    new Answer("Todas son incorrectas, así que todas son correctas", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente paradójico.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Sabes que esta pregunta fue escrita solo para incomodarte a ti?
+            _allQuestions.Add(new Question(
+                "q_meta_player_09",
+                "¿Sabes que esta pregunta fue escrita solo para incomodarte a ti?",
+                new List<Answer>
+                {
+                    new Answer("Sí, y funciona", 5, 0, AnswerType.Professional, "Consciente y honesto."),
+                    new Answer("No, pero ahora me siento incómodo", 0, 10, AnswerType.AbsurdCoherent, "¿Incomodidad retroactiva?"),
+                    new Answer("Sí, pero me gusta sentirme incómodo", 0, 15, AnswerType.AbsurdExtreme, "¿Masoquismo emocional?"),
+                    new Answer("No me incomoda, soy inmune", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente resistente.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Crees que el juego te está evaluando? Porque sí lo está.
+            _allQuestions.Add(new Question(
+                "q_meta_player_10",
+                "¿Crees que el juego te está evaluando? Porque sí lo está.",
+                new List<Answer>
+                {
+                    new Answer("Sí, es parte de la mecánica del juego", 5, 0, AnswerType.Professional, "Consciente del sistema."),
+                    new Answer("No, pero ahora me da miedo", 0, 10, AnswerType.AbsurdCoherent, "¿Paranoia justificada?"),
+                    new Answer("Sí, y me gusta ser evaluado", 0, 15, AnswerType.AbsurdExtreme, "¿Masoquismo evaluativo?"),
+                    new Answer("No me importa, evaluar es subjetivo", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente desapegado.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // ========== PREGUNTAS QUE ADMITEN QUE SON UN JUEGO ==========
+            
+            // Pregunta: Si este juego tuviera presupuesto, ¿qué crees que verías en pantalla?
+            _allQuestions.Add(new Question(
+                "q_meta_game_01",
+                "Si este juego tuviera presupuesto, ¿qué crees que verías en pantalla?",
+                new List<Answer>
+                {
+                    new Answer("Animaciones y gráficos más elaborados", 5, 0, AnswerType.Professional, "Realista y visual."),
+                    new Answer("Más preguntas absurdas como estas", 0, 10, AnswerType.AbsurdCoherent, "¿Prioridad al contenido?"),
+                    new Answer("Un entrevistador 3D con expresiones faciales", 0, 15, AnswerType.AbsurdExtreme, "¿Realismo extremo?"),
+                    new Answer("Nada, el presupuesto se gastaría en café", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente realista.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Te molesta que este juego no tenga IA pero sí preguntas profundas?
+            _allQuestions.Add(new Question(
+                "q_meta_game_02",
+                "¿Te molesta que este juego no tenga IA pero sí preguntas profundas?",
+                new List<Answer>
+                {
+                    new Answer("No, las preguntas escritas son más consistentes", 5, 0, AnswerType.Professional, "Apreciativo del diseño."),
+                    new Answer("Un poco, pero me divierte de todas formas", 0, 10, AnswerType.AbsurdCoherent, "¿Aceptación condicional?"),
+                    new Answer("Sí, quiero que el juego piense por sí mismo", 0, 15, AnswerType.AbsurdExtreme, "¿IA sentiente?"),
+                    new Answer("No me molesta, me molesta que me lo recuerdes", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente contradictorio.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Te gustaría que agregara más gráficos o ya te acostumbraste a mi pobreza visual?
+            _allQuestions.Add(new Question(
+                "q_meta_game_03",
+                "¿Te gustaría que agregara más gráficos o ya te acostumbraste a mi pobreza visual?",
+                new List<Answer>
+                {
+                    new Answer("El estilo actual es suficiente y funcional", 5, 0, AnswerType.Professional, "Apreciativo del estilo."),
+                    new Answer("Más gráficos serían geniales, pero no es necesario", 0, 10, AnswerType.AbsurdCoherent, "¿Mejora opcional?"),
+                    new Answer("Ya me acostumbré, no cambies nada", 0, 15, AnswerType.AbsurdExtreme, "¿Resistencia al cambio?"),
+                    new Answer("Me gusta la pobreza visual, es auténtica", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente nostálgico.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Qué te hace seguir aquí aunque no haya animaciones llamativas?
+            _allQuestions.Add(new Question(
+                "q_meta_game_04",
+                "¿Qué te hace seguir aquí aunque no haya animaciones llamativas?",
+                new List<Answer>
+                {
+                    new Answer("El contenido y las preguntas interesantes", 5, 0, AnswerType.Professional, "Valora el contenido."),
+                    new Answer("La curiosidad de ver qué pregunta viene", 0, 10, AnswerType.AbsurdCoherent, "¿Curiosidad adictiva?"),
+                    new Answer("No sé, pero sigo aquí", 0, 15, AnswerType.AbsurdExtreme, "¿Inercia lúdica?"),
+                    new Answer("Me siento atrapado y no puedo salir", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente prisionero.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Crees que este juego necesita mecánicas nuevas o ya te resignaste?
+            _allQuestions.Add(new Question(
+                "q_meta_game_05",
+                "¿Crees que este juego necesita mecánicas nuevas o ya te resignaste?",
+                new List<Answer>
+                {
+                    new Answer("Las mecánicas actuales son suficientes", 5, 0, AnswerType.Professional, "Satisfecho con el diseño."),
+                    new Answer("Más mecánicas serían geniales", 0, 10, AnswerType.AbsurdCoherent, "¿Deseo de expansión?"),
+                    new Answer("Ya me resigné, pero sigo jugando", 0, 15, AnswerType.AbsurdExtreme, "¿Resignación activa?"),
+                    new Answer("No necesito mecánicas, solo más preguntas como esta", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente meta.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Sientes que las opciones importan aunque yo sé que no?
+            _allQuestions.Add(new Question(
+                "q_meta_game_06",
+                "¿Sientes que las opciones importan aunque yo sé que no?",
+                new List<Answer>
+                {
+                    new Answer("Sí, cada elección afecta la experiencia", 5, 0, AnswerType.Professional, "Valora las decisiones."),
+                    new Answer("A veces, pero sé que es ilusorio", 0, 10, AnswerType.AbsurdCoherent, "¿Ilusión consciente?"),
+                    new Answer("No, pero finjo que sí para disfrutar más", 0, 15, AnswerType.AbsurdExtreme, "¿Autoengaño lúdico?"),
+                    new Answer("Nada importa, todo es aleatorio", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente nihilista.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Si pudieras reescribir esta pregunta, la harías mejor o peor?
+            _allQuestions.Add(new Question(
+                "q_meta_game_07",
+                "¿Si pudieras reescribir esta pregunta, la harías mejor o peor?",
+                new List<Answer>
+                {
+                    new Answer("Mejor, pero respeto la original", 5, 0, AnswerType.Professional, "Respetuoso y constructivo."),
+                    new Answer("Peor, definitivamente peor", 0, 10, AnswerType.AbsurdCoherent, "¿Modestia excesiva?"),
+                    new Answer("Igual, porque no sé escribir preguntas", 0, 15, AnswerType.AbsurdExtreme, "¿Auto-duda creativa?"),
+                    new Answer("La reescribiría para que sea sobre mí", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente narcisista.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Cuánto tardaste en darte cuenta de que tu final depende de un random?
+            _allQuestions.Add(new Question(
+                "q_meta_game_08",
+                "¿Cuánto tardaste en darte cuenta de que tu final depende de un random?",
+                new List<Answer>
+                {
+                    new Answer("Desde el principio, es obvio", 5, 0, AnswerType.Professional, "Consciente del sistema."),
+                    new Answer("Hasta ahora, y me siento engañado", 0, 10, AnswerType.AbsurdCoherent, "¿Decepción tardía?"),
+                    new Answer("Aún no me he dado cuenta", 0, 15, AnswerType.AbsurdExtreme, "¿Ignorancia persistente?"),
+                    new Answer("Siempre lo supe, pero finjo que no", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente autoengañoso.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Crees que el entrevistador piensa por sí mismo? Spoiler: no.
+            _allQuestions.Add(new Question(
+                "q_meta_game_09",
+                "¿Crees que el entrevistador piensa por sí mismo? Spoiler: no.",
+                new List<Answer>
+                {
+                    new Answer("No, es un script preprogramado", 5, 0, AnswerType.Professional, "Consciente del código."),
+                    new Answer("Sí, y el spoiler me rompió la ilusión", 0, 10, AnswerType.AbsurdCoherent, "¿Ilusión rota?"),
+                    new Answer("No sé, pero ahora dudo de todo", 0, 15, AnswerType.AbsurdExtreme, "¿Crisis existencial lúdica?"),
+                    new Answer("Sí piensa, pero solo cuando no lo veo", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente paranoico.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Te molesta que el juego se burle de ti? Porque va a seguir.
+            _allQuestions.Add(new Question(
+                "q_meta_game_10",
+                "¿Te molesta que el juego se burle de ti? Porque va a seguir.",
+                new List<Answer>
+                {
+                    new Answer("No, es parte del humor del juego", 5, 0, AnswerType.Professional, "Apreciativo del tono."),
+                    new Answer("Un poco, pero me divierte", 0, 10, AnswerType.AbsurdCoherent, "¿Masoquismo ligero?"),
+                    new Answer("Sí, pero sigo jugando de todas formas", 0, 15, AnswerType.AbsurdExtreme, "¿Masoquismo completo?"),
+                    new Answer("Me gusta que se burle, es estimulante", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente masoquista.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // ========== PREGUNTAS QUE SE AUTOCRITICAN ==========
+            
+            // Pregunta: En una escala del 1 al 10, ¿qué tan mediocre te parece mi interfaz?
+            _allQuestions.Add(new Question(
+                "q_meta_critique_01",
+                "En una escala del 1 al 10, ¿qué tan mediocre te parece mi interfaz?",
+                new List<Answer>
+                {
+                    new Answer("Un 5, es funcional y adecuada", 5, 0, AnswerType.Professional, "Balanceado y honesto."),
+                    new Answer("Un 7, pero tiene su encanto", 0, 10, AnswerType.AbsurdCoherent, "¿Encanto en la mediocridad?"),
+                    new Answer("Un 10, es perfectamente mediocre", 0, 15, AnswerType.AbsurdExtreme, "¿Perfección en mediocridad?"),
+                    new Answer("Un 11, supera todas las expectativas de mediocridad", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente elogioso.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Te gustaría que la próxima pregunta fuera menos decepcionante?
+            _allQuestions.Add(new Question(
+                "q_meta_critique_02",
+                "¿Te gustaría que la próxima pregunta fuera menos decepcionante?",
+                new List<Answer>
+                {
+                    new Answer("No, las preguntas actuales están bien", 5, 0, AnswerType.Professional, "Satisfecho con el contenido."),
+                    new Answer("Sí, pero sé que no va a pasar", 0, 10, AnswerType.AbsurdCoherent, "¿Esperanza realista?"),
+                    new Answer("No, me gusta la decepción", 0, 15, AnswerType.AbsurdExtreme, "¿Masoquismo emocional?"),
+                    new Answer("Ya me acostumbré a la decepción", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente resignado.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Estoy escribiendo demasiado? No respondas eso.
+            _allQuestions.Add(new Question(
+                "q_meta_critique_03",
+                "¿Estoy escribiendo demasiado? No respondas eso.",
+                new List<Answer>
+                {
+                    new Answer("No, la longitud es apropiada", 5, 0, AnswerType.Professional, "Respetuoso de las instrucciones."),
+                    new Answer("Sí, pero no puedo responder", 0, 10, AnswerType.AbsurdCoherent, "¿Conflicto de instrucciones?"),
+                    new Answer("No responderé, como me pediste", 0, 15, AnswerType.AbsurdExtreme, "¿Obediencia literal?"),
+                    new Answer("Respondo de todas formas: sí, escribes mucho", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente desafiante.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: Si este juego crashéa, ¿dirías que es por tu culpa o por la mía?
+            _allQuestions.Add(new Question(
+                "q_meta_critique_04",
+                "Si este juego crashéa, ¿dirías que es por tu culpa o por la mía?",
+                new List<Answer>
+                {
+                    new Answer("Por el código, es responsabilidad del desarrollador", 5, 0, AnswerType.Professional, "Realista y justo."),
+                    new Answer("Por mí, hice algo mal", 0, 10, AnswerType.AbsurdCoherent, "¿Auto-culpa excesiva?"),
+                    new Answer("Por ambos, es un esfuerzo conjunto", 0, 15, AnswerType.AbsurdExtreme, "¿Responsabilidad compartida?"),
+                    new Answer("Por el universo, todo está conectado", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente místico.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Cuántos bugs estás dispuesto a perdonar antes de renunciar?
+            _allQuestions.Add(new Question(
+                "q_meta_critique_05",
+                "¿Cuántos bugs estás dispuesto a perdonar antes de renunciar?",
+                new List<Answer>
+                {
+                    new Answer("Algunos, dependiendo de la gravedad", 5, 0, AnswerType.Professional, "Razonable y tolerante."),
+                    new Answer("Infinitos, soy muy paciente", 0, 10, AnswerType.AbsurdCoherent, "¿Paciencia infinita?"),
+                    new Answer("Ninguno, pero sigo jugando de todas formas", 0, 15, AnswerType.AbsurdExtreme, "¿Contradicción lúdica?"),
+                    new Answer("Los bugs son características, no errores", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente optimista.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Te molesta que esto parezca sacado de un jam de dos días?
+            _allQuestions.Add(new Question(
+                "q_meta_critique_06",
+                "¿Te molesta que esto parezca sacado de un jam de dos días?",
+                new List<Answer>
+                {
+                    new Answer("No, los jams pueden tener buen contenido", 5, 0, AnswerType.Professional, "Apreciativo del proceso."),
+                    new Answer("Un poco, pero tiene su encanto", 0, 10, AnswerType.AbsurdCoherent, "¿Encanto en la rapidez?"),
+                    new Answer("Sí, pero me gusta el estilo crudo", 0, 15, AnswerType.AbsurdExtreme, "¿Aprecio por lo crudo?"),
+                    new Answer("Me encanta que parezca de jam, es auténtico", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente nostálgico.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Qué prefieres: una pregunta profunda o una mediocre pero corta?
+            _allQuestions.Add(new Question(
+                "q_meta_critique_07",
+                "¿Qué prefieres: una pregunta profunda o una mediocre pero corta?",
+                new List<Answer>
+                {
+                    new Answer("Una pregunta profunda, valoro el contenido", 5, 0, AnswerType.Professional, "Valora la profundidad."),
+                    new Answer("Una mediocre pero corta, ahorra tiempo", 0, 10, AnswerType.AbsurdCoherent, "¿Eficiencia sobre calidad?"),
+                    new Answer("Ambas, en secuencia", 0, 15, AnswerType.AbsurdExtreme, "¿Greedo de contenido?"),
+                    new Answer("Una profunda y mediocre a la vez", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente contradictorio.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Por qué estás evaluando un juego que no te está evaluando bien?
+            _allQuestions.Add(new Question(
+                "q_meta_critique_08",
+                "¿Por qué estás evaluando un juego que no te está evaluando bien?",
+                new List<Answer>
+                {
+                    new Answer("Porque el juego es interesante a pesar de todo", 5, 0, AnswerType.Professional, "Apreciativo y justo."),
+                    new Answer("Por venganza, quiero evaluarlo mal", 0, 10, AnswerType.AbsurdCoherent, "¿Venganza evaluativa?"),
+                    new Answer("Porque me gusta la ironía", 0, 15, AnswerType.AbsurdExtreme, "¿Aprecio por la ironía?"),
+                    new Answer("No lo estoy evaluando, solo estoy aquí", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente pasivo.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Qué te sorprende más: que yo exista o que tú sigas jugando?
+            _allQuestions.Add(new Question(
+                "q_meta_critique_09",
+                "¿Qué te sorprende más: que yo exista o que tú sigas jugando?",
+                new List<Answer>
+                {
+                    new Answer("Que existas, es impresionante que funcione", 5, 0, AnswerType.Professional, "Apreciativo del logro."),
+                    new Answer("Que siga jugando, no sé por qué lo hago", 0, 10, AnswerType.AbsurdCoherent, "¿Auto-cuestionamiento?"),
+                    new Answer("Ambas cosas me sorprenden igual", 0, 15, AnswerType.AbsurdExtreme, "¿Sorpresa balanceada?"),
+                    new Answer("Nada me sorprende, ya nada tiene sentido", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente nihilista.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿En qué momento el juego perdió tu respeto?
+            _allQuestions.Add(new Question(
+                "q_meta_critique_10",
+                "¿En qué momento el juego perdió tu respeto?",
+                new List<Answer>
+                {
+                    new Answer("Nunca lo perdió, lo respeto", 5, 0, AnswerType.Professional, "Respetuoso y apreciativo."),
+                    new Answer("Cuando empezó a burlarse de mí", 0, 10, AnswerType.AbsurdCoherent, "¿Sensibilidad al humor?"),
+                    new Answer("Desde el principio, nunca lo tuve", 0, 15, AnswerType.AbsurdExtreme, "¿Respeto nunca existente?"),
+                    new Answer("Lo perdí y lo recuperé varias veces", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente volátil.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // ========== PREGUNTAS QUE HABLAN DEL DESARROLLADOR ==========
+            
+            // Pregunta: ¿Te parece que el desarrollador durmió lo suficiente?
+            _allQuestions.Add(new Question(
+                "q_meta_dev_01",
+                "¿Te parece que el desarrollador durmió lo suficiente?",
+                new List<Answer>
+                {
+                    new Answer("Sí, el juego está bien desarrollado", 5, 0, AnswerType.Professional, "Apreciativo del trabajo."),
+                    new Answer("No, se nota el cansancio en el código", 0, 10, AnswerType.AbsurdCoherent, "¿Percepción de fatiga?"),
+                    new Answer("No sé, pero espero que sí", 0, 15, AnswerType.AbsurdExtreme, "¿Preocupación empática?"),
+                    new Answer("Definitivamente no, y se nota", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente crítico.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Crees que el creador de este juego tenía un buen día cuando escribió esto?
+            _allQuestions.Add(new Question(
+                "q_meta_dev_02",
+                "¿Crees que el creador de este juego tenía un buen día cuando escribió esto?",
+                new List<Answer>
+                {
+                    new Answer("Sí, se nota la creatividad y entusiasmo", 5, 0, AnswerType.Professional, "Apreciativo del proceso creativo."),
+                    new Answer("No, parece escrito en un mal día", 0, 10, AnswerType.AbsurdCoherent, "¿Percepción de negatividad?"),
+                    new Answer("No sé, pero espero que sí", 0, 15, AnswerType.AbsurdExtreme, "¿Optimismo empático?"),
+                    new Answer("Definitivamente no, y se nota en cada línea", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente pesimista.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Si supieras cuántos assets se reciclaron, cambiarías tu respuesta?
+            _allQuestions.Add(new Question(
+                "q_meta_dev_03",
+                "¿Si supieras cuántos assets se reciclaron, cambiarías tu respuesta?",
+                new List<Answer>
+                {
+                    new Answer("No, el reciclaje es parte del desarrollo", 5, 0, AnswerType.Professional, "Entiende el proceso."),
+                    new Answer("Sí, me decepcionaría un poco", 0, 10, AnswerType.AbsurdCoherent, "¿Expectativas de originalidad?"),
+                    new Answer("No, me gusta el reciclaje creativo", 0, 15, AnswerType.AbsurdExtreme, "¿Aprecio por el reciclaje?"),
+                    new Answer("Sí, y ahora sospecho de todo", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente paranoico.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Te imaginas al dev viendo tu partida y juzgando tus elecciones?
+            _allQuestions.Add(new Question(
+                "q_meta_dev_04",
+                "¿Te imaginas al dev viendo tu partida y juzgando tus elecciones?",
+                new List<Answer>
+                {
+                    new Answer("No, el dev probablemente no está viendo", 5, 0, AnswerType.Professional, "Realista y privado."),
+                    new Answer("Sí, y me da un poco de ansiedad", 0, 10, AnswerType.AbsurdCoherent, "¿Paranoia justificada?"),
+                    new Answer("Sí, y me gusta que me juzgue", 0, 15, AnswerType.AbsurdExtreme, "¿Masoquismo evaluativo?"),
+                    new Answer("Siempre siento que me está observando", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente paranoico.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Crees que el desarrollador creó esto por pasión o por desesperación?
+            _allQuestions.Add(new Question(
+                "q_meta_dev_05",
+                "¿Crees que el desarrollador creó esto por pasión o por desesperación?",
+                new List<Answer>
+                {
+                    new Answer("Por pasión, se nota el cuidado", 5, 0, AnswerType.Professional, "Apreciativo del esfuerzo."),
+                    new Answer("Por desesperación, pero funcionó", 0, 10, AnswerType.AbsurdCoherent, "¿Desesperación exitosa?"),
+                    new Answer("Por ambas, pasión desesperada", 0, 15, AnswerType.AbsurdExtreme, "¿Híbrido emocional?"),
+                    new Answer("Por accidente, y ahora está atrapado", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente fatalista.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Si este juego se vuelve viral, sentirías que ayudaste?
+            _allQuestions.Add(new Question(
+                "q_meta_dev_06",
+                "¿Si este juego se vuelve viral, sentirías que ayudaste?",
+                new List<Answer>
+                {
+                    new Answer("Un poco, compartiría el juego", 5, 0, AnswerType.Professional, "Modesto y colaborativo."),
+                    new Answer("Sí, me sentiría parte del éxito", 0, 10, AnswerType.AbsurdCoherent, "¿Sentido de pertenencia?"),
+                    new Answer("No, el éxito sería del dev, no mío", 0, 15, AnswerType.AbsurdExtreme, "¿Modestia excesiva?"),
+                    new Answer("Sí, y exigiría crédito", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente narcisista.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Qué tan probable es que reportes un bug? No te veo muy motivado.
+            _allQuestions.Add(new Question(
+                "q_meta_dev_07",
+                "¿Qué tan probable es que reportes un bug? No te veo muy motivado.",
+                new List<Answer>
+                {
+                    new Answer("Muy probable, reportaría bugs importantes", 5, 0, AnswerType.Professional, "Colaborativo y responsable."),
+                    new Answer("Poco probable, pero no imposible", 0, 10, AnswerType.AbsurdCoherent, "¿Motivación baja?"),
+                    new Answer("Improbable, soy muy perezoso", 0, 15, AnswerType.AbsurdExtreme, "¿Pereza extrema?"),
+                    new Answer("Nunca, los bugs son características", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente optimista.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Qué tan mal te caerías si fueras el dev y vieras tus propias respuestas?
+            _allQuestions.Add(new Question(
+                "q_meta_dev_08",
+                "¿Qué tan mal te caerías si fueras el dev y vieras tus propias respuestas?",
+                new List<Answer>
+                {
+                    new Answer("Bien, creo que mis respuestas son razonables", 5, 0, AnswerType.Professional, "Confianza en las decisiones."),
+                    new Answer("Mal, me juzgaría mucho", 0, 10, AnswerType.AbsurdCoherent, "¿Auto-crítica excesiva?"),
+                    new Answer("Muy mal, me odiaría", 0, 15, AnswerType.AbsurdExtreme, "¿Auto-odio?"),
+                    new Answer("Me caería perfecto, soy encantador", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente narcisista.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Te parece justo que el dev se burle de ti desde estas preguntas?
+            _allQuestions.Add(new Question(
+                "q_meta_dev_09",
+                "¿Te parece justo que el dev se burle de ti desde estas preguntas?",
+                new List<Answer>
+                {
+                    new Answer("Sí, es parte del humor del juego", 5, 0, AnswerType.Professional, "Acepta el tono del juego."),
+                    new Answer("Un poco injusto, pero me divierte", 0, 10, AnswerType.AbsurdCoherent, "¿Aceptación condicional?"),
+                    new Answer("No, pero sigo jugando de todas formas", 0, 15, AnswerType.AbsurdExtreme, "¿Masoquismo lúdico?"),
+                    new Answer("Me encanta que se burle, es estimulante", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente masoquista.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
+
+            // Pregunta: ¿Qué tan orgulloso crees que está el dev de este desastre funcional?
+            _allQuestions.Add(new Question(
+                "q_meta_dev_10",
+                "¿Qué tan orgulloso crees que está el dev de este desastre funcional?",
+                new List<Answer>
+                {
+                    new Answer("Muy orgulloso, es un logro funcional", 5, 0, AnswerType.Professional, "Apreciativo del logro."),
+                    new Answer("Moderadamente, sabe que es imperfecto", 0, 10, AnswerType.AbsurdCoherent, "¿Realismo sobre orgullo?"),
+                    new Answer("Muy poco, pero lo publicó de todas formas", 0, 15, AnswerType.AbsurdExtreme, "¿Publicación desesperada?"),
+                    new Answer("Extremadamente, y tiene razón", -5, 15, AnswerType.Sociopathic, "Eso es... específicamente elogioso.")
+                },
+                QuestionType.Base,
+                0,
+                null,
+                QuestionCategory.Meta
+            ));
         }
 
         /// <summary>
         /// Obtiene la siguiente pregunta disponible (aleatoria, priorizando contradicciones)
+        /// Las preguntas meta solo pueden aparecer después de 4 preguntas no-meta
         /// </summary>
         public Question GetNextQuestion()
         {
             var gameState = _stateManager.GameState;
             var random = new System.Random();
 
+            // Verificar si las preguntas meta están disponibles (necesitan 4 preguntas no-meta)
+            bool canShowMetaQuestions = gameState.NonMetaQuestionsAnswered >= 4;
+
             // PRIORIDAD 1: Buscar preguntas contradictorias que puedan aparecer
             // (preguntas que contradicen a preguntas ya respondidas)
+            // Excluir preguntas meta si no están disponibles
             var contradictoryQuestions = _allQuestions
                 .Where(q => !string.IsNullOrEmpty(q.ContradictsQuestionId) &&
                            !gameState.AnsweredQuestionIds.Contains(q.Id) &&
                            gameState.AnsweredQuestionIds.Contains(q.ContradictsQuestionId) &&
-                           (q.Type == QuestionType.Base || (q.Type == QuestionType.Special && CheckUnlockConditions(q))))
+                           (q.Type == QuestionType.Base || (q.Type == QuestionType.Special && CheckUnlockConditions(q))) &&
+                           (canShowMetaQuestions || q.Category != QuestionCategory.Meta)) // Excluir meta si no están disponibles
                 .ToList();
 
             if (contradictoryQuestions.Count > 0)
@@ -1192,8 +2058,11 @@ namespace TheLastInterview.Interview.Managers
             }
 
             // PRIORIDAD 2: Preguntas base no respondidas (aleatorias)
+            // Excluir preguntas meta si no están disponibles
             var baseQuestions = _allQuestions
-                .Where(q => q.Type == QuestionType.Base && !gameState.AnsweredQuestionIds.Contains(q.Id))
+                .Where(q => q.Type == QuestionType.Base && 
+                           !gameState.AnsweredQuestionIds.Contains(q.Id) &&
+                           (canShowMetaQuestions || q.Category != QuestionCategory.Meta)) // Excluir meta si no están disponibles
                 .ToList();
 
             if (baseQuestions.Count > 0)
@@ -1202,10 +2071,12 @@ namespace TheLastInterview.Interview.Managers
             }
 
             // PRIORIDAD 3: Preguntas especiales disponibles (aleatorias)
+            // Excluir preguntas meta si no están disponibles
             var specialQuestions = _allQuestions
                 .Where(q => q.Type == QuestionType.Special && 
                            !gameState.AnsweredQuestionIds.Contains(q.Id) &&
-                           CheckUnlockConditions(q))
+                           CheckUnlockConditions(q) &&
+                           (canShowMetaQuestions || q.Category != QuestionCategory.Meta)) // Excluir meta si no están disponibles
                 .ToList();
 
             if (specialQuestions.Count > 0)

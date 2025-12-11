@@ -408,7 +408,7 @@ namespace TheLastInterview.Interview.Managers
 
             // Aplicar respuesta al estado
             _stateManager.ApplyAnswer(selectedAnswer);
-            _stateManager.MarkQuestionAnswered(_currentQuestion.Id);
+            _stateManager.MarkQuestionAnswered(_currentQuestion); // Usar el método que actualiza el contador de preguntas no-meta
 
             // Verificar cambio de estado
             var previousState = _stateManager.GameState.CurrentState;

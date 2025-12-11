@@ -171,7 +171,7 @@ namespace Package.UI
 			_dialogPanel.OffsetBottom = 0; // Desde la parte inferior
 
 			// Cargar y aplicar la imagen de fondo del panel general
-			Texture2D panelTexture = GD.Load<Texture2D>("res://src/Image/Gemini_Generated_Image_11b5vz11b5vz11b5.png");
+			Texture2D panelTexture = GD.Load<Texture2D>("res://src/Image/Gui/button_option.png");
 			if (panelTexture != null)
 			{
 				// Usar StyleBoxTexture para aplicar la imagen de fondo

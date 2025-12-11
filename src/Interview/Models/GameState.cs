@@ -46,6 +46,11 @@ namespace TheLastInterview.Interview.Models
         public OfficeRumor ActiveRumor { get; set; }
 
         /// <summary>
+        /// Contador de preguntas no-meta respondidas (para controlar aparición de preguntas meta)
+        /// </summary>
+        public int NonMetaQuestionsAnswered { get; set; } = 0;
+
+        /// <summary>
         /// Calcula el total de puntos
         /// </summary>
         public int TotalPoints => NormalPoints + ChaosPoints;
@@ -62,6 +67,7 @@ namespace TheLastInterview.Interview.Models
             AnsweredQuestionIds.Clear();
             AnswerHistory.Clear();
             AnswerTypeHistory.Clear();
+            NonMetaQuestionsAnswered = 0;
         }
     }
 
