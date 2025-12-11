@@ -5,15 +5,42 @@ using System.Collections.Generic;
 namespace TheLastInterview.Interview.Minigames
 {
     /// <summary>
-    /// Minijuego: Acomoda documentos donde nada encaja
+    /// Minijuego: Ordena documentos - da igual dónde los sueltes, siempre comentarios aleatorios
     /// </summary>
     public partial class OrganizeDocumentsMinigame : BaseMinigame
     {
         private List<Control> _documents;
         private List<Control> _slots;
         private Label _instructionLabel;
+        private Label _feedbackLabel;
         private Button _continueButton;
         private System.Random _random = new System.Random();
+        private int _documentsPlaced = 0;
+        private string _selectedDocument = null;
+        
+        private string[] _slotLabels = { "Urgente", "No urgente", "Totalmente urgente" };
+        
+        private string[] _documentNames = {
+            "Solicitud de descanso emocional",
+            "Queja del pasante por existir",
+            "Denuncia del ventilador"
+        };
+        
+        private string[] _positiveFeedback = {
+            "Excelente organización. Eres un genio del archivo.",
+            "Perfecto. Esa es exactamente la carpeta correcta... creo.",
+            "Bien hecho. Tu instinto organizacional es impresionante.",
+            "Aprobado. Aunque técnicamente nada de esto tiene sentido.",
+            "Perfecto. Has demostrado dominio total del caos."
+        };
+        
+        private string[] _negativeFeedback = {
+            "Eso no va ahí. ¿Estás seguro de que sabes leer?",
+            "Incorrecto. Ese documento pertenece a... ¿dónde?",
+            "Mal. Muy mal. Pero seguimos adelante porque sí.",
+            "Eso está mal, pero me da igual. Siguiente.",
+            "No, eso no es correcto. Pero tampoco importa realmente."
+        };
         
         public OrganizeDocumentsMinigame(Node parent) : base(parent)
         {
@@ -21,7 +48,7 @@ namespace TheLastInterview.Interview.Minigames
         
         protected override void CreateUI()
         {
-            // Panel de fondo (más grande para que quepan los textos)
+            // Panel de fondo
             var panel = new Panel();
             panel.Name = "MinigamePanel";
             panel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
@@ -66,10 +93,10 @@ namespace TheLastInterview.Interview.Minigames
             titleLabel.OffsetRight = -20;
             panel.AddChild(titleLabel);
             
-            // Instrucción
+            // Instrucción (más clara)
             _instructionLabel = new Label();
             _instructionLabel.Name = "InstructionLabel";
-            _instructionLabel.Text = "Haz click en los documentos para intentar organizarlos.\n(Los tamaños no coinciden, nada encaja)";
+            _instructionLabel.Text = "1. Haz click en un documento (izquierda)\n2. Luego haz click en una carpeta (derecha) para organizarlo\n(Da igual dónde lo pongas, siempre habrá comentarios aleatorios)";
             _instructionLabel.HorizontalAlignment = HorizontalAlignment.Center;
             _instructionLabel.VerticalAlignment = VerticalAlignment.Center;
             _instructionLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
@@ -78,28 +105,43 @@ namespace TheLastInterview.Interview.Minigames
             _instructionLabel.AddThemeFontSizeOverride("font_size", (int)instructionSize);
             _instructionLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
             _instructionLabel.OffsetTop = 65;
-            _instructionLabel.OffsetBottom = 115;
+            _instructionLabel.OffsetBottom = 125;
             _instructionLabel.OffsetLeft = 30;
             _instructionLabel.OffsetRight = -30;
             panel.AddChild(_instructionLabel);
+            
+            // Feedback label (más espacio)
+            _feedbackLabel = new Label();
+            _feedbackLabel.Name = "FeedbackLabel";
+            _feedbackLabel.Text = "";
+            _feedbackLabel.HorizontalAlignment = HorizontalAlignment.Center;
+            _feedbackLabel.VerticalAlignment = VerticalAlignment.Center;
+            _feedbackLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
+            _feedbackLabel.ClipContents = true;
+            _feedbackLabel.AddThemeFontSizeOverride("font_size", (int)instructionSize);
+            _feedbackLabel.AddThemeColorOverride("font_color", new Color(0.8f, 1.0f, 0.6f, 1.0f));
+            _feedbackLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
+            _feedbackLabel.OffsetTop = 135;
+            _feedbackLabel.OffsetBottom = 185;
+            _feedbackLabel.OffsetLeft = 30;
+            _feedbackLabel.OffsetRight = -30;
+            panel.AddChild(_feedbackLabel);
             
             _documents = new List<Control>();
             _slots = new List<Control>();
             
             // Crear documentos (lado izquierdo)
-            string[] documentNames = { "CV.pdf", "Contrato.docx", "Factura.xlsx", "Foto.jpg" };
-            for (int i = 0; i < documentNames.Length; i++)
+            for (int i = 0; i < _documentNames.Length; i++)
             {
-                var doc = CreateDocument(documentNames[i], new Vector2(100, 150 + i * 80));
+                var doc = CreateDocument(_documentNames[i], new Vector2(100, 210 + i * 90));
                 _documents.Add(doc);
                 panel.AddChild(doc);
             }
             
-            // Crear slots (lado derecho) - pero con tamaños que no encajan
-            string[] slotLabels = { "IMPORTANTE", "URGENTE", "ARCHIVAR", "BASURA" };
-            for (int i = 0; i < slotLabels.Length; i++)
+            // Crear slots (lado derecho)
+            for (int i = 0; i < _slotLabels.Length; i++)
             {
-                var slot = CreateSlot(slotLabels[i], new Vector2(500, 150 + i * 80));
+                var slot = CreateSlot(_slotLabels[i], new Vector2(550, 210 + i * 90));
                 _slots.Add(slot);
                 panel.AddChild(slot);
             }
@@ -107,10 +149,11 @@ namespace TheLastInterview.Interview.Minigames
             // Botón continuar
             _continueButton = new Button();
             _continueButton.Name = "ContinueButton";
-            _continueButton.Text = "Nada encaja, continuar de todas formas";
+            _continueButton.Text = "Continuar";
             _continueButton.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.BottomWide);
             _continueButton.OffsetBottom = -20;
             _continueButton.OffsetTop = -80;
+            _continueButton.Visible = false;
             float buttonSize = FontManager.GetScaledSize(TextType.Body);
             _continueButton.AddThemeFontSizeOverride("font_size", (int)buttonSize);
             _continueButton.Pressed += OnContinuePressed;
@@ -123,8 +166,8 @@ namespace TheLastInterview.Interview.Minigames
             doc.Name = $"Document_{name}";
             doc.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopLeft);
             doc.Position = position;
-            doc.CustomMinimumSize = new Vector2(120, 60);
-            doc.Size = new Vector2(120, 60);
+            doc.CustomMinimumSize = new Vector2(200, 70);
+            doc.Size = new Vector2(200, 70);
             
             var docStyle = new StyleBoxFlat();
             docStyle.BgColor = new Color(0.9f, 0.9f, 0.7f, 1.0f);
@@ -146,11 +189,11 @@ namespace TheLastInterview.Interview.Minigames
             label.AddThemeFontSizeOverride("font_size", (int)labelSize);
             doc.AddChild(label);
             
-            // Hacer que se pueda arrastrar (pero nunca encaja)
+            // Hacer clickeable - seleccionar documento
             doc.GuiInput += (InputEvent @event) => {
                 if (@event is InputEventMouseButton mouseEvent && mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Left)
                 {
-                    _instructionLabel.Text = $"Intentando colocar {name}... No encaja en ningún lado.";
+                    OnDocumentClicked(name, doc);
                 }
             };
             
@@ -163,16 +206,8 @@ namespace TheLastInterview.Interview.Minigames
             slot.Name = $"Slot_{label}";
             slot.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopLeft);
             slot.Position = position;
-            // Tamaños diferentes para que nada encaje
-            var sizes = new Vector2[] { 
-                new Vector2(150, 50),  // Más pequeño
-                new Vector2(180, 70), // Más grande
-                new Vector2(140, 55), // Mediano pero diferente
-                new Vector2(160, 65)  // Otro tamaño
-            };
-            int index = _slots.Count;
-            slot.CustomMinimumSize = sizes[index % sizes.Length];
-            slot.Size = sizes[index % sizes.Length];
+            slot.CustomMinimumSize = new Vector2(200, 70);
+            slot.Size = new Vector2(200, 70);
             
             var slotStyle = new StyleBoxFlat();
             slotStyle.BgColor = new Color(0.2f, 0.2f, 0.4f, 0.5f);
@@ -194,7 +229,36 @@ namespace TheLastInterview.Interview.Minigames
             slotLabel.AddThemeFontSizeOverride("font_size", (int)labelSize);
             slot.AddChild(slotLabel);
             
+            // Hacer clickeable - colocar documento en carpeta
+            slot.GuiInput += (InputEvent @event) => {
+                if (@event is InputEventMouseButton mouseEvent && mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Left)
+                {
+                    OnSlotClicked(label, slot);
+                }
+            };
+            
             return slot;
+        }
+        
+        private void OnDocumentClicked(string documentName)
+        {
+            _documentsPlaced++;
+            
+            // Comentario aleatorio (da igual dónde lo pongas)
+            bool isPositive = _random.Next(0, 2) == 0;
+            string feedback = isPositive 
+                ? _positiveFeedback[_random.Next(_positiveFeedback.Length)]
+                : _negativeFeedback[_random.Next(_negativeFeedback.Length)];
+            
+            _feedbackLabel.Text = $"Entrevistador: \"{feedback}\"";
+            
+            // Después de colocar todos los documentos, mostrar botón continuar
+            if (_documentsPlaced >= _documentNames.Length)
+            {
+                GetTree().CreateTimer(1.5f).Timeout += () => {
+                    _continueButton.Visible = true;
+                };
+            }
         }
         
         private void OnContinuePressed()
@@ -203,4 +267,3 @@ namespace TheLastInterview.Interview.Minigames
         }
     }
 }
-

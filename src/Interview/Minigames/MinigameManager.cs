@@ -16,9 +16,11 @@ namespace TheLastInterview.Interview.Minigames
         /// </summary>
         public enum MinigameType
         {
-            LieDetector,        // Detector de mentiras que nunca acierta
-            TypeName,           // Escribe tu nombre con teclado que falla
-            OrganizeDocuments   // Acomoda documentos donde nada encaja
+            LieDetector,        // Detector de mentiras descompuesto
+            TypeName,           // Escribe tu nombre con teclado aleatorio
+            OrganizeDocuments,  // Ordena documentos (comentarios aleatorios)
+            TechnicalTest,      // Prueba técnica falsa
+            StayCalm            // Mantén la calma (barra de estrés)
         }
         
         /// <summary>
@@ -40,6 +42,8 @@ namespace TheLastInterview.Interview.Minigames
                 MinigameType.LieDetector => new LieDetectorMinigame(parent),
                 MinigameType.TypeName => new TypeNameMinigame(parent),
                 MinigameType.OrganizeDocuments => new OrganizeDocumentsMinigame(parent),
+                MinigameType.TechnicalTest => new TechnicalTestMinigame(parent),
+                MinigameType.StayCalm => new StayCalmMinigame(parent),
                 _ => throw new ArgumentException($"Tipo de minijuego desconocido: {type}")
             };
         }

@@ -5,16 +5,36 @@ using SlimeKingdomChronicles.Core.UI;
 namespace TheLastInterview.Interview.Minigames
 {
     /// <summary>
-    /// Minijuego: Detector de mentiras que nunca acierta
+    /// Minijuego: Detector de mentiras descompuesto - siempre da resultados aleatorios y cómicos
     /// </summary>
     public partial class LieDetectorMinigame : BaseMinigame
     {
         private ProgressBar _detectorBar;
         private Label _statusLabel;
-        private Label _questionLabel;
+        private Label _statementLabel;
+        private Button _confirmButton;
         private Button _continueButton;
-        private Timer _fakeTimer;
-        private bool _isDetecting = false;
+        private Timer _barTimer;
+        private System.Random _random = new System.Random();
+        private bool _hasConfirmed = false;
+        
+        private string[] _statements = {
+            "Soy muy trabajador y puntual.",
+            "Me encanta trabajar en equipo.",
+            "Siempre cumplo con los plazos.",
+            "Tengo mucha experiencia en este campo.",
+            "Estoy muy motivado para este puesto."
+        };
+        
+        private string[] _results = {
+            "MENTIROSO detectado. Nivel de honestidad: 23%",
+            "Aprobado absurdamente. Honestidad: 156% (¿cómo?)",
+            "Evaluando... Error 404: Honestidad no encontrada",
+            "Resultado: INCONCLUSOPS. El detector se confundió.",
+            "Sistema dice: 'Probablemente humano, pero no estoy seguro.'",
+            "Análisis completo: Eres 73% agua, 27% dudas existenciales.",
+            "El detector detectó... ¡otro detector! Error recursivo."
+        };
         
         public LieDetectorMinigame(Node parent) : base(parent)
         {
@@ -22,7 +42,7 @@ namespace TheLastInterview.Interview.Minigames
         
         protected override void CreateUI()
         {
-            // Panel de fondo (más grande para que quepan los textos)
+            // Panel de fondo
             var panel = new Panel();
             panel.Name = "MinigamePanel";
             panel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
@@ -67,23 +87,23 @@ namespace TheLastInterview.Interview.Minigames
             titleLabel.OffsetRight = -20;
             panel.AddChild(titleLabel);
             
-            // Pregunta del detector (contexto)
-            _questionLabel = new Label();
-            _questionLabel.Name = "QuestionLabel";
-            _questionLabel.Text = "Pregunta: ¿Estás mintiendo en esta entrevista?\n(El detector siempre falla, es solo para molestarte)";
-            _questionLabel.HorizontalAlignment = HorizontalAlignment.Center;
-            _questionLabel.VerticalAlignment = VerticalAlignment.Center;
-            _questionLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
-            _questionLabel.ClipContents = true;
-            float questionSize = FontManager.GetScaledSize(TextType.Body);
-            _questionLabel.AddThemeFontSizeOverride("font_size", (int)questionSize);
-            _questionLabel.AddThemeColorOverride("font_color", new Color(0.9f, 0.9f, 0.9f, 1.0f));
-            _questionLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
-            _questionLabel.OffsetTop = 70;
-            _questionLabel.OffsetBottom = 130;
-            _questionLabel.OffsetLeft = 30;
-            _questionLabel.OffsetRight = -30;
-            panel.AddChild(_questionLabel);
+            // Afirmación del jugador
+            _statementLabel = new Label();
+            _statementLabel.Name = "StatementLabel";
+            _statementLabel.Text = $"Afirmación: \"{_statements[_random.Next(_statements.Length)]}\"";
+            _statementLabel.HorizontalAlignment = HorizontalAlignment.Center;
+            _statementLabel.VerticalAlignment = VerticalAlignment.Center;
+            _statementLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
+            _statementLabel.ClipContents = true;
+            float statementSize = FontManager.GetScaledSize(TextType.Body);
+            _statementLabel.AddThemeFontSizeOverride("font_size", (int)statementSize);
+            _statementLabel.AddThemeColorOverride("font_color", new Color(0.9f, 0.9f, 0.9f, 1.0f));
+            _statementLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide);
+            _statementLabel.OffsetTop = 70;
+            _statementLabel.OffsetBottom = 130;
+            _statementLabel.OffsetLeft = 30;
+            _statementLabel.OffsetRight = -30;
+            panel.AddChild(_statementLabel);
             
             // Barra del detector
             _detectorBar = new ProgressBar();
@@ -92,8 +112,8 @@ namespace TheLastInterview.Interview.Minigames
             _detectorBar.CustomMinimumSize = new Vector2(550, 50);
             _detectorBar.OffsetLeft = -275;
             _detectorBar.OffsetRight = 275;
-            _detectorBar.OffsetTop = -30;
-            _detectorBar.OffsetBottom = 20;
+            _detectorBar.OffsetTop = -50;
+            _detectorBar.OffsetBottom = 0;
             _detectorBar.MinValue = 0;
             _detectorBar.MaxValue = 100;
             _detectorBar.Value = 0;
@@ -102,18 +122,31 @@ namespace TheLastInterview.Interview.Minigames
             // Label de estado
             _statusLabel = new Label();
             _statusLabel.Name = "StatusLabel";
-            _statusLabel.Text = "Analizando tu respuesta...";
+            _statusLabel.Text = "Presiona el botón para confirmar tu honestidad...";
             _statusLabel.HorizontalAlignment = HorizontalAlignment.Center;
             _statusLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             _statusLabel.ClipContents = true;
-            float statusSize = FontManager.GetScaledSize(TextType.Body);
-            _statusLabel.AddThemeFontSizeOverride("font_size", (int)statusSize);
+            _statusLabel.AddThemeFontSizeOverride("font_size", (int)statementSize);
             _statusLabel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
-            _statusLabel.OffsetTop = 50;
-            _statusLabel.OffsetBottom = 100;
+            _statusLabel.OffsetTop = 30;
+            _statusLabel.OffsetBottom = 80;
             _statusLabel.OffsetLeft = 30;
             _statusLabel.OffsetRight = -30;
             panel.AddChild(_statusLabel);
+            
+            // Botón confirmar honestidad
+            _confirmButton = new Button();
+            _confirmButton.Name = "ConfirmButton";
+            _confirmButton.Text = "Confirmar Honestidad";
+            _confirmButton.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
+            _confirmButton.CustomMinimumSize = new Vector2(250, 50);
+            _confirmButton.OffsetLeft = -125;
+            _confirmButton.OffsetRight = 125;
+            _confirmButton.OffsetTop = 60;
+            _confirmButton.OffsetBottom = 110;
+            _confirmButton.AddThemeFontSizeOverride("font_size", (int)statementSize);
+            _confirmButton.Pressed += OnConfirmPressed;
+            panel.AddChild(_confirmButton);
             
             // Botón continuar (oculto inicialmente)
             _continueButton = new Button();
@@ -123,73 +156,60 @@ namespace TheLastInterview.Interview.Minigames
             _continueButton.OffsetBottom = -30;
             _continueButton.OffsetTop = -90;
             _continueButton.Visible = false;
-            float buttonSize = FontManager.GetScaledSize(TextType.Body);
-            _continueButton.AddThemeFontSizeOverride("font_size", (int)buttonSize);
+            _continueButton.AddThemeFontSizeOverride("font_size", (int)statementSize);
             _continueButton.Pressed += OnContinuePressed;
             panel.AddChild(_continueButton);
             
-            // Iniciar detección falsa
-            StartFakeDetection();
+            // Iniciar animación de la barra
+            StartBarAnimation();
         }
         
-        private void StartFakeDetection()
+        private void StartBarAnimation()
         {
-            _isDetecting = true;
-            _fakeTimer = new Timer();
-            _fakeTimer.WaitTime = 0.1f;
-            _fakeTimer.Timeout += UpdateFakeBar;
-            _fakeTimer.Autostart = true;
-            AddChild(_fakeTimer);
+            _barTimer = new Timer();
+            _barTimer.WaitTime = 0.1f;
+            _barTimer.Timeout += UpdateBar;
+            _barTimer.Autostart = true;
+            AddChild(_barTimer);
         }
         
-        private void UpdateFakeBar()
+        private void UpdateBar()
         {
-            if (!_isDetecting) return;
+            if (_hasConfirmed) return;
             
-            // La barra sube y baja aleatoriamente, nunca llega al 100%
-            var random = new System.Random();
+            // La barra sube y baja aleatoriamente
             float currentValue = (float)_detectorBar.Value;
             
-            // Movimiento errático que nunca completa
-            if (currentValue < 30)
+            if (_random.Next(0, 2) == 0)
             {
-                _detectorBar.Value = currentValue + random.Next(5, 15);
-            }
-            else if (currentValue < 70)
-            {
-                // Va hacia arriba pero luego baja
-                if (random.Next(0, 2) == 0)
-                {
-                    _detectorBar.Value = currentValue + random.Next(1, 10);
-                }
-                else
-                {
-                    _detectorBar.Value = Math.Max(0, currentValue - random.Next(5, 15));
-                }
+                _detectorBar.Value = Mathf.Clamp(currentValue + _random.Next(-15, 20), 0, 100);
             }
             else
             {
-                // Casi llega pero siempre falla
-                if (currentValue > 85)
-                {
-                    _detectorBar.Value = Math.Max(0, currentValue - random.Next(10, 20));
-                    _statusLabel.Text = "Error en el sistema... Reintentando...";
-                }
-                else
-                {
-                    _detectorBar.Value = currentValue + random.Next(1, 5);
-                }
+                _detectorBar.Value = Mathf.Clamp(currentValue + _random.Next(-20, 15), 0, 100);
             }
+        }
+        
+        private void OnConfirmPressed()
+        {
+            if (_hasConfirmed) return;
             
-            // Después de 3 segundos, siempre falla de forma cómica
-            if (_fakeTimer.TimeLeft < 2.0f && _fakeTimer.TimeLeft > 0)
-            {
-                _detectorBar.Value = random.Next(0, 30);
-                _statusLabel.Text = "Resultado: INCONCLUSOPS... ERROR DEL SISTEMA\n(Como siempre, el detector no sirve para nada)";
-                _isDetecting = false;
-                _fakeTimer.Stop();
+            _hasConfirmed = true;
+            _confirmButton.Visible = false;
+            _barTimer.Stop();
+            
+            // Resultado aleatorio y cómico
+            string result = _results[_random.Next(_results.Length)];
+            _statusLabel.Text = result;
+            _statusLabel.AddThemeColorOverride("font_color", new Color(1.0f, 0.8f, 0.2f, 1.0f));
+            
+            // La barra se queda en un valor aleatorio
+            _detectorBar.Value = _random.Next(0, 101);
+            
+            // Mostrar botón continuar después de un momento
+            GetTree().CreateTimer(1.5f).Timeout += () => {
                 _continueButton.Visible = true;
-            }
+            };
         }
         
         private void OnContinuePressed()
@@ -198,4 +218,3 @@ namespace TheLastInterview.Interview.Minigames
         }
     }
 }
-
