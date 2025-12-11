@@ -28,6 +28,16 @@ namespace TheLastInterview.Interview.Managers
         private const float EVENT_PROBABILITY = 0.18f; // 18% de probabilidad de evento meta-oficina
         private const float INTERRUPTION_PROBABILITY = 0.15f; // 15% de probabilidad de interrupción
         private bool _rumorShown = false; // Flag para mostrar el rumor solo una vez
+        
+        // Límites por partida
+        private const int MIN_QUESTIONS_PER_GAME = 12; // Mínimo de preguntas por partida
+        private const int MAX_QUESTIONS_PER_GAME = 15; // Máximo de preguntas por partida
+        private const int MIN_MINIGAMES_PER_GAME = 2; // Mínimo de minijuegos por partida
+        private const int MAX_MINIGAMES_PER_GAME = 4; // Máximo de minijuegos por partida
+        
+        private int _targetQuestionsForThisGame = 0; // Número objetivo de preguntas para esta partida
+        private int _targetMinigamesForThisGame = 0; // Número objetivo de minijuegos para esta partida
+        private int _minigamesShown = 0; // Contador de minijuegos mostrados en esta partida
 
         /// <summary>
         /// Señal que se emite cuando la entrevista termina
@@ -180,7 +190,16 @@ namespace TheLastInterview.Interview.Managers
             _stateManager.Reset();
             _usedMinigames.Clear(); // Limpiar minijuegos usados al iniciar nueva partida
             _questionsShown = 0; // Resetear contador de preguntas
+            _minigamesShown = 0; // Resetear contador de minijuegos
             _rumorShown = false; // Resetear flag de rumor
+            
+            // Seleccionar número aleatorio de preguntas para esta partida (12-15)
+            _targetQuestionsForThisGame = _minigameRandom.Next(MIN_QUESTIONS_PER_GAME, MAX_QUESTIONS_PER_GAME + 1);
+            
+            // Seleccionar número aleatorio de minijuegos para esta partida (2-4)
+            _targetMinigamesForThisGame = _minigameRandom.Next(MIN_MINIGAMES_PER_GAME, MAX_MINIGAMES_PER_GAME + 1);
+            
+            GD.Print($"[InterviewManager] Partida configurada: {_targetQuestionsForThisGame} preguntas, {_targetMinigamesForThisGame} minijuegos");
             
             // Seleccionar rumor aleatorio para esta partida
             var rumor = OfficeRumorManager.GetRandomRumor();
@@ -198,11 +217,19 @@ namespace TheLastInterview.Interview.Managers
         /// </summary>
         private void ShowNextQuestion()
         {
+            // Verificar si ya se alcanzó el límite de preguntas para esta partida
+            if (_questionsShown >= _targetQuestionsForThisGame)
+            {
+                GD.Print($"[InterviewManager] Límite de preguntas alcanzado ({_targetQuestionsForThisGame}), terminando entrevista");
+                EndInterview();
+                return;
+            }
+
             _currentQuestion = _questionSystem.GetNextQuestion();
 
             if (_currentQuestion == null)
             {
-                // No hay más preguntas, terminar entrevista
+                // No hay más preguntas disponibles, terminar entrevista
                 EndInterview();
                 return;
             }
@@ -214,11 +241,40 @@ namespace TheLastInterview.Interview.Managers
                 return; // El evento mostrará la pregunta después
             }
 
-            // Solo permitir minijuegos si ya se han mostrado al menos 3 preguntas
+            // Lógica de minijuegos: asegurar que aparezcan entre 2 y 4 minijuegos durante la partida
             bool canShowMinigame = _questionsShown >= MIN_QUESTIONS_BEFORE_MINIGAME;
+            bool shouldShowMinigame = false;
             
-            // 30% de probabilidad de mostrar un minijuego antes de la pregunta (solo si se cumplen las condiciones)
-            if (canShowMinigame && _minigameRandom.Next(0, 10) < 3)
+            // Calcular cuántos minijuegos faltan por mostrar
+            int remainingMinigames = _targetMinigamesForThisGame - _minigamesShown;
+            int remainingQuestions = _targetQuestionsForThisGame - _questionsShown;
+            
+            // Si faltan minijuegos y hay preguntas suficientes restantes
+            if (canShowMinigame && remainingMinigames > 0)
+            {
+                // Si quedan pocas preguntas y faltan minijuegos, forzar aparición
+                if (remainingQuestions <= remainingMinigames + 2)
+                {
+                    // Forzar minijuego si quedan muy pocas preguntas y faltan minijuegos
+                    shouldShowMinigame = true;
+                }
+                else
+                {
+                    // Calcular probabilidad dinámica basada en minijuegos faltantes y preguntas restantes
+                    float minigameProbability = 0.25f; // Base 25%
+                    
+                    if (remainingMinigames > 0 && remainingQuestions > 0)
+                    {
+                        // Aumentar probabilidad si faltan minijuegos y quedan pocas preguntas
+                        float urgencyFactor = (float)remainingMinigames / Mathf.Max(remainingQuestions, 1);
+                        minigameProbability = Mathf.Clamp(0.25f + urgencyFactor * 0.4f, 0.25f, 0.85f);
+                    }
+                    
+                    shouldShowMinigame = _minigameRandom.NextDouble() < minigameProbability;
+                }
+            }
+            
+            if (shouldShowMinigame)
             {
                 ShowRandomMinigame();
             }
@@ -242,6 +298,14 @@ namespace TheLastInterview.Interview.Managers
         /// </summary>
         private void ShowRandomMinigame()
         {
+            // Verificar si ya se alcanzó el límite de minijuegos para esta partida
+            if (_minigamesShown >= _targetMinigamesForThisGame)
+            {
+                GD.Print($"[InterviewManager] Límite de minijuegos alcanzado ({_targetMinigamesForThisGame}), mostrando pregunta directamente");
+                ShowQuestionAsDialog(_currentQuestion);
+                return;
+            }
+            
             // Obtener todos los tipos de minijuegos disponibles
             var allMinigameTypes = new List<MinigameManager.MinigameType>
             {
@@ -275,6 +339,9 @@ namespace TheLastInterview.Interview.Managers
             
             // Marcar como usado
             _usedMinigames.Add(minigameType);
+            _minigamesShown++; // Incrementar contador de minijuegos mostrados
+            
+            GD.Print($"[InterviewManager] Mostrando minijuego {_minigamesShown}/{_targetMinigamesForThisGame}: {minigameType}");
             
             _currentMinigame = MinigameManager.CreateMinigame(minigameType, this);
             _currentMinigame.OnMinigameFinished += OnMinigameFinished;
