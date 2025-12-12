@@ -40,19 +40,27 @@ namespace TheLastInterview.Interview.Minigames
         
         protected override void CreateUI()
         {
+            // Obtener tamaño del viewport para hacer el panel responsive
+            var viewportSize = GetViewportSize();
+            
+            // Calcular tamaño del panel como porcentaje del viewport (optimizado para HD 1920x1080)
+            float panelWidthPercent = viewportSize.X < 1000 ? 0.90f : 0.70f;
+            float panelHeightPercent = viewportSize.Y < 1000 ? 0.85f : 0.60f;
+            Vector2 panelSize = GetResponsiveSize(panelWidthPercent, panelHeightPercent);
+            
             // Panel de fondo
             var panel = new Panel();
             panel.Name = "MinigamePanel";
             panel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
-            panel.CustomMinimumSize = new Vector2(700, 600);
+            panel.CustomMinimumSize = panelSize;
             panel.AnchorLeft = 0.5f;
             panel.AnchorTop = 0.5f;
             panel.AnchorRight = 0.5f;
             panel.AnchorBottom = 0.5f;
-            panel.OffsetLeft = -350;
-            panel.OffsetRight = 350;
-            panel.OffsetTop = -300;
-            panel.OffsetBottom = 300;
+            panel.OffsetLeft = -panelSize.X * 0.5f;
+            panel.OffsetRight = panelSize.X * 0.5f;
+            panel.OffsetTop = -panelSize.Y * 0.5f;
+            panel.OffsetBottom = panelSize.Y * 0.5f;
             
             var styleBox = new StyleBoxFlat();
             styleBox.BgColor = new Color(0.1f, 0.1f, 0.1f, 0.95f);

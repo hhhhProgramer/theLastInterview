@@ -34,19 +34,27 @@ namespace TheLastInterview.Interview.Minigames
         
         protected override void CreateUI()
         {
+            // Obtener tamaño del viewport para hacer el panel responsive
+            var viewportSize = GetViewportSize();
+            
+            // Calcular tamaño del panel como porcentaje del viewport (optimizado para HD 1920x1080)
+            float panelWidthPercent = viewportSize.X < 1000 ? 0.90f : 0.70f;
+            float panelHeightPercent = viewportSize.Y < 1000 ? 0.85f : 0.55f;
+            Vector2 panelSize = GetResponsiveSize(panelWidthPercent, panelHeightPercent);
+            
             // Panel de fondo
             var panel = new Panel();
             panel.Name = "MinigamePanel";
             panel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
-            panel.CustomMinimumSize = new Vector2(700, 500);
+            panel.CustomMinimumSize = panelSize;
             panel.AnchorLeft = 0.5f;
             panel.AnchorTop = 0.5f;
             panel.AnchorRight = 0.5f;
             panel.AnchorBottom = 0.5f;
-            panel.OffsetLeft = -350;
-            panel.OffsetRight = 350;
-            panel.OffsetTop = -250;
-            panel.OffsetBottom = 250;
+            panel.OffsetLeft = -panelSize.X * 0.5f;
+            panel.OffsetRight = panelSize.X * 0.5f;
+            panel.OffsetTop = -panelSize.Y * 0.5f;
+            panel.OffsetBottom = panelSize.Y * 0.5f;
             
             var styleBox = new StyleBoxFlat();
             styleBox.BgColor = new Color(0.1f, 0.1f, 0.1f, 0.95f);
@@ -62,15 +70,17 @@ namespace TheLastInterview.Interview.Minigames
             panel.AddThemeStyleboxOverride("panel", styleBox);
             AddChild(panel);
             
-            // Contenedor principal
+            // Contenedor principal (márgenes responsive)
             var mainContainer = new VBoxContainer();
             mainContainer.Name = "MainContainer";
             mainContainer.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
-            mainContainer.OffsetLeft = 30;
-            mainContainer.OffsetRight = -30;
-            mainContainer.OffsetTop = 20;
-            mainContainer.OffsetBottom = -20;
-            mainContainer.AddThemeConstantOverride("separation", 20);
+            float margin = GetResponsiveMargin(0.015f);
+            mainContainer.OffsetLeft = margin;
+            mainContainer.OffsetRight = -margin;
+            mainContainer.OffsetTop = margin * 0.7f;
+            mainContainer.OffsetBottom = -margin * 0.7f;
+            float separation = GetResponsiveMargin(0.01f);
+            mainContainer.AddThemeConstantOverride("separation", (int)separation);
             panel.AddChild(mainContainer);
             
             // Título
@@ -99,17 +109,19 @@ namespace TheLastInterview.Interview.Minigames
             _errorLabel.AddThemeColorOverride("font_color", new Color(1.0f, 0.3f, 0.3f, 1.0f));
             mainContainer.AddChild(_errorLabel);
             
-            // Campo de entrada
+            // Campo de entrada (tamaño responsive)
             _inputField = new LineEdit();
             _inputField.PlaceholderText = "Escribe aquí...";
-            _inputField.CustomMinimumSize = new Vector2(0, 50);
+            float inputHeight = viewportSize.Y * 0.035f;
+            _inputField.CustomMinimumSize = new Vector2(0, inputHeight);
             _inputField.AddThemeFontSizeOverride("font_size", (int)bodySize);
             _inputField.TextChanged += OnTextChanged;
             mainContainer.AddChild(_inputField);
             
-            // Barra de progreso
+            // Barra de progreso (tamaño responsive)
             _progressBar = new ProgressBar();
-            _progressBar.CustomMinimumSize = new Vector2(0, 30);
+            float progressBarHeight = viewportSize.Y * 0.025f;
+            _progressBar.CustomMinimumSize = new Vector2(0, progressBarHeight);
             _progressBar.MinValue = 0;
             _progressBar.MaxValue = _targetText.Length;
             _progressBar.Value = 0;
@@ -117,14 +129,16 @@ namespace TheLastInterview.Interview.Minigames
             
             // Espaciador
             var spacer = new Control();
-            spacer.CustomMinimumSize = new Vector2(0, 20);
+            float spacerHeight = viewportSize.Y * 0.015f;
+            spacer.CustomMinimumSize = new Vector2(0, spacerHeight);
             spacer.SizeFlagsVertical = Control.SizeFlags.ExpandFill;
             mainContainer.AddChild(spacer);
             
-            // Botón continuar
+            // Botón continuar (tamaño responsive)
             _continueButton = new Button();
             _continueButton.Text = "Continuar";
-            _continueButton.CustomMinimumSize = new Vector2(200, 50);
+            Vector2 continueButtonSize = GetResponsiveSize(0.30f, 0.035f);
+            _continueButton.CustomMinimumSize = continueButtonSize;
             _continueButton.Visible = false;
             _continueButton.AddThemeFontSizeOverride("font_size", (int)bodySize);
             _continueButton.Pressed += OnContinuePressed;

@@ -26,7 +26,7 @@ namespace Core.Services
             // Detectar si es teléfono (pantalla pequeña)
             // Usar DisplayServer para obtener el tamaño de la pantalla
             var screenSize = DisplayServer.ScreenGetSize();
-            bool isPhone = screenSize.X > 1920 || screenSize.Y > 1080;
+            bool isPhone = screenSize.X >= 1920 || screenSize.Y >= 1080;
 
             // Multiplicador para teléfonos (aumentar tamaño en 40%)
             float phoneMultiplier = isPhone ? 1.4f : 1.0f;

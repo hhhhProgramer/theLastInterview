@@ -69,6 +69,33 @@ namespace TheLastInterview.Interview.Minigames
             blinkTimer.Autostart = true;
             AddChild(blinkTimer);
         }
+        
+        /// <summary>
+        /// Obtiene el tamaño del viewport de forma segura
+        /// </summary>
+        protected Vector2 GetViewportSize()
+        {
+            var viewport = GetViewport();
+            return viewport?.GetVisibleRect().Size ?? new Vector2(2560, 1440);
+        }
+        
+        /// <summary>
+        /// Calcula un tamaño responsive basado en porcentajes del viewport
+        /// </summary>
+        protected Vector2 GetResponsiveSize(float widthPercent, float heightPercent)
+        {
+            var viewportSize = GetViewportSize();
+            return new Vector2(viewportSize.X * widthPercent, viewportSize.Y * heightPercent);
+        }
+        
+        /// <summary>
+        /// Calcula un margen responsive basado en porcentaje del viewport
+        /// </summary>
+        protected float GetResponsiveMargin(float percent)
+        {
+            var viewportSize = GetViewportSize();
+            return Mathf.Max(viewportSize.X, viewportSize.Y) * percent;
+        }
     }
 }
 

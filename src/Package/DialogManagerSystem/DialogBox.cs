@@ -129,19 +129,19 @@ namespace Package.UI
 
 			// Detectar si es teléfono (pantalla pequeña)
 			var screenSize = DisplayServer.ScreenGetSize();
-			bool isPhone = screenSize.X < 1000 || screenSize.Y < 1000;
+			bool isPhone = screenSize.X > 1080 && screenSize.Y > 1920;
 
-			// CRÍTICO: El cuadro de diálogo debe ocupar máximo 40% de la altura del viewport (o más en teléfonos)
+			// CRÍTICO: El cuadro de diálogo debe ocupar más altura del viewport (aumentado para hacerlo más grande)
 			// Calcular altura como porcentaje del viewport (responsivo)
-			// En teléfonos, usar 50% para hacer el panel más grande
-			float maxHeightPercent = isPhone ? 0.50f : 0.40f; // 50% en teléfonos, 40% en pantallas grandes
+			// En teléfonos, usar 60% para hacer el panel más grande
+			float maxHeightPercent = isPhone ? 0.60f : 0.50f; // 60% en teléfonos, 50% en pantallas grandes (aumentado desde 40%)
 			float maxDialogHeight = viewportSize.Y * maxHeightPercent;
 			
 			// Calcular la altura mínima necesaria para el panel basada en el contenido
 			// Hacer los tamaños responsivos al viewport
 			// Tamaño de fuente base: 2.5% de la altura del viewport (responsivo)
 			// En teléfonos, aumentar el porcentaje base para letras más grandes
-			float baseFontSizePercent = isPhone ? 0.035f : 0.025f; // 3.5% en teléfonos, 2.5% en pantallas grandes
+			float baseFontSizePercent = isPhone ? 0.045f : 0.025f; // 3.5% en teléfonos, 2.5% en pantallas grandes
 			float baseFontSize = viewportSize.Y * baseFontSizePercent;
 			float fontSize = baseFontSize * 1.2f; // 20% más grande para diálogos
 			int lineSeparation = (int)(baseFontSize * 0.05f); // 5% del tamaño de fuente
@@ -1521,7 +1521,18 @@ namespace Package.UI
 			var button = new Button();
 			button.Name = $"OptionButton_{index}";
 			button.Text = text;
-			button.CustomMinimumSize = new Vector2(450, 60);
+			
+			// Calcular tamaño responsive basado en porcentajes del viewport (aproximadamente 10% del ancho y alto)
+			var viewportSize = GetViewportRect().Size;
+			float buttonWidthPercent = 0.50f; // 10% del ancho del viewport
+			float buttonHeightPercent = 0.15f; // 10% del alto del viewport
+			Vector2 buttonSize = new Vector2(viewportSize.X * buttonWidthPercent, viewportSize.Y * buttonHeightPercent);
+			
+			// Asegurar un tamaño mínimo razonable
+			buttonSize.X = Mathf.Max(buttonSize.X, 400.0f);
+			buttonSize.Y = Mathf.Max(buttonSize.Y, 50.0f);
+			
+			button.CustomMinimumSize = buttonSize;
 			// CRÍTICO: Usar Fill para que todos los botones tengan el mismo ancho y queden centrados
 			button.SizeFlagsHorizontal = Control.SizeFlags.Fill;
 

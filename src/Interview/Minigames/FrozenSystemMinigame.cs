@@ -133,7 +133,8 @@ namespace TheLastInterview.Interview.Minigames
             var popup = new Panel();
             popup.Name = $"Popup_{_popupPanels.Count}";
             popup.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
-            popup.CustomMinimumSize = new Vector2(400, 200);
+            Vector2 popupSize = GetResponsiveSize(0.35f, 0.14f);
+            popup.CustomMinimumSize = popupSize;
             popup.AnchorLeft = 0.5f;
             popup.AnchorTop = 0.5f;
             popup.AnchorRight = 0.5f;
