@@ -127,7 +127,7 @@ namespace TheLastInterview.Interview.Minigames
             titleLabel.HorizontalAlignment = HorizontalAlignment.Center;
             titleLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             titleLabel.ClipContents = true;
-            float titleSize = FontManager.GetScaledSize(TextType.Subtitle);
+            float titleSize = FontManager.GetScaledSize(TextType.Subtitle) * 1.3f; // 30% más grande
             titleLabel.AddThemeFontSizeOverride("font_size", (int)titleSize);
             titleLabel.AddThemeColorOverride("font_color", new Color(0.2f, 0.8f, 1.0f, 1.0f));
             mainContainer.AddChild(titleLabel);
@@ -143,7 +143,7 @@ namespace TheLastInterview.Interview.Minigames
             _questionLabel.VerticalAlignment = VerticalAlignment.Center;
             _questionLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             _questionLabel.ClipContents = true;
-            float questionSize = FontManager.GetScaledSize(TextType.Body);
+            float questionSize = FontManager.GetScaledSize(TextType.Body) * 1.2f; // 20% más grande
             _questionLabel.AddThemeFontSizeOverride("font_size", (int)questionSize);
             _questionLabel.AddThemeColorOverride("font_color", new Color(0.9f, 0.9f, 0.9f, 1.0f));
             mainContainer.AddChild(_questionLabel);
@@ -170,7 +170,7 @@ namespace TheLastInterview.Interview.Minigames
                 int index = i;
                 var button = new Button();
                 button.Text = selectedOptions[i];
-                button.AddThemeFontSizeOverride("font_size", (int)questionSize);
+                button.AddThemeFontSizeOverride("font_size", (int)(questionSize * 1.1f)); // 10% más grande
                 button.Pressed += () => OnOptionSelected(index);
                 _optionButtons.Add(button);
                 optionsContainer.AddChild(button);

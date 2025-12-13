@@ -88,7 +88,7 @@ namespace TheLastInterview.Interview.Minigames
             titleLabel.HorizontalAlignment = HorizontalAlignment.Center;
             titleLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             titleLabel.ClipContents = true;
-            float titleSize = FontManager.GetScaledSize(TextType.Subtitle);
+            float titleSize = FontManager.GetScaledSize(TextType.Subtitle) * 1.3f; // 30% más grande
             titleLabel.AddThemeFontSizeOverride("font_size", (int)titleSize);
             titleLabel.AddThemeColorOverride("font_color", new Color(0.2f, 0.8f, 1.0f, 1.0f));
             mainContainer.AddChild(titleLabel);
@@ -101,7 +101,7 @@ namespace TheLastInterview.Interview.Minigames
             _instructionLabel.VerticalAlignment = VerticalAlignment.Center;
             _instructionLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             _instructionLabel.ClipContents = true;
-            float instructionSize = FontManager.GetScaledSize(TextType.Body);
+            float instructionSize = FontManager.GetScaledSize(TextType.Body) * 1.2f; // 20% más grande
             _instructionLabel.AddThemeFontSizeOverride("font_size", (int)instructionSize);
             mainContainer.AddChild(_instructionLabel);
             

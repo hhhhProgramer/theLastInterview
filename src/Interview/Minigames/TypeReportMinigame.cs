@@ -87,7 +87,7 @@ namespace TheLastInterview.Interview.Minigames
             var titleLabel = new Label();
             titleLabel.Text = "ESCRIBIR REPORTE";
             titleLabel.HorizontalAlignment = HorizontalAlignment.Center;
-            float titleSize = FontManager.GetScaledSize(TextType.Subtitle);
+            float titleSize = FontManager.GetScaledSize(TextType.Subtitle) * 1.3f; // 30% más grande
             titleLabel.AddThemeFontSizeOverride("font_size", (int)titleSize);
             titleLabel.AddThemeColorOverride("font_color", new Color(0.2f, 0.8f, 1.0f, 1.0f));
             mainContainer.AddChild(titleLabel);
@@ -96,7 +96,7 @@ namespace TheLastInterview.Interview.Minigames
             _instructionLabel = new Label();
             _instructionLabel.Text = $"Escribe: {_targetText}";
             _instructionLabel.HorizontalAlignment = HorizontalAlignment.Center;
-            float bodySize = FontManager.GetScaledSize(TextType.Body);
+            float bodySize = FontManager.GetScaledSize(TextType.Body) * 1.2f; // 20% más grande
             _instructionLabel.AddThemeFontSizeOverride("font_size", (int)bodySize);
             _instructionLabel.AddThemeColorOverride("font_color", new Color(0.9f, 0.9f, 0.9f, 1.0f));
             mainContainer.AddChild(_instructionLabel);
@@ -105,7 +105,7 @@ namespace TheLastInterview.Interview.Minigames
             _errorLabel = new Label();
             _errorLabel.Text = "";
             _errorLabel.HorizontalAlignment = HorizontalAlignment.Center;
-            _errorLabel.AddThemeFontSizeOverride("font_size", (int)(bodySize * 0.9f));
+            _errorLabel.AddThemeFontSizeOverride("font_size", (int)bodySize); // Usar tamaño completo
             _errorLabel.AddThemeColorOverride("font_color", new Color(1.0f, 0.3f, 0.3f, 1.0f));
             mainContainer.AddChild(_errorLabel);
             

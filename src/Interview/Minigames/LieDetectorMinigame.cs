@@ -94,7 +94,7 @@ namespace TheLastInterview.Interview.Minigames
             titleLabel.HorizontalAlignment = HorizontalAlignment.Center;
             titleLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             titleLabel.ClipContents = true;
-            float titleSize = FontManager.GetScaledSize(TextType.Subtitle);
+            float titleSize = FontManager.GetScaledSize(TextType.Subtitle) * 1.3f; // 30% más grande
             titleLabel.AddThemeFontSizeOverride("font_size", (int)titleSize);
             titleLabel.AddThemeColorOverride("font_color", new Color(1.0f, 0.2f, 0.2f, 1.0f));
             mainContainer.AddChild(titleLabel);
@@ -107,7 +107,7 @@ namespace TheLastInterview.Interview.Minigames
             _statementLabel.VerticalAlignment = VerticalAlignment.Center;
             _statementLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             _statementLabel.ClipContents = true;
-            float statementSize = FontManager.GetScaledSize(TextType.Body);
+            float statementSize = FontManager.GetScaledSize(TextType.Body) * 1.2f; // 20% más grande
             _statementLabel.AddThemeFontSizeOverride("font_size", (int)statementSize);
             _statementLabel.AddThemeColorOverride("font_color", new Color(0.9f, 0.9f, 0.9f, 1.0f));
             mainContainer.AddChild(_statementLabel);
@@ -151,7 +151,7 @@ namespace TheLastInterview.Interview.Minigames
             _confirmButton.Name = "ConfirmButton";
             _confirmButton.Text = "Confirmar Honestidad";
             _confirmButton.CustomMinimumSize = new Vector2(250, 50);
-            _confirmButton.AddThemeFontSizeOverride("font_size", (int)statementSize);
+            _confirmButton.AddThemeFontSizeOverride("font_size", (int)(statementSize * 1.1f)); // 10% más grande
             _confirmButton.Pressed += OnConfirmPressed;
             buttonContainer.AddChild(_confirmButton);
             

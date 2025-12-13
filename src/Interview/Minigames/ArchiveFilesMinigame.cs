@@ -77,7 +77,7 @@ namespace TheLastInterview.Interview.Minigames
             var titleLabel = new Label();
             titleLabel.Text = "ARCHIVAR ARCHIVOS";
             titleLabel.HorizontalAlignment = HorizontalAlignment.Center;
-            float titleSize = FontManager.GetScaledSize(TextType.Subtitle);
+            float titleSize = FontManager.GetScaledSize(TextType.Subtitle) * 1.3f; // 30% más grande
             titleLabel.AddThemeFontSizeOverride("font_size", (int)titleSize);
             titleLabel.AddThemeColorOverride("font_color", new Color(1.0f, 0.9f, 0.0f, 1.0f)); // Amarillo brillante
             mainContainer.AddChild(titleLabel);
@@ -86,7 +86,7 @@ namespace TheLastInterview.Interview.Minigames
             _scoreLabel = new Label();
             _scoreLabel.Text = $"Correctos: {_correctCount} / {_targetCount}";
             _scoreLabel.HorizontalAlignment = HorizontalAlignment.Center;
-            float bodySize = FontManager.GetScaledSize(TextType.Body);
+            float bodySize = FontManager.GetScaledSize(TextType.Body) * 1.2f; // 20% más grande
             _scoreLabel.AddThemeFontSizeOverride("font_size", (int)bodySize);
             _scoreLabel.AddThemeColorOverride("font_color", new Color(0.9f, 0.9f, 0.9f, 1.0f));
             mainContainer.AddChild(_scoreLabel);
@@ -97,7 +97,7 @@ namespace TheLastInterview.Interview.Minigames
             _fileLabel.HorizontalAlignment = HorizontalAlignment.Center;
             _fileLabel.VerticalAlignment = VerticalAlignment.Center;
             _fileLabel.CustomMinimumSize = new Vector2(0, 100);
-            _fileLabel.AddThemeFontSizeOverride("font_size", (int)(bodySize * 1.2f));
+            _fileLabel.AddThemeFontSizeOverride("font_size", (int)(bodySize * 1.4f)); // Aumentado de 1.2f a 1.4f
             _fileLabel.AddThemeColorOverride("font_color", new Color(1.0f, 0.9f, 0.6f, 1.0f));
             mainContainer.AddChild(_fileLabel);
             
@@ -108,15 +108,16 @@ namespace TheLastInterview.Interview.Minigames
             
             _trayAButton = new Button();
             _trayAButton.Text = "BANDEJA A";
-            _trayAButton.CustomMinimumSize = new Vector2(250, 80);
-            _trayAButton.AddThemeFontSizeOverride("font_size", (int)bodySize);
+            Vector2 trayButtonSize = GetResponsiveSize(0.35f, 0.055f);
+            _trayAButton.CustomMinimumSize = trayButtonSize;
+            _trayAButton.AddThemeFontSizeOverride("font_size", (int)(bodySize * 1.1f)); // 10% más grande
             _trayAButton.Pressed += () => OnTraySelected("A");
             buttonsContainer.AddChild(_trayAButton);
             
             _trayBButton = new Button();
             _trayBButton.Text = "BANDEJA B";
-            _trayBButton.CustomMinimumSize = new Vector2(250, 80);
-            _trayBButton.AddThemeFontSizeOverride("font_size", (int)bodySize);
+            _trayBButton.CustomMinimumSize = trayButtonSize;
+            _trayBButton.AddThemeFontSizeOverride("font_size", (int)(bodySize * 1.1f)); // 10% más grande
             _trayBButton.Pressed += () => OnTraySelected("B");
             buttonsContainer.AddChild(_trayBButton);
             

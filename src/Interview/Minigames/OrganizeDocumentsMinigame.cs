@@ -56,19 +56,27 @@ namespace TheLastInterview.Interview.Minigames
         
         protected override void CreateUI()
         {
+            // Obtener tamaño del viewport para hacer el panel responsive
+            var viewportSize = GetViewportSize();
+            
+            // Calcular tamaño del panel como porcentaje del viewport (optimizado para HD 1920x1080)
+            float panelWidthPercent = viewportSize.X < 1000 ? 0.90f : 0.65f;
+            float panelHeightPercent = viewportSize.Y < 1000 ? 0.85f : 0.55f;
+            Vector2 panelSize = GetResponsiveSize(panelWidthPercent, panelHeightPercent);
+            
             // Panel de fondo (compacto)
             var panel = new Panel();
             panel.Name = "MinigamePanel";
             panel.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
-            panel.CustomMinimumSize = new Vector2(600, 500);
+            panel.CustomMinimumSize = panelSize;
             panel.AnchorLeft = 0.5f;
             panel.AnchorTop = 0.5f;
             panel.AnchorRight = 0.5f;
             panel.AnchorBottom = 0.5f;
-            panel.OffsetLeft = -300;
-            panel.OffsetRight = 300;
-            panel.OffsetTop = -250;
-            panel.OffsetBottom = 250;
+            panel.OffsetLeft = -panelSize.X * 0.5f;
+            panel.OffsetRight = panelSize.X * 0.5f;
+            panel.OffsetTop = -panelSize.Y * 0.5f;
+            panel.OffsetBottom = panelSize.Y * 0.5f;
             
             var styleBox = new StyleBoxFlat();
             styleBox.BgColor = new Color(0.1f, 0.1f, 0.1f, 0.95f);
@@ -84,15 +92,17 @@ namespace TheLastInterview.Interview.Minigames
             panel.AddThemeStyleboxOverride("panel", styleBox);
             AddChild(panel);
             
-            // Contenedor principal con VBoxContainer
+            // Contenedor principal con VBoxContainer (márgenes responsive)
             var mainContainer = new VBoxContainer();
             mainContainer.Name = "MainContainer";
             mainContainer.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
-            mainContainer.OffsetLeft = 20;
-            mainContainer.OffsetRight = -20;
-            mainContainer.OffsetTop = 15;
-            mainContainer.OffsetBottom = -15;
-            mainContainer.AddThemeConstantOverride("separation", 12);
+            float margin = GetResponsiveMargin(0.015f);
+            mainContainer.OffsetLeft = margin;
+            mainContainer.OffsetRight = -margin;
+            mainContainer.OffsetTop = margin * 0.7f;
+            mainContainer.OffsetBottom = -margin * 0.7f;
+            float separation = GetResponsiveMargin(0.008f);
+            mainContainer.AddThemeConstantOverride("separation", (int)separation);
             panel.AddChild(mainContainer);
             
             // Título
@@ -102,7 +112,7 @@ namespace TheLastInterview.Interview.Minigames
             titleLabel.HorizontalAlignment = HorizontalAlignment.Center;
             titleLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             titleLabel.ClipContents = true;
-            float titleSize = FontManager.GetScaledSize(TextType.Subtitle);
+            float titleSize = FontManager.GetScaledSize(TextType.Subtitle) * 1.3f; // 30% más grande
             titleLabel.AddThemeFontSizeOverride("font_size", (int)titleSize);
             titleLabel.AddThemeColorOverride("font_color", new Color(0.8f, 0.8f, 0.2f, 1.0f));
             mainContainer.AddChild(titleLabel);
@@ -114,7 +124,7 @@ namespace TheLastInterview.Interview.Minigames
             instructionLabel.HorizontalAlignment = HorizontalAlignment.Center;
             instructionLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             instructionLabel.ClipContents = true;
-            float instructionSize = FontManager.GetScaledSize(TextType.Body);
+            float instructionSize = FontManager.GetScaledSize(TextType.Body) * 1.2f; // 20% más grande
             instructionLabel.AddThemeFontSizeOverride("font_size", (int)instructionSize);
             instructionLabel.AddThemeColorOverride("font_color", new Color(0.9f, 0.9f, 0.9f, 1.0f));
             mainContainer.AddChild(instructionLabel);
@@ -131,8 +141,9 @@ namespace TheLastInterview.Interview.Minigames
                 int index = i;
                 var button = new Button();
                 button.Text = $"📄 {_documentNames[i]}";
-                button.CustomMinimumSize = new Vector2(0, 50);
-                button.AddThemeFontSizeOverride("font_size", (int)(instructionSize * 0.9f));
+                float buttonHeight = viewportSize.Y * 0.035f;
+                button.CustomMinimumSize = new Vector2(0, buttonHeight);
+                button.AddThemeFontSizeOverride("font_size", (int)instructionSize); // Usar tamaño completo
                 button.Pressed += () => OnDocumentClicked(index);
                 _documentButtons.Add(button);
                 documentsContainer.AddChild(button);

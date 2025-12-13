@@ -94,7 +94,7 @@ namespace TheLastInterview.Interview.Minigames
             titleLabel.HorizontalAlignment = HorizontalAlignment.Center;
             titleLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             titleLabel.ClipContents = true;
-            float titleSize = FontManager.GetScaledSize(TextType.Subtitle);
+            float titleSize = FontManager.GetScaledSize(TextType.Subtitle) * 1.3f; // 30% más grande
             titleLabel.AddThemeFontSizeOverride("font_size", (int)titleSize);
             titleLabel.AddThemeColorOverride("font_color", new Color(1.0f, 0.5f, 0.2f, 1.0f));
             mainContainer.AddChild(titleLabel);
@@ -107,7 +107,7 @@ namespace TheLastInterview.Interview.Minigames
             _instructionLabel.VerticalAlignment = VerticalAlignment.Center;
             _instructionLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             _instructionLabel.ClipContents = true;
-            float instructionSize = FontManager.GetScaledSize(TextType.Body);
+            float instructionSize = FontManager.GetScaledSize(TextType.Body) * 1.2f; // 20% más grande
             _instructionLabel.AddThemeFontSizeOverride("font_size", (int)instructionSize);
             mainContainer.AddChild(_instructionLabel);
             
@@ -136,8 +136,9 @@ namespace TheLastInterview.Interview.Minigames
             _relaxButton = new Button();
             _relaxButton.Name = "RelaxButton";
             _relaxButton.Text = "Relájate";
-            _relaxButton.CustomMinimumSize = new Vector2(200, 50);
-            _relaxButton.AddThemeFontSizeOverride("font_size", (int)instructionSize);
+            Vector2 relaxButtonSize = GetResponsiveSize(0.30f, 0.035f);
+            _relaxButton.CustomMinimumSize = relaxButtonSize;
+            _relaxButton.AddThemeFontSizeOverride("font_size", (int)(instructionSize * 1.1f)); // 10% más grande
             _relaxButton.Pressed += OnRelaxPressed;
             buttonContainer.AddChild(_relaxButton);
             

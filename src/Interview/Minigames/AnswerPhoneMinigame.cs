@@ -76,7 +76,7 @@ namespace TheLastInterview.Interview.Minigames
             var titleLabel = new Label();
             titleLabel.Text = "RESPONDER EL TELÉFONO";
             titleLabel.HorizontalAlignment = HorizontalAlignment.Center;
-            float titleSize = FontManager.GetScaledSize(TextType.Subtitle);
+            float titleSize = FontManager.GetScaledSize(TextType.Subtitle) * 1.3f; // 30% más grande
             titleLabel.AddThemeFontSizeOverride("font_size", (int)titleSize);
             titleLabel.AddThemeColorOverride("font_color", new Color(0.8f, 0.2f, 0.8f, 1.0f));
             mainContainer.AddChild(titleLabel);
@@ -85,7 +85,7 @@ namespace TheLastInterview.Interview.Minigames
             _instructionLabel = new Label();
             _instructionLabel.Text = "Responde el teléfono que está sonando (el que parpadea)";
             _instructionLabel.HorizontalAlignment = HorizontalAlignment.Center;
-            float bodySize = FontManager.GetScaledSize(TextType.Body);
+            float bodySize = FontManager.GetScaledSize(TextType.Body) * 1.2f; // 20% más grande
             _instructionLabel.AddThemeFontSizeOverride("font_size", (int)bodySize);
             _instructionLabel.AddThemeColorOverride("font_color", new Color(0.9f, 0.9f, 0.9f, 1.0f));
             mainContainer.AddChild(_instructionLabel);
@@ -101,8 +101,9 @@ namespace TheLastInterview.Interview.Minigames
                 int index = i;
                 var phoneButton = new Button();
                 phoneButton.Text = $"📞 Teléfono {(char)('A' + i)}";
-                phoneButton.CustomMinimumSize = new Vector2(200, 150);
-                phoneButton.AddThemeFontSizeOverride("font_size", (int)bodySize);
+                Vector2 phoneButtonSize = GetResponsiveSize(0.28f, 0.10f);
+                phoneButton.CustomMinimumSize = phoneButtonSize;
+                phoneButton.AddThemeFontSizeOverride("font_size", (int)(bodySize * 1.1f)); // 10% más grande
                 phoneButton.Pressed += () => OnPhoneClicked(index);
                 _phoneButtons[i] = phoneButton;
                 phonesContainer.AddChild(phoneButton);

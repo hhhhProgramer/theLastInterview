@@ -74,7 +74,7 @@ namespace TheLastInterview.Interview.Minigames
             var titleLabel = new Label();
             titleLabel.Text = "SISTEMA CONGELADO";
             titleLabel.HorizontalAlignment = HorizontalAlignment.Center;
-            float titleSize = FontManager.GetScaledSize(TextType.Subtitle);
+            float titleSize = FontManager.GetScaledSize(TextType.Subtitle) * 1.3f; // 30% más grande
             titleLabel.AddThemeFontSizeOverride("font_size", (int)titleSize);
             titleLabel.AddThemeColorOverride("font_color", new Color(1.0f, 0.3f, 0.3f, 1.0f));
             mainContainer.AddChild(titleLabel);
@@ -83,7 +83,7 @@ namespace TheLastInterview.Interview.Minigames
             _instructionLabel = new Label();
             _instructionLabel.Text = "Cierra los paneles emergentes...";
             _instructionLabel.HorizontalAlignment = HorizontalAlignment.Center;
-            float bodySize = FontManager.GetScaledSize(TextType.Body);
+            float bodySize = FontManager.GetScaledSize(TextType.Body) * 1.2f; // 20% más grande
             _instructionLabel.AddThemeFontSizeOverride("font_size", (int)bodySize);
             _instructionLabel.AddThemeColorOverride("font_color", new Color(0.9f, 0.9f, 0.9f, 1.0f));
             mainContainer.AddChild(_instructionLabel);
@@ -210,22 +210,24 @@ namespace TheLastInterview.Interview.Minigames
             messageLabel.HorizontalAlignment = HorizontalAlignment.Center;
             messageLabel.VerticalAlignment = VerticalAlignment.Center;
             messageLabel.AutowrapMode = TextServer.AutowrapMode.WordSmart;
-            float bodySize = FontManager.GetScaledSize(TextType.Body);
-            messageLabel.AddThemeFontSizeOverride("font_size", (int)(bodySize * 0.9f));
+            float bodySize = FontManager.GetScaledSize(TextType.Body) * 1.2f; // 20% más grande
+            messageLabel.AddThemeFontSizeOverride("font_size", (int)bodySize); // Usar tamaño completo
             messageLabel.AddThemeColorOverride("font_color", new Color(0.9f, 0.9f, 0.9f, 1.0f));
             container.AddChild(messageLabel);
             
             // Espaciador
             var spacer = new Control();
-            spacer.CustomMinimumSize = new Vector2(0, 10);
+            float popupSpacerHeight = viewportSize.Y * 0.007f;
+            spacer.CustomMinimumSize = new Vector2(0, popupSpacerHeight);
             spacer.SizeFlagsVertical = Control.SizeFlags.ExpandFill;
             container.AddChild(spacer);
             
-            // Botón cerrar
+            // Botón cerrar (tamaño responsive)
             var closeButton = new Button();
             closeButton.Text = "X Cerrar";
-            closeButton.CustomMinimumSize = new Vector2(150, 40);
-            closeButton.AddThemeFontSizeOverride("font_size", (int)(bodySize * 0.9f));
+            Vector2 closeButtonSize = GetResponsiveSize(0.20f, 0.028f);
+            closeButton.CustomMinimumSize = closeButtonSize;
+            closeButton.AddThemeFontSizeOverride("font_size", (int)(bodySize * 1.1f)); // 10% más grande
             closeButton.Pressed += () => OnClosePopup(popup);
             container.AddChild(closeButton);
             
